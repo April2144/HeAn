@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目详情 | 禾安</title>
+    <meta name="description" content="禾安 - 项目详情">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        dark: '#0F172A',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        .dark ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .glass-effect { background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); }
+        .dark .glass-effect { background: rgba(15,23,42,0.7); }
+        .project-detail img { transition: transform 0.5s ease; }
+        .project-detail img:hover { transform: scale(1.02); }
+    </style>
+</head>
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 transition-colors duration-300 font-sans">
+
+    <!-- 导航栏 -->
+    <nav class="fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="index.html" class="flex-shrink-0 flex items-center">
+                    <i class="fa-solid fa-code text-primary text-2xl mr-2"></i>
+                    <span class="font-bold text-xl tracking-tight">禾安</span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="index.html" class="hover:text-primary transition-colors">首页</a>
+                    <a href="index.html#about" class="hover:text-primary transition-colors">关于我</a>
+                    <a href="index.html#projects" class="hover:text-primary transition-colors">项目作品</a>
+                    <a href="blog.html" class="hover:text-primary transition-colors">博客</a>
+                    <a href="index.html#contact" class="hover:text-primary transition-colors">联系合作</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+                    <a href="https://github.com" target="_blank" class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 面包屑 -->
+    <div class="pt-20 pb-4 px-4 max-w-7xl mx-auto">
+        <nav class="flex items-center space-x-2 text-sm text-slate-500">
+            <a href="index.html" class="hover:text-primary transition-colors"><i class="fas fa-home"></i> 首页</a>
+            <i class="fas fa-chevron-right text-xs"></i>
+            <a href="index.html#projects" class="hover:text-primary transition-colors">项目作品</a>
+            <i class="fas fa-chevron-right text-xs"></i>
+            <span class="text-slate-800 dark:text-slate-200" id="breadcrumb-title">项目详情</span>
+        </nav>
+    </div>
+
+    <!-- 项目详情 -->
+    <main class="project-detail max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <div class="fade-in-up">
+            <!-- 项目封面 -->
+            <div class="rounded-2xl overflow-hidden shadow-xl mb-10">
+                <img id="project-image" src="https://picsum.photos/1200/600?dashboard" alt="项目封面" class="w-full object-cover">
+            </div>
+
+            <!-- 标题与标签 -->
+            <div class="mb-8">
+                <h1 class="text-3xl md:text-4xl font-extrabold mb-4" id="project-title">SaaS 仪表盘模板</h1>
+                <div class="flex flex-wrap gap-2 mb-4" id="project-tags">
+                    <span class="text-xs font-semibold px-3 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">React</span>
+                    <span class="text-xs font-semibold px-3 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">Tailwind</span>
+                </div>
+            </div>
+
+            <!-- 项目简介 -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-md border border-slate-100 dark:border-slate-700 mb-8">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-info-circle text-primary mr-2"></i>项目简介
+                </h2>
+                <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed" id="project-desc">
+                    基于 React + Tailwind 构建的高性能后台管理模板，支持暗黑模式。该模板提供了丰富的组件库，包括图表、表格、表单、导航等常见后台模块，开箱即用，可快速搭建企业级管理后台。
+                </p>
+            </div>
+
+            <!-- 项目特性 -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-md border border-slate-100 dark:border-slate-700 mb-8">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-star text-yellow-500 mr-2"></i>核心特性
+                </h2>
+                <ul class="space-y-3" id="project-features">
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                        <span class="text-slate-600 dark:text-slate-400">高性能组件架构，支持按需加载</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                        <span class="text-slate-600 dark:text-slate-400">内置暗黑模式，一键切换主题</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                        <span class="text-slate-600 dark:text-slate-400">响应式布局，适配桌面端与移动端</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                        <span class="text-slate-600 dark:text-slate-400">完善的 TypeScript 类型支持</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 技术栈详情 -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-md border border-slate-100 dark:border-slate-700 mb-8">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-layer-group text-primary mr-2"></i>技术栈
+                </h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="project-tech-stack">
+                    <div class="text-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <i class="fab fa-react text-3xl text-blue-500 mb-2"></i>
+                        <p class="text-sm font-medium">React 18</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <i class="fab fa-css3-alt text-3xl text-cyan-500 mb-2"></i>
+                        <p class="text-sm font-medium">Tailwind CSS</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <i class="fas fa-chart-bar text-3xl text-green-500 mb-2"></i>
+                        <p class="text-sm font-medium">ECharts</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg">
+                        <i class="fas fa-code text-3xl text-purple-500 mb-2"></i>
+                        <p class="text-sm font-medium">TypeScript</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 项目链接 -->
+            <div class="flex flex-col sm:flex-row gap-4 mb-10">
+                <a id="project-demo-link" href="#" target="_blank" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-white font-medium hover:bg-blue-600 transition-all shadow-lg hover:shadow-blue-500/30">
+                    <i class="fas fa-external-link-alt"></i> 在线预览
+                </a>
+                <a id="project-source-link" href="#" target="_blank" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                    <i class="fab fa-github"></i> 源码仓库
+                </a>
+            </div>
+
+            <!-- 返回 -->
+            <div class="text-center">
+                <a href="index.html#projects" class="inline-flex items-center text-primary font-medium hover:underline">
+                    <i class="fas fa-arrow-left mr-2"></i> 返回项目列表
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <a href="index.html" class="font-bold text-lg">禾安</a>
+                <p class="text-sm text-slate-500 mt-1">&copy; 2026 All rights reserved.</p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="text-slate-400 hover:text-primary"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-slate-400 hover:text-primary"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-slate-400 hover:text-primary"><i class="fab fa-weixin"></i></a>
+                <a href="#" class="text-slate-400 hover:text-primary"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 项目数据
+        const projectsData = {
+            '0': {
+                title: 'SaaS 仪表盘模板',
+                tags: ['React', 'Tailwind', 'ECharts'],
+                image: 'https://picsum.photos/1200/600?dashboard',
+                desc: '基于 React + Tailwind 构建的高性能后台管理模板，支持暗黑模式。该模板提供了丰富的组件库，包括图表、表格、表单、导航等常见后台模块，开箱即用，可快速搭建企业级管理后台。',
+                features: ['高性能组件架构，支持按需加载', '内置暗黑模式，一键切换主题', '响应式布局，适配桌面端与移动端', '完善的 TypeScript 类型支持'],
+                demoLink: '#',
+                sourceLink: '#'
+            },
+            '1': {
+                title: '极简待办清单',
+                tags: ['Vue3', 'Pinia', 'LocalStorage'],
+                image: 'https://picsum.photos/1200/600?todo',
+                desc: '一款注重体验的 Todo App，支持本地存储与多端同步。界面简洁清爽，交互流畅，帮助你高效管理日常任务。支持拖拽排序、标签分类、优先级标记等功能。',
+                features: ['极简设计，零学习成本', '拖拽排序，直观高效', '标签分类与优先级管理', '多设备数据同步'],
+                demoLink: '#',
+                sourceLink: '#'
+            },
+            '2': {
+                title: '技术博客引擎',
+                tags: ['Node.js', 'Markdown', 'SEO'],
+                image: 'https://picsum.photos/1200/600?blog',
+                desc: '轻量级静态博客生成器，专为开发者打造，SEO 友好。支持 Markdown 写作，自动生成目录，代码高亮，自定义主题等特性。',
+                features: ['Markdown 原生支持，写作体验流畅', '自动生成文章目录与 SEO 元数据', '内置代码高亮，支持多种语言', '主题可定制，灵活扩展'],
+                demoLink: '#',
+                sourceLink: '#'
+            }
+        };
+
+        // 从 URL 参数获取项目 ID
+        const params = new URLSearchParams(window.location.search);
+        const projectId = params.get('id') || '0';
+        const project = projectsData[projectId] || projectsData['0'];
+
+        // 填充页面内容
+        document.getElementById('breadcrumb-title').textContent = project.title;
+        document.title = `${project.title} | 禾安`;
+        document.getElementById('project-image').src = project.image;
+        document.getElementById('project-image').alt = project.title;
+        document.getElementById('project-title').textContent = project.title;
+        document.getElementById('project-desc').textContent = project.desc;
+
+        // 标签
+        const tagsContainer = document.getElementById('project-tags');
+        tagsContainer.innerHTML = project.tags.map(tag =>
+            `<span class="text-xs font-semibold px-3 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">${tag}</span>`
+        ).join('');
+
+        // 特性
+        const featuresContainer = document.getElementById('project-features');
+        featuresContainer.innerHTML = project.features.map(f =>
+            `<li class="flex items-start"><i class="fas fa-check-circle text-secondary mt-1 mr-3"></i><span class="text-slate-600 dark:text-slate-400">${f}</span></li>`
+        ).join('');
+
+        // 链接
+        document.getElementById('project-demo-link').href = project.demoLink;
+        document.getElementById('project-source-link').href = project.sourceLink;
+
+        // 暗黑模式
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            navbar.classList.toggle('shadow-md', window.scrollY > 20);
+        });
+    </script>
+</body>
+</html>

@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevProfile | 独立开发者 & 技术博主</title>
-    <meta name="description" content="专注前端开发与全栈架构，分享技术实战与独立开发经验。">
+    <title>禾安 | 独立开发者 & 技术博主</title>
+    <meta name="description" content="专注iOS移动端开发与跨平台技术，分享技术实战与独立开发经验。">
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 Font Awesome 图标 -->
@@ -76,13 +76,13 @@
             <div class="flex justify-between h-16 items-center">
                 <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
                     <i class="fa-solid fa-code text-primary text-2xl mr-2"></i>
-                    <span class="font-bold text-xl tracking-tight">DevProfile</span>
+                    <span class="font-bold text-xl tracking-tight">禾安</span>
                 </div>
                 <div class="hidden md:flex space-x-8">
                     <a href="#home" class="hover:text-primary transition-colors">首页</a>
                     <a href="#about" class="hover:text-primary transition-colors">关于我</a>
                     <a href="#projects" class="hover:text-primary transition-colors">项目作品</a>
-                    <a href="#blog" class="hover:text-primary transition-colors">技术博客</a>
+                    <a href="blog.html" class="hover:text-primary transition-colors">博客</a>
                     <a href="#contact" class="hover:text-primary transition-colors">联系合作</a>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -109,7 +109,7 @@
                 分享 <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary">技术洞察</span>
             </h1>
             <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-600 dark:text-slate-400">
-                专注于 Web 全栈开发与独立产品孵化。在掘金分享实战经验，在 GitHub 开源优质项目。
+                专注于 iOS 移动端开发与跨平台技术。持续探索小程序、Web 及 SaaS 定制开发，拥抱 AI 新时代。
             </p>
             <div class="mt-10 flex justify-center gap-4">
                 <a href="#projects" class="px-8 py-3 rounded-lg bg-primary text-white font-medium hover:bg-blue-600 transition-all shadow-lg hover:shadow-blue-500/30">
@@ -133,22 +133,31 @@
                 <div class="mt-10 lg:mt-0">
                     <h2 class="text-3xl font-bold mb-6">关于我</h2>
                     <p class="text-lg text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-                        我是一名拥有 5 年经验的全栈开发者，热衷于通过代码解决实际问题。目前主要聚焦于 React 生态与 Node.js 后端服务。
+                        我是一名拥有 10 年经验的 iOS 开发者，也是一个正在学习用技术 + 商业思维搭建自己数字资产的实践者。
                     </p>
-                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-                        除了日常工作，我还运营着一个技术公众号，定期输出前端进阶指南与独立开发复盘文章。我相信技术不仅是工具，更是创造价值的杠杆。
+                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
+                        主攻移动端和小程序的定制开发，提供技术咨询、上架协助。
                     </p>
                     
                     <div class="space-y-4">
                         <h3 class="font-semibold text-lg">技术栈</h3>
                         <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">React / Next.js</span>
-                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">TypeScript</span>
-                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">Node.js</span>
-                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">TailwindCSS</span>
-                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">PostgreSQL</span>
-                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">Docker</span>
+                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">Objective-C</span>
+                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">Swift</span>
+                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">SwiftUI</span>
+                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">Flutter</span>
                         </div>
+
+                        <h3 class="font-semibold text-lg mt-6">服务内容</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-md text-sm"><i class="fas fa-mobile-alt mr-1"></i>App 开发</span>
+                            <span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-md text-sm"><i class="fas fa-lightbulb mr-1"></i>技术咨询</span>
+                            <span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-md text-sm"><i class="fas fa-rocket mr-1"></i>上架协助</span>
+                        </div>
+
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-4 leading-relaxed">
+                            会持续更新新技术的学习、行业信息和个人思考。
+                        </p>
                     </div>
                 </div>
             </div>
@@ -177,7 +186,7 @@
                     <h2 class="text-3xl font-bold mb-4">最新博文</h2>
                     <p class="text-slate-600 dark:text-slate-400">同步自掘金与个人思考</p>
                 </div>
-                <a href="#" class="text-primary hover:underline hidden md:block">查看全部 -></a>
+                <a href="blog.html" class="text-primary hover:underline hidden md:block">查看全部 -></a>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8" id="blog-grid">
@@ -185,7 +194,7 @@
             </div>
             
             <div class="mt-8 text-center md:hidden">
-                <a href="#" class="text-primary hover:underline">查看全部 -></a>
+                <a href="blog.html" class="text-primary hover:underline">查看全部 -></a>
             </div>
         </div>
     </section>
@@ -224,7 +233,7 @@
     <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <div class="mb-4 md:mb-0">
-                <span class="font-bold text-lg">DevProfile</span>
+                <span class="font-bold text-lg">禾安</span>
                 <p class="text-sm text-slate-500 mt-1">© 2026 All rights reserved.</p>
             </div>
             <div class="flex space-x-6">
@@ -241,41 +250,41 @@
         // 模拟数据：项目
         const projects = [
             {
+                id: 0,
                 title: "SaaS 仪表盘模板",
                 desc: "基于 React + Tailwind 构建的高性能后台管理模板，支持暗黑模式。",
                 tags: ["React", "Tailwind"],
-                image: "https://picsum.photos/400/250?dashboard",
-                link: "#"
+                image: "https://picsum.photos/400/250?dashboard"
             },
             {
+                id: 1,
                 title: "极简待办清单",
                 desc: "一款注重体验的 Todo App，支持本地存储与多端同步。",
                 tags: ["Vue3", "Pinia"],
-                image: "https://picsum.photos/400/250?todo",
-                link: "#"
+                image: "https://picsum.photos/400/250?todo"
             },
             {
+                id: 2,
                 title: "技术博客引擎",
                 desc: "轻量级静态博客生成器，专为开发者打造，SEO 友好。",
                 tags: ["Node.js", "Markdown"],
-                image: "https://picsum.photos/400/250?blog",
-                link: "#"
+                image: "https://picsum.photos/400/250?blog"
             }
         ];
 
         // 模拟数据：博客
         const blogs = [
             {
-                title: "2026年前端架构演进趋势",
+                id: 1,
+                title: "2026 年 iOS 开发者技术栈选择",
                 date: "2026-06-20",
-                summary: "深入分析 Server Components 与边缘计算对前端开发模式的影响...",
-                link: "#"
+                summary: "深入分析 Swift 6 新特性、SwiftUI 进展以及跨平台框架对 iOS 开发模式的影响...",
             },
             {
-                title: "独立开发首月营收复盘",
-                date: "2026-05-15",
-                summary: "从0到1构建产品，分享获客渠道选择与付费转化优化策略...",
-                link: "#"
+                id: 2,
+                title: "独立开发者如何找到第一个付费客户",
+                date: "2026-06-10",
+                summary: "从 0 到 1 的获客之路：分享我在独立开发过程中找到第一批付费用户的经验和教训。",
             }
         ];
 
@@ -283,7 +292,8 @@
         const projectsGrid = document.getElementById('projects-grid');
         projects.forEach(project => {
             const card = document.createElement('div');
-            card.className = "bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group";
+            card.className = "bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group cursor-pointer";
+            card.onclick = () => { window.location.href = `project-detail.html?id=${project.id}`; };
             card.innerHTML = `
                 <div class="overflow-hidden">
                     <img src="${project.image}" alt="${project.title}" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500">
@@ -294,7 +304,7 @@
                     </div>
                     <h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">${project.title}</h3>
                     <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">${project.desc}</p>
-                    <a href="${project.link}" class="inline-flex items-center text-primary font-medium hover:underline">
+                    <a href="project-detail.html?id=${project.id}" class="inline-flex items-center text-primary font-medium hover:underline" onclick="event.stopPropagation()">
                         查看详情 <i class="fas fa-arrow-right ml-2 text-xs"></i>
                     </a>
                 </div>
@@ -305,14 +315,15 @@
         // 渲染博客
         const blogGrid = document.getElementById('blog-grid');
         blogs.forEach(blog => {
-            const card = document.createElement('div');
-            card.className = "flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md hover:shadow-lg transition-all border border-slate-100 dark:border-slate-700";
+            const card = document.createElement('a');
+            card.href = `blog-detail.html?id=${blog.id}`;
+            card.className = "flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md hover:shadow-lg transition-all border border-slate-100 dark:border-slate-700 group";
             card.innerHTML = `
                 <div class="flex-1">
                     <div class="text-sm text-slate-500 mb-2">${blog.date}</div>
-                    <h3 class="text-xl font-bold mb-3 hover:text-primary cursor-pointer transition-colors">${blog.title}</h3>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-colors">${blog.title}</h3>
                     <p class="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4">${blog.summary}</p>
-                    <a href="${blog.link}" class="text-primary text-sm font-medium hover:underline">阅读全文</a>
+                    <span class="text-primary text-sm font-medium hover:underline inline-flex items-center">阅读全文 <i class="fas fa-arrow-right ml-2 text-xs"></i></span>
                 </div>
             `;
             blogGrid.appendChild(card);
