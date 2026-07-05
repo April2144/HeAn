@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevProfile | 独立开发者 & 技术博主</title>
+    <meta name="description" content="专注前端开发与全栈架构，分享技术实战与独立开发经验。">
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Font Awesome 图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 配置 Tailwind 主题色 -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        dark: '#0F172A',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #1e293b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+        /* 动画效果 */
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        .dark .glass-effect {
+            background: rgba(15, 23, 42, 0.7);
+        }
+    </style>
+</head>
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 transition-colors duration-300 font-sans">
+
+    <!-- 导航栏 -->
+    <nav class="fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <i class="fa-solid fa-code text-primary text-2xl mr-2"></i>
+                    <span class="font-bold text-xl tracking-tight">DevProfile</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="hover:text-primary transition-colors">首页</a>
+                    <a href="#about" class="hover:text-primary transition-colors">关于我</a>
+                    <a href="#projects" class="hover:text-primary transition-colors">项目作品</a>
+                    <a href="#blog" class="hover:text-primary transition-colors">技术博客</a>
+                    <a href="#contact" class="hover:text-primary transition-colors">联系合作</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+                    <a href="https://github.com" target="_blank" class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero 区域 -->
+    <section id="home" class="pt-32 pb-20 lg:pt-48 lg:pb-32 px-4">
+        <div class="max-w-7xl mx-auto text-center fade-in-up">
+            <div class="inline-block p-2 px-4 rounded-full bg-blue-100 text-primary text-sm font-semibold mb-6 dark:bg-blue-900/30">
+                👋 你好，我是独立开发者
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
+                构建 <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">数字产品</span><br>
+                分享 <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary">技术洞察</span>
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-600 dark:text-slate-400">
+                专注于 Web 全栈开发与独立产品孵化。在掘金分享实战经验，在 GitHub 开源优质项目。
+            </p>
+            <div class="mt-10 flex justify-center gap-4">
+                <a href="#projects" class="px-8 py-3 rounded-lg bg-primary text-white font-medium hover:bg-blue-600 transition-all shadow-lg hover:shadow-blue-500/30">
+                    查看作品
+                </a>
+                <a href="#contact" class="px-8 py-3 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                    联系我
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section id="about" class="py-20 bg-white dark:bg-slate-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-primary to-secondary rounded-2xl opacity-30 blur-lg"></div>
+                    <img src="https://picsum.photos/600/400?tech" alt="开发者工作场景" class="relative rounded-2xl shadow-2xl w-full object-cover">
+                </div>
+                <div class="mt-10 lg:mt-0">
+                    <h2 class="text-3xl font-bold mb-6">关于我</h2>
+                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
+                        我是一名拥有 5 年经验的全栈开发者，热衷于通过代码解决实际问题。目前主要聚焦于 React 生态与 Node.js 后端服务。
+                    </p>
+                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+                        除了日常工作，我还运营着一个技术公众号，定期输出前端进阶指南与独立开发复盘文章。我相信技术不仅是工具，更是创造价值的杠杆。
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <h3 class="font-semibold text-lg">技术栈</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">React / Next.js</span>
+                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">TypeScript</span>
+                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">Node.js</span>
+                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">TailwindCSS</span>
+                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">PostgreSQL</span>
+                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">Docker</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目作品 -->
+    <section id="projects" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">精选项目</h2>
+                <p class="text-slate-600 dark:text-slate-400">近期独立开发或参与的核心产品</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
+                <!-- 项目卡片将通过 JS 动态生成 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 技术博客 -->
+    <section id="blog" class="py-20 bg-white dark:bg-slate-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl font-bold mb-4">最新博文</h2>
+                    <p class="text-slate-600 dark:text-slate-400">同步自掘金与个人思考</p>
+                </div>
+                <a href="#" class="text-primary hover:underline hidden md:block">查看全部 -></a>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8" id="blog-grid">
+                <!-- 博客卡片将通过 JS 动态生成 -->
+            </div>
+            
+            <div class="mt-8 text-center md:hidden">
+                <a href="#" class="text-primary hover:underline">查看全部 -></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 公众号引流与联系 -->
+    <section id="contact" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800 -z-10"></div>
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-6">保持连接</h2>
+            <p class="text-lg text-slate-600 dark:text-slate-400 mb-10">
+                订阅我的公众号，获取独家技术资料、源码下载权限及最新独立开发资讯。
+            </p>
+            
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl inline-block w-full max-w-md">
+                <div class="w-48 h-48 bg-slate-100 dark:bg-slate-700 mx-auto rounded-lg flex items-center justify-center mb-6">
+                    <!-- 这里替换为你的公众号二维码图片 -->
+                    <img src="https://picsum.photos/200/200?qr" alt="公众号二维码" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <h3 class="font-bold text-xl mb-2">扫码关注「DevTech」</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">回复“简历”获取我的完整技术履历</p>
+                
+                <form class="space-y-4 text-left" onsubmit="event.preventDefault(); alert('感谢订阅！请检查邮箱确认。');">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">邮箱地址</label>
+                        <input type="email" placeholder="your@email.com" class="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-primary outline-none">
+                    </div>
+                    <button type="submit" class="w-full py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        订阅 Newsletter
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <span class="font-bold text-lg">DevProfile</span>
+                <p class="text-sm text-slate-500 mt-1">© 2026 All rights reserved.</p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="text-slate-400 hover:text-primary"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-slate-400 hover:text-primary"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-slate-400 hover:text-primary"><i class="fab fa-weixin"></i></a>
+                <a href="#" class="text-slate-400 hover:text-primary"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript 逻辑 -->
+    <script>
+        // 模拟数据：项目
+        const projects = [
+            {
+                title: "SaaS 仪表盘模板",
+                desc: "基于 React + Tailwind 构建的高性能后台管理模板，支持暗黑模式。",
+                tags: ["React", "Tailwind"],
+                image: "https://picsum.photos/400/250?dashboard",
+                link: "#"
+            },
+            {
+                title: "极简待办清单",
+                desc: "一款注重体验的 Todo App，支持本地存储与多端同步。",
+                tags: ["Vue3", "Pinia"],
+                image: "https://picsum.photos/400/250?todo",
+                link: "#"
+            },
+            {
+                title: "技术博客引擎",
+                desc: "轻量级静态博客生成器，专为开发者打造，SEO 友好。",
+                tags: ["Node.js", "Markdown"],
+                image: "https://picsum.photos/400/250?blog",
+                link: "#"
+            }
+        ];
+
+        // 模拟数据：博客
+        const blogs = [
+            {
+                title: "2026年前端架构演进趋势",
+                date: "2026-06-20",
+                summary: "深入分析 Server Components 与边缘计算对前端开发模式的影响...",
+                link: "#"
+            },
+            {
+                title: "独立开发首月营收复盘",
+                date: "2026-05-15",
+                summary: "从0到1构建产品，分享获客渠道选择与付费转化优化策略...",
+                link: "#"
+            }
+        ];
+
+        // 渲染项目
+        const projectsGrid = document.getElementById('projects-grid');
+        projects.forEach(project => {
+            const card = document.createElement('div');
+            card.className = "bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group";
+            card.innerHTML = `
+                <div class="overflow-hidden">
+                    <img src="${project.image}" alt="${project.title}" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-6">
+                    <div class="flex gap-2 mb-3">
+                        ${project.tags.map(tag => `<span class="text-xs font-semibold px-2 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded">${tag}</span>`).join('')}
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">${project.title}</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">${project.desc}</p>
+                    <a href="${project.link}" class="inline-flex items-center text-primary font-medium hover:underline">
+                        查看详情 <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                    </a>
+                </div>
+            `;
+            projectsGrid.appendChild(card);
+        });
+
+        // 渲染博客
+        const blogGrid = document.getElementById('blog-grid');
+        blogs.forEach(blog => {
+            const card = document.createElement('div');
+            card.className = "flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md hover:shadow-lg transition-all border border-slate-100 dark:border-slate-700";
+            card.innerHTML = `
+                <div class="flex-1">
+                    <div class="text-sm text-slate-500 mb-2">${blog.date}</div>
+                    <h3 class="text-xl font-bold mb-3 hover:text-primary cursor-pointer transition-colors">${blog.title}</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4">${blog.summary}</p>
+                    <a href="${blog.link}" class="text-primary text-sm font-medium hover:underline">阅读全文</a>
+                </div>
+            `;
+            blogGrid.appendChild(card);
+        });
+
+        // 暗黑模式切换
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        // 检查本地存储或系统偏好
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            if (html.classList.contains('dark')) {
+                localStorage.theme = 'dark';
+            } else {
+                localStorage.theme = 'light';
+            }
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 20) {
+                navbar.classList.add('shadow-md');
+            } else {
+                navbar.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body>
+</html>
