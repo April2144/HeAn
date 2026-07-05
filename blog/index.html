@@ -45,16 +45,16 @@
     <nav class="fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <a href="index.html" class="flex-shrink-0 flex items-center">
+                <a href="../index.html" class="flex-shrink-0 flex items-center">
                     <i class="fa-solid fa-code text-primary text-2xl mr-2"></i>
                     <span class="font-bold text-xl tracking-tight">禾安</span>
                 </a>
                 <div class="hidden md:flex space-x-8">
-                    <a href="index.html" class="hover:text-primary transition-colors">首页</a>
-                    <a href="index.html#about" class="hover:text-primary transition-colors">关于我</a>
-                    <a href="index.html#projects" class="hover:text-primary transition-colors">项目作品</a>
-                    <a href="blog.html" class="text-primary font-medium transition-colors">博客</a>
-                    <a href="index.html#contact" class="hover:text-primary transition-colors">联系合作</a>
+                    <a href="../index.html" class="hover:text-primary transition-colors">首页</a>
+                    <a href="../index.html#about" class="hover:text-primary transition-colors">关于我</a>
+                    <a href="../index.html#projects" class="hover:text-primary transition-colors">项目作品</a>
+                    <a href="../blog/index.html" class="text-primary font-medium transition-colors">博客</a>
+                    <a href="../index.html#contact" class="hover:text-primary transition-colors">联系合作</a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
@@ -72,7 +72,7 @@
     <!-- 面包屑 -->
     <div class="pt-20 pb-4 px-4 max-w-7xl mx-auto">
         <nav class="flex items-center space-x-2 text-sm text-slate-500">
-            <a href="index.html" class="hover:text-primary transition-colors"><i class="fas fa-home"></i> 首页</a>
+            <a href="../index.html" class="hover:text-primary transition-colors"><i class="fas fa-home"></i> 首页</a>
             <i class="fas fa-chevron-right text-xs"></i>
             <span class="text-slate-800 dark:text-slate-200">博客</span>
         </nav>
@@ -83,9 +83,7 @@
         <div class="fade-in-up">
             <!-- 页头 -->
             <div class="text-center mb-12 pt-6">
-                <h1 class="text-4xl font-extrabold mb-4">
-                    博客文章
-                </h1>
+                <h1 class="text-4xl font-extrabold mb-4">博客文章</h1>
                 <p class="text-lg text-slate-600 dark:text-slate-400">记录技术成长、商业思考与个人感悟</p>
             </div>
 
@@ -106,9 +104,7 @@
             </div>
 
             <!-- 文章列表 -->
-            <div class="space-y-6" id="blog-list">
-                <!-- JS 动态渲染 -->
-            </div>
+            <div class="space-y-6" id="blog-list"></div>
 
             <!-- 空状态 -->
             <div class="hidden text-center py-16" id="empty-state">
@@ -122,7 +118,7 @@
     <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <div class="mb-4 md:mb-0">
-                <a href="index.html" class="font-bold text-lg">禾安</a>
+                <a href="../index.html" class="font-bold text-lg">禾安</a>
                 <p class="text-sm text-slate-500 mt-1">&copy; 2026 All rights reserved.</p>
             </div>
             <div class="flex space-x-6">
@@ -135,86 +131,35 @@
     </footer>
 
     <script>
-        // 博客数据
-        const blogsData = [
-            {
-                id: 0,
-                title: 'SwiftUI 与 UIKit 混合开发实践指南',
-                tag: '技术博客',
-                date: '2026-06-28',
-                summary: '在实际项目中如何优雅地混用 SwiftUI 和 UIKit，包括桥接方案、状态管理策略以及性能优化技巧。',
-                content: '随着 SwiftUI 的成熟，越来越多的项目开始引入 SwiftUI。但对于已有的大量 UIKit 项目，完全迁移并不现实。本文将分享在实际项目中如何优雅地混用 SwiftUI 和 UIKit...'
-            },
-            {
-                id: 1,
-                title: '2026 年 iOS 开发者技术栈选择',
-                tag: '技术博客',
-                date: '2026-06-20',
-                summary: '深入分析 Swift 6 新特性、SwiftUI 进展以及跨平台框架对 iOS 开发模式的影响...',
-                content: '2026 年 iOS 开发生态迎来了许多变化。Swift 6 带来了更强的并发安全检查，SwiftUI 的组件库日趋完善...'
-            },
-            {
-                id: 2,
-                title: '独立开发者如何找到第一个付费客户',
-                tag: '商业洞察',
-                date: '2026-06-10',
-                summary: '从 0 到 1 的获客之路：分享我在独立开发过程中找到第一批付费用户的经验和教训。',
-                content: '独立开发最大的挑战不是写代码，而是找到愿意为你产品付费的人。在开发完第一款产品后，我花了整整两个月才获得第一个付费客户...'
-            },
-            {
-                id: 3,
-                title: 'App 定制开发报价方法论',
-                tag: '商业洞察',
-                date: '2026-05-25',
-                summary: '如何科学地为移动端定制开发项目报价？从需求分析到工时估算，建立一套可复用的定价体系。',
-                content: '报价是自由开发者最头疼的环节之一。报高了容易流失客户，报低了又难以覆盖成本。经过多年的实践，我总结出了一套系统化的报价方法论...'
-            },
-            {
-                id: 4,
-                title: '从打工者到独立开发者的心态转变',
-                tag: '个人思考',
-                date: '2026-05-15',
-                summary: '回顾从全职工作到独立开发的心路历程，分享那些没人告诉你的认知转变和成长收获。',
-                content: '三年前，我做出了一个大胆的决定：离开稳定的工作，成为一名独立开发者。这个决定改变了我对"工作"和"价值"的理解...'
-            },
-            {
-                id: 5,
-                title: '技术人的时间管理与精力分配',
-                tag: '个人思考',
-                date: '2026-04-28',
-                summary: '如何在编码、学习、生活和商业探索之间找到平衡？分享我的时间管理框架和工具选择。',
-                content: '作为独立开发者，时间是最大的资源。没有公司的时间框架约束，反而更容易陷入低效状态。经过长期摸索，我建立了自己的时间管理体系...'
-            }
-        ];
+        // 标签 → 子文件夹映射
+        const tagFolderMap = {
+            '技术博客': 'tech',
+            '商业洞察': 'business',
+            '个人思考': 'thoughts'
+        };
 
-        // 渲染文章列表
+        const tagColors = {
+            '技术博客': 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+            '商业洞察': 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+            '个人思考': 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400'
+        };
+        const tagIcons = { '技术博客': 'fa-code', '商业洞察': 'fa-chart-line', '个人思考': 'fa-lightbulb' };
+
+        let blogsData = [];
+
         function renderBlogs(filter = 'all') {
             const blogList = document.getElementById('blog-list');
             const emptyState = document.getElementById('empty-state');
             const filtered = filter === 'all' ? blogsData : blogsData.filter(b => b.tag === filter);
 
-            if (filtered.length === 0) {
-                blogList.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
+            if (filtered.length === 0) { blogList.innerHTML = ''; emptyState.classList.remove('hidden'); return; }
             emptyState.classList.add('hidden');
 
-            // 标签颜色映射
-            const tagColors = {
-                '技术博客': 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
-                '商业洞察': 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-                '个人思考': 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400'
-            };
-            const tagIcons = {
-                '技术博客': 'fa-code',
-                '商业洞察': 'fa-chart-line',
-                '个人思考': 'fa-lightbulb'
-            };
-
-            blogList.innerHTML = filtered.map(blog => `
-                <a href="blog-detail.html?id=${blog.id}" class="block group">
+            blogList.innerHTML = filtered.map(blog => {
+                const folder = tagFolderMap[blog.tag] || '';
+                const detailPath = folder ? `${folder}/detail.html?id=${blog.id}` : `detail.html?id=${blog.id}`;
+                return `
+                <a href="${detailPath}" class="block group">
                     <article class="bg-white dark:bg-slate-800 rounded-xl p-6 md:p-8 shadow-md hover:shadow-xl transition-all border border-slate-100 dark:border-slate-700">
                         <div class="flex flex-col md:flex-row md:items-start gap-4">
                             <div class="flex-1">
@@ -235,42 +180,37 @@
                             </div>
                         </div>
                     </article>
-                </a>
-            `).join('');
+                </a>`;
+            }).join('');
         }
 
-        // 标签筛选
         document.querySelectorAll('.tag-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.tag-btn').forEach(b => {
-                    b.classList.remove('active');
-                    b.classList.add('bg-white', 'dark:bg-slate-800');
-                });
-                btn.classList.add('active');
-                btn.classList.remove('bg-white', 'dark:bg-slate-800');
+                document.querySelectorAll('.tag-btn').forEach(b => { b.classList.remove('active'); b.classList.add('bg-white', 'dark:bg-slate-800'); });
+                btn.classList.add('active'); btn.classList.remove('bg-white', 'dark:bg-slate-800');
                 renderBlogs(btn.dataset.tag);
             });
         });
 
-        // 初始渲染
-        renderBlogs();
+        // 从 JSON 加载数据
+        async function loadBlogs() {
+            try {
+                const res = await fetch('../data/blogs.json');
+                const data = await res.json();
+                blogsData = data.blogs;
+                renderBlogs();
+            } catch (err) {
+                console.error('加载博客数据失败:', err);
+            }
+        }
+        loadBlogs();
 
         // 暗黑模式
         const themeToggle = document.getElementById('theme-toggle');
         const html = document.documentElement;
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            html.classList.add('dark');
-        }
-        themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
-        });
-
-        // 导航栏滚动效果
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            navbar.classList.toggle('shadow-md', window.scrollY > 20);
-        });
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { html.classList.add('dark'); }
+        themeToggle.addEventListener('click', () => { html.classList.toggle('dark'); localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light'; });
+        window.addEventListener('scroll', () => { const navbar = document.getElementById('navbar'); navbar.classList.toggle('shadow-md', window.scrollY > 20); });
     </script>
 </body>
 </html>

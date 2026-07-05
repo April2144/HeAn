@@ -82,7 +82,7 @@
                     <a href="#home" class="hover:text-primary transition-colors">首页</a>
                     <a href="#about" class="hover:text-primary transition-colors">关于我</a>
                     <a href="#projects" class="hover:text-primary transition-colors">项目作品</a>
-                    <a href="blog.html" class="hover:text-primary transition-colors">博客</a>
+                    <a href="blog/index.html" class="hover:text-primary transition-colors">博客</a>
                     <a href="#contact" class="hover:text-primary transition-colors">联系合作</a>
                 </div>
                 <div class="flex items-center space-x-4">
@@ -186,7 +186,7 @@
                     <h2 class="text-3xl font-bold mb-4">最新博文</h2>
                     <p class="text-slate-600 dark:text-slate-400">同步自掘金与个人思考</p>
                 </div>
-                <a href="blog.html" class="text-primary hover:underline hidden md:block">查看全部 -></a>
+                <a href="blog/index.html" class="text-primary hover:underline hidden md:block">查看全部 -></a>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8" id="blog-grid">
@@ -194,7 +194,7 @@
             </div>
             
             <div class="mt-8 text-center md:hidden">
-                <a href="blog.html" class="text-primary hover:underline">查看全部 -></a>
+                <a href="blog/index.html" class="text-primary hover:underline">查看全部 -></a>
             </div>
         </div>
     </section>
@@ -275,13 +275,15 @@
         // 模拟数据：博客
         const blogs = [
             {
-                id: 1,
-                title: "2026 年 iOS 开发者技术栈选择",
-                date: "2026-06-20",
-                summary: "深入分析 Swift 6 新特性、SwiftUI 进展以及跨平台框架对 iOS 开发模式的影响...",
+                id: 0,
+                tagFolder: 'tech',
+                title: "SwiftUI 与 UIKit 混合开发实践指南",
+                date: "2026-06-28",
+                summary: "在实际项目中如何优雅地混用 SwiftUI 和 UIKit，包括桥接方案、状态管理策略以及性能优化技巧。",
             },
             {
                 id: 2,
+                tagFolder: 'business',
                 title: "独立开发者如何找到第一个付费客户",
                 date: "2026-06-10",
                 summary: "从 0 到 1 的获客之路：分享我在独立开发过程中找到第一批付费用户的经验和教训。",
@@ -293,7 +295,7 @@
         projects.forEach(project => {
             const card = document.createElement('div');
             card.className = "bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group cursor-pointer";
-            card.onclick = () => { window.location.href = `project-detail.html?id=${project.id}`; };
+            card.onclick = () => { window.location.href = `projects/detail.html?id=${project.id}`; };
             card.innerHTML = `
                 <div class="overflow-hidden">
                     <img src="${project.image}" alt="${project.title}" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500">
@@ -304,7 +306,7 @@
                     </div>
                     <h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">${project.title}</h3>
                     <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">${project.desc}</p>
-                    <a href="project-detail.html?id=${project.id}" class="inline-flex items-center text-primary font-medium hover:underline" onclick="event.stopPropagation()">
+                    <a href="projects/detail.html?id=${project.id}" class="inline-flex items-center text-primary font-medium hover:underline" onclick="event.stopPropagation()">
                         查看详情 <i class="fas fa-arrow-right ml-2 text-xs"></i>
                     </a>
                 </div>
@@ -316,7 +318,7 @@
         const blogGrid = document.getElementById('blog-grid');
         blogs.forEach(blog => {
             const card = document.createElement('a');
-            card.href = `blog-detail.html?id=${blog.id}`;
+            card.href = `blog/${blog.tagFolder}/detail.html?id=${blog.id}`;
             card.className = "flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md hover:shadow-lg transition-all border border-slate-100 dark:border-slate-700 group";
             card.innerHTML = `
                 <div class="flex-1">

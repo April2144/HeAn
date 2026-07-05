@@ -45,16 +45,16 @@
     <nav class="fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <a href="index.html" class="flex-shrink-0 flex items-center">
+                <a href="../index.html" class="flex-shrink-0 flex items-center">
                     <i class="fa-solid fa-code text-primary text-2xl mr-2"></i>
                     <span class="font-bold text-xl tracking-tight">禾安</span>
                 </a>
                 <div class="hidden md:flex space-x-8">
-                    <a href="index.html" class="hover:text-primary transition-colors">首页</a>
-                    <a href="index.html#about" class="hover:text-primary transition-colors">关于我</a>
-                    <a href="index.html#projects" class="hover:text-primary transition-colors">项目作品</a>
-                    <a href="blog.html" class="hover:text-primary transition-colors">博客</a>
-                    <a href="index.html#contact" class="hover:text-primary transition-colors">联系合作</a>
+                    <a href="../index.html" class="hover:text-primary transition-colors">首页</a>
+                    <a href="../index.html#about" class="hover:text-primary transition-colors">关于我</a>
+                    <a href="../index.html#projects" class="hover:text-primary transition-colors">项目作品</a>
+                    <a href="../blog/index.html" class="hover:text-primary transition-colors">博客</a>
+                    <a href="../index.html#contact" class="hover:text-primary transition-colors">联系合作</a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
@@ -72,9 +72,9 @@
     <!-- 面包屑 -->
     <div class="pt-20 pb-4 px-4 max-w-7xl mx-auto">
         <nav class="flex items-center space-x-2 text-sm text-slate-500">
-            <a href="index.html" class="hover:text-primary transition-colors"><i class="fas fa-home"></i> 首页</a>
+            <a href="../index.html" class="hover:text-primary transition-colors"><i class="fas fa-home"></i> 首页</a>
             <i class="fas fa-chevron-right text-xs"></i>
-            <a href="index.html#projects" class="hover:text-primary transition-colors">项目作品</a>
+            <a href="../index.html#projects" class="hover:text-primary transition-colors">项目作品</a>
             <i class="fas fa-chevron-right text-xs"></i>
             <span class="text-slate-800 dark:text-slate-200" id="breadcrumb-title">项目详情</span>
         </nav>
@@ -169,7 +169,7 @@
 
             <!-- 返回 -->
             <div class="text-center">
-                <a href="index.html#projects" class="inline-flex items-center text-primary font-medium hover:underline">
+                <a href="../index.html#projects" class="inline-flex items-center text-primary font-medium hover:underline">
                     <i class="fas fa-arrow-left mr-2"></i> 返回项目列表
                 </a>
             </div>
@@ -180,7 +180,7 @@
     <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <div class="mb-4 md:mb-0">
-                <a href="index.html" class="font-bold text-lg">禾安</a>
+                <a href="../index.html" class="font-bold text-lg">禾安</a>
                 <p class="text-sm text-slate-500 mt-1">&copy; 2026 All rights reserved.</p>
             </div>
             <div class="flex space-x-6">
@@ -193,65 +193,39 @@
     </footer>
 
     <script>
-        // 项目数据
-        const projectsData = {
-            '0': {
-                title: 'SaaS 仪表盘模板',
-                tags: ['React', 'Tailwind', 'ECharts'],
-                image: 'https://picsum.photos/1200/600?dashboard',
-                desc: '基于 React + Tailwind 构建的高性能后台管理模板，支持暗黑模式。该模板提供了丰富的组件库，包括图表、表格、表单、导航等常见后台模块，开箱即用，可快速搭建企业级管理后台。',
-                features: ['高性能组件架构，支持按需加载', '内置暗黑模式，一键切换主题', '响应式布局，适配桌面端与移动端', '完善的 TypeScript 类型支持'],
-                demoLink: '#',
-                sourceLink: '#'
-            },
-            '1': {
-                title: '极简待办清单',
-                tags: ['Vue3', 'Pinia', 'LocalStorage'],
-                image: 'https://picsum.photos/1200/600?todo',
-                desc: '一款注重体验的 Todo App，支持本地存储与多端同步。界面简洁清爽，交互流畅，帮助你高效管理日常任务。支持拖拽排序、标签分类、优先级标记等功能。',
-                features: ['极简设计，零学习成本', '拖拽排序，直观高效', '标签分类与优先级管理', '多设备数据同步'],
-                demoLink: '#',
-                sourceLink: '#'
-            },
-            '2': {
-                title: '技术博客引擎',
-                tags: ['Node.js', 'Markdown', 'SEO'],
-                image: 'https://picsum.photos/1200/600?blog',
-                desc: '轻量级静态博客生成器，专为开发者打造，SEO 友好。支持 Markdown 写作，自动生成目录，代码高亮，自定义主题等特性。',
-                features: ['Markdown 原生支持，写作体验流畅', '自动生成文章目录与 SEO 元数据', '内置代码高亮，支持多种语言', '主题可定制，灵活扩展'],
-                demoLink: '#',
-                sourceLink: '#'
+        // 从 JSON 加载项目数据
+        async function loadProject() {
+            try {
+                const res = await fetch('../../data/projects.json');
+                const data = await res.json();
+                const params = new URLSearchParams(window.location.search);
+                const projectId = params.get('id') || '0';
+                const project = data.projects.find(p => p.id === projectId) || data.projects[0];
+
+                document.getElementById('breadcrumb-title').textContent = project.title;
+                document.title = `${project.title} | 禾安`;
+                document.getElementById('project-image').src = project.image;
+                document.getElementById('project-image').alt = project.title;
+                document.getElementById('project-title').textContent = project.title;
+                document.getElementById('project-desc').textContent = project.desc;
+
+                const tagsContainer = document.getElementById('project-tags');
+                tagsContainer.innerHTML = project.tags.map(tag =>
+                    `<span class="text-xs font-semibold px-3 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">${tag}</span>`
+                ).join('');
+
+                const featuresContainer = document.getElementById('project-features');
+                featuresContainer.innerHTML = project.features.map(f =>
+                    `<li class="flex items-start"><i class="fas fa-check-circle text-secondary mt-1 mr-3"></i><span class="text-slate-600 dark:text-slate-400">${f}</span></li>`
+                ).join('');
+
+                document.getElementById('project-demo-link').href = project.demoLink;
+                document.getElementById('project-source-link').href = project.sourceLink;
+            } catch (err) {
+                console.error('加载项目数据失败:', err);
             }
-        };
-
-        // 从 URL 参数获取项目 ID
-        const params = new URLSearchParams(window.location.search);
-        const projectId = params.get('id') || '0';
-        const project = projectsData[projectId] || projectsData['0'];
-
-        // 填充页面内容
-        document.getElementById('breadcrumb-title').textContent = project.title;
-        document.title = `${project.title} | 禾安`;
-        document.getElementById('project-image').src = project.image;
-        document.getElementById('project-image').alt = project.title;
-        document.getElementById('project-title').textContent = project.title;
-        document.getElementById('project-desc').textContent = project.desc;
-
-        // 标签
-        const tagsContainer = document.getElementById('project-tags');
-        tagsContainer.innerHTML = project.tags.map(tag =>
-            `<span class="text-xs font-semibold px-3 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">${tag}</span>`
-        ).join('');
-
-        // 特性
-        const featuresContainer = document.getElementById('project-features');
-        featuresContainer.innerHTML = project.features.map(f =>
-            `<li class="flex items-start"><i class="fas fa-check-circle text-secondary mt-1 mr-3"></i><span class="text-slate-600 dark:text-slate-400">${f}</span></li>`
-        ).join('');
-
-        // 链接
-        document.getElementById('project-demo-link').href = project.demoLink;
-        document.getElementById('project-source-link').href = project.sourceLink;
+        }
+        loadProject();
 
         // 暗黑模式
         const themeToggle = document.getElementById('theme-toggle');

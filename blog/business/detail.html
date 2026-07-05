@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博文详情 | 禾安</title>
+    <meta name="description" content="禾安的博客文章">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { primary: '#3B82F6', secondary: '#10B981', dark: '#0F172A', light: '#F8FAFC' }, fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        .dark ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .glass-effect { background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); }
+        .dark .glass-effect { background: rgba(15,23,42,0.7); }
+        .article-content h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; padding-left: 0.75rem; border-left: 3px solid #3B82F6; }
+        .article-content h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        .article-content p { margin-bottom: 1.25rem; line-height: 1.8; }
+        .article-content ul, .article-content ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+        .article-content li { margin-bottom: 0.5rem; line-height: 1.8; }
+        .article-content blockquote { border-left: 3px solid #3B82F6; padding: 1rem 1.5rem; margin: 1.5rem 0; background: rgba(59,130,246,0.05); border-radius: 0 0.5rem 0.5rem 0; }
+        .dark .article-content blockquote { background: rgba(59,130,246,0.1); }
+        .article-content code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+        .dark .article-content code { background: #1e293b; }
+        .article-content pre { background: #1e293b; color: #e2e8f0; padding: 1.25rem; border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.5rem; }
+        .article-content pre code { background: none; padding: 0; }
+        .article-content img { border-radius: 0.75rem; margin: 1.5rem 0; }
+    </style>
+</head>
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 transition-colors duration-300 font-sans">
+    <nav class="fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="../../index.html" class="flex-shrink-0 flex items-center">
+                    <i class="fa-solid fa-code text-primary text-2xl mr-2"></i>
+                    <span class="font-bold text-xl tracking-tight">禾安</span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="../../index.html" class="hover:text-primary transition-colors">首页</a>
+                    <a href="../../index.html#about" class="hover:text-primary transition-colors">关于我</a>
+                    <a href="../../index.html#projects" class="hover:text-primary transition-colors">项目作品</a>
+                    <a href="../index.html" class="hover:text-primary transition-colors">博客</a>
+                    <a href="../../index.html#contact" class="hover:text-primary transition-colors">联系合作</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+                    <a href="https://github.com" target="_blank" class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-20 pb-4 px-4 max-w-7xl mx-auto">
+        <nav class="flex items-center space-x-2 text-sm text-slate-500">
+            <a href="../../index.html" class="hover:text-primary transition-colors"><i class="fas fa-home"></i> 首页</a>
+            <i class="fas fa-chevron-right text-xs"></i>
+            <a href="../index.html" class="hover:text-primary transition-colors">博客</a>
+            <i class="fas fa-chevron-right text-xs"></i>
+            <a href="../index.html" class="hover:text-primary transition-colors">商业洞察</a>
+            <i class="fas fa-chevron-right text-xs"></i>
+            <span class="text-slate-800 dark:text-slate-200" id="breadcrumb-title">文章详情</span>
+        </nav>
+    </div>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <article class="fade-in-up">
+            <header class="mb-10 pt-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-xs font-semibold px-2.5 py-1 rounded-full" id="article-tag">商业洞察</span>
+                    <span class="text-sm text-slate-400" id="article-date">2026-06-28</span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold mb-6 leading-tight" id="article-title">SwiftUI 与 UIKit 混合开发实践指南</h1>
+                <div class="flex items-center gap-3 pb-6 border-b border-slate-200 dark:border-slate-700">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">禾</div>
+                    <div>
+                        <p class="font-medium text-sm">禾安</p>
+                        <p class="text-xs text-slate-500">独立开发者 · 专注 iOS 移动端开发</p>
+                    </div>
+                </div>
+            </header>
+            <div class="rounded-2xl overflow-hidden shadow-lg mb-10">
+                <img id="article-cover" src="https://picsum.photos/1000/400?article" alt="文章封面" class="w-full object-cover">
+            </div>
+            <div class="article-content text-slate-700 dark:text-slate-300" id="article-body"></div>
+            <div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full" id="article-tag-bottom">商业洞察</span>
+                    </div>
+                    <div class="flex gap-3">
+                        <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-sm">
+                            <i class="fas fa-share-alt"></i> 分享
+                        </button>
+                        <button id="back-to-blog" class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-white text-sm hover:bg-blue-600 transition-all">
+                            <i class="fas fa-arrow-left"></i> 返回列表
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <a href="../../index.html" class="font-bold text-lg">禾安</a>
+                <p class="text-sm text-slate-500 mt-1">&copy; 2026 All rights reserved.</p>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="text-slate-400 hover:text-primary"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-slate-400 hover:text-primary"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-slate-400 hover:text-primary"><i class="fab fa-weixin"></i></a>
+                <a href="#" class="text-slate-400 hover:text-primary"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const tagColors = {
+            '技术博客': 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
+            '商业洞察': 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+            '个人思考': 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400'
+        };
+
+        async function loadBlog() {
+            try {
+                const res = await fetch('../../data/blogs.json');
+                const data = await res.json();
+                const params = new URLSearchParams(window.location.search);
+                const blogId = parseInt(params.get('id')) || 0;
+                const blog = data.blogs.find(b => b.id === blogId) || data.blogs[0];
+
+                document.getElementById('breadcrumb-title').textContent = blog.title;
+                document.title = `${blog.title} | 禾安`;
+                document.getElementById('article-title').textContent = blog.title;
+                document.getElementById('article-date').textContent = blog.date;
+                document.getElementById('article-cover').src = blog.cover;
+                document.getElementById('article-cover').alt = blog.title;
+                document.getElementById('article-body').innerHTML = blog.body;
+
+                const tagColor = tagColors[blog.tag] || 'bg-slate-100 text-slate-600';
+                document.getElementById('article-tag').className = `text-xs font-semibold px-2.5 py-1 rounded-full ${tagColor}`;
+                document.getElementById('article-tag').textContent = blog.tag;
+                document.getElementById('article-tag-bottom').className = `text-xs font-semibold px-2.5 py-1 rounded-full ${tagColor}`;
+                document.getElementById('article-tag-bottom').textContent = blog.tag;
+            } catch (err) {
+                console.error('加载博客数据失败:', err);
+            }
+        }
+        loadBlog();
+
+        document.getElementById('back-to-blog').addEventListener('click', () => { window.location.href = '../index.html'; });
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { html.classList.add('dark'); }
+        themeToggle.addEventListener('click', () => { html.classList.toggle('dark'); localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light'; });
+        window.addEventListener('scroll', () => { const navbar = document.getElementById('navbar'); navbar.classList.toggle('shadow-md', window.scrollY > 20); });
+    </script>
+</body>
+</html>

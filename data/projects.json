@@ -1,0 +1,49 @@
+{
+  "projects": [
+    {
+      "id": "0",
+      "title": "SaaS 仪表盘模板",
+      "tags": ["React", "Tailwind", "ECharts"],
+      "image": "https://picsum.photos/1200/600?dashboard",
+      "desc": "基于 React + Tailwind 构建的高性能后台管理模板，支持暗黑模式。该模板提供了丰富的组件库，包括图表、表格、表单、导航等常见后台模块，开箱即用，可快速搭建企业级管理后台。",
+      "features": [
+        "高性能组件架构，支持按需加载",
+        "内置暗黑模式，一键切换主题",
+        "响应式布局，适配桌面端与移动端",
+        "完善的 TypeScript 类型支持"
+      ],
+      "demoLink": "#",
+      "sourceLink": "#"
+    },
+    {
+      "id": "1",
+      "title": "极简待办清单",
+      "tags": ["Vue3", "Pinia", "LocalStorage"],
+      "image": "https://picsum.photos/1200/600?todo",
+      "desc": "一款注重体验的 Todo App，支持本地存储与多端同步。界面简洁清爽，交互流畅，帮助你高效管理日常任务。支持拖拽排序、标签分类、优先级标记等功能。",
+      "features": [
+        "极简设计，零学习成本",
+        "拖拽排序，直观高效",
+        "标签分类与优先级管理",
+        "多设备数据同步"
+      ],
+      "demoLink": "#",
+      "sourceLink": "#"
+    },
+    {
+      "id": "2",
+      "title": "技术博客引擎",
+      "tags": ["Node.js", "Markdown", "SEO"],
+      "image": "https://picsum.photos/1200/600?blog",
+      "desc": "轻量级静态博客生成器，专为开发者打造，SEO 友好。支持 Markdown 写作，自动生成目录，代码高亮，自定义主题等特性。",
+      "features": [
+        "Markdown 原生支持，写作体验流畅",
+        "自动生成文章目录与 SEO 元数据",
+        "内置代码高亮，支持多种语言",
+        "主题可定制，灵活扩展"
+      ],
+      "demoLink": "#",
+      "sourceLink": "#"
+    }
+  ]
+}
