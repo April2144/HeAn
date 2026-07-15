@@ -1,0 +1,54 @@
+/* ========== 滚动条 ========== */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+.dark ::-webkit-scrollbar-track { background: #1e293b; }
+::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* ========== 动画 ========== */
+.fade-in-up { animation: fadeInUp 0.6s ease-out forwards; opacity: 0; transform: translateY(20px); }
+@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+/* ========== 横向滚动隐藏滚动条 ========== */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ========== 导航栏占位，防止 JS 渲染前的布局跳动 ========== */
+#navbar { min-height: 64px; background: rgba(255,255,255,0.95); }
+.dark #navbar { background: rgba(15,23,42,0.95); }
+
+/* 页面加载时禁用颜色过渡，JS 初始化后通过 .ready 类启用 */
+body { transition: none !important; }
+body.ready { transition: background-color 0.3s ease, color 0.3s ease !important; }
+
+/* ========== 毛玻璃导航 ========== */
+.glass-effect { background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); }
+.dark .glass-effect { background: rgba(15,23,42,0.7); }
+
+/* ========== 博客列表标签按钮 ========== */
+.tag-btn.active { background-color: #3B82F6; color: white; }
+
+/* ========== 博客左侧导航 ========== */
+.blog-side-btn { color: #64748b; background: transparent; cursor: pointer; transition: all 0.2s ease; }
+.blog-side-btn:hover { background-color: #f1f5f9; color: #0f172a; transform: translateX(4px); }
+.dark .blog-side-btn:hover { background-color: #1e293b; color: #e2e8f0; }
+.blog-side-btn.active { background-color: #3B82F6; color: white; box-shadow: 0 2px 8px rgba(59,130,246,0.3); }
+.blog-side-btn.active:hover { background-color: #2563eb; transform: translateX(0); }
+.blog-side-btn:active { transform: scale(0.97); }
+
+/* ========== 博客标签色块 ========== */
+.tag-badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 12px; font-weight: 600; }
+
+/* ========== 文章正文排版 ========== */
+.article-content h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; padding-left: 0.75rem; border-left: 3px solid #3B82F6; }
+.article-content h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+.article-content p { margin-bottom: 1.25rem; line-height: 1.8; }
+.article-content ul, .article-content ol { margin-bottom: 1.25rem; padding-left: 1.5rem; }
+.article-content li { margin-bottom: 0.5rem; line-height: 1.8; }
+.article-content blockquote { border-left: 3px solid #3B82F6; padding: 1rem 1.5rem; margin: 1.5rem 0; background: rgba(59,130,246,0.05); border-radius: 0 0.5rem 0.5rem 0; }
+.dark .article-content blockquote { background: rgba(59,130,246,0.1); }
+.article-content code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
+.dark .article-content code { background: #1e293b; }
+.article-content pre { background: #1e293b; color: #e2e8f0; padding: 1.25rem; border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.5rem; }
+.article-content pre code { background: none; padding: 0; }
+.article-content img { border-radius: 0.75rem; margin: 1.5rem 0; }

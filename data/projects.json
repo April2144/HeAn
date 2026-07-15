@@ -2,48 +2,99 @@
   "projects": [
     {
       "id": "0",
+      "category": "personal",
       "title": "SaaS 仪表盘模板",
       "tags": ["React", "Tailwind", "ECharts"],
-      "image": "https://picsum.photos/1200/600?dashboard",
-      "desc": "基于 React + Tailwind 构建的高性能后台管理模板，支持暗黑模式。该模板提供了丰富的组件库，包括图表、表格、表单、导航等常见后台模块，开箱即用，可快速搭建企业级管理后台。",
+      "cover_image": "https://picsum.photos/1200/600?dashboard",
+      "description": "基于 React + Tailwind 构建的高性能后台管理模板，支持暗黑模式。该模板提供了丰富的组件库，包括图表、表格、表单、导航等常见后台模块，开箱即用，可快速搭建企业级管理后台。",
       "features": [
         "高性能组件架构，支持按需加载",
         "内置暗黑模式，一键切换主题",
         "响应式布局，适配桌面端与移动端",
         "完善的 TypeScript 类型支持"
       ],
-      "demoLink": "#",
-      "sourceLink": "#"
+      "demo_url": "#",
+      "source_url": "#"
     },
     {
       "id": "1",
+      "category": "personal",
       "title": "极简待办清单",
       "tags": ["Vue3", "Pinia", "LocalStorage"],
-      "image": "https://picsum.photos/1200/600?todo",
-      "desc": "一款注重体验的 Todo App，支持本地存储与多端同步。界面简洁清爽，交互流畅，帮助你高效管理日常任务。支持拖拽排序、标签分类、优先级标记等功能。",
+      "cover_image": "https://picsum.photos/1200/600?todo",
+      "description": "一款注重体验的 Todo App，支持本地存储与多端同步。界面简洁清爽，交互流畅，帮助你高效管理日常任务。支持拖拽排序、标签分类、优先级标记等功能。",
       "features": [
         "极简设计，零学习成本",
         "拖拽排序，直观高效",
         "标签分类与优先级管理",
         "多设备数据同步"
       ],
-      "demoLink": "#",
-      "sourceLink": "#"
+      "demo_url": "#",
+      "source_url": "#"
     },
     {
       "id": "2",
+      "category": "personal",
       "title": "技术博客引擎",
       "tags": ["Node.js", "Markdown", "SEO"],
-      "image": "https://picsum.photos/1200/600?blog",
-      "desc": "轻量级静态博客生成器，专为开发者打造，SEO 友好。支持 Markdown 写作，自动生成目录，代码高亮，自定义主题等特性。",
+      "cover_image": "https://picsum.photos/1200/600?blog",
+      "description": "轻量级静态博客生成器，专为开发者打造，SEO 友好。支持 Markdown 写作，自动生成目录，代码高亮，自定义主题等特性。",
       "features": [
         "Markdown 原生支持，写作体验流畅",
         "自动生成文章目录与 SEO 元数据",
         "内置代码高亮，支持多种语言",
         "主题可定制，灵活扩展"
       ],
-      "demoLink": "#",
-      "sourceLink": "#"
+      "demo_url": "#",
+      "source_url": "#"
+    },
+    {
+      "id": "3",
+      "category": "collab",
+      "title": "企业级 OA 系统",
+      "tags": ["React", "TypeScript", "Ant Design"],
+      "cover_image": "https://picsum.photos/1200/600?oa",
+      "description": "为企业客户定制开发的 OA 办公系统，涵盖审批流程、考勤管理、公告通知等核心模块，支持多部门协作。",
+      "features": [
+        "可配置的审批流程引擎",
+        "考勤打卡与请假管理",
+        "组织架构与权限管理",
+        "数据报表与统计分析"
+      ],
+      "demo_url": "#",
+      "source_url": "#"
+    },
+    {
+      "id": "4",
+      "category": "collab",
+      "title": "电商小程序",
+      "tags": ["微信小程序", "Node.js", "MongoDB"],
+      "cover_image": "https://picsum.photos/1200/600?ecommerce",
+      "description": "为某品牌定制开发的电商小程序，包含商品展示、购物车、订单管理、支付对接等完整电商链路。",
+      "features": [
+        "商品分类与搜索功能",
+        "完整的购物车与结算流程",
+        "微信支付与退款对接",
+        "订单跟踪与物流查询"
+      ],
+      "demo_url": "#",
+      "source_url": "#"
+    },
+    {
+      "id": "5",
+      "category": "collab",
+      "title": "在线教育 App",
+      "tags": ["Flutter", "Firebase", "Dart"],
+      "cover_image": "https://picsum.photos/1200/600?education",
+      "description": "跨平台在线教育应用，支持视频课程播放、章节笔记、学习进度追踪等功能，iOS 与 Android 双端覆盖。",
+      "features": [
+        "自适应码率视频播放",
+        "课程章节与进度管理",
+        "离线缓存与断点续播",
+        "iOS/Android 双端同步"
+      ],
+      "demo_url": "#",
+      "source_url": "#"
     }
   ]
 }

@@ -1,105 +1,68 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>禾安 | 独立开发者 & 技术博主</title>
-    <meta name="description" content="专注iOS移动端开发与跨平台技术，分享技术实战与独立开发经验。">
-    <!-- 引入 Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Font Awesome 图标 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 配置 Tailwind 主题色 -->
+    <meta name="description" content="" id="meta-desc">
+    <!-- 暗黑模式防闪烁：在页面渲染前设置 dark 类 -->
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3B82F6',
-                        secondary: '#10B981',
-                        dark: '#0F172A',
-                        light: '#F8FAFC'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    }
-                }
+        (function() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
             }
-        }
+        })();
     </script>
-    <style>
-        /* 自定义滚动条 */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1; 
-        }
-        .dark ::-webkit-scrollbar-track {
-            background: #1e293b; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #888; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555; 
-        }
-        /* 动画效果 */
-        .fade-in-up {
-            animation: fadeInUp 0.8s ease-out forwards;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-        }
-        .dark .glass-effect {
-            background: rgba(15, 23, 42, 0.7);
-        }
-    </style>
+    <script src="./js/config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = TAILWIND_CONFIG;
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./js/common.css">
 </head>
-<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 transition-colors duration-300 font-sans">
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
 
-    <!-- 导航栏 -->
+    <!-- 导航栏：纯静态 HTML，JS 只做高亮和事件绑定 -->
     <nav class="fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                <a href="./index.html" class="flex-shrink-0 flex items-center">
                     <i class="fa-solid fa-code text-primary text-2xl mr-2"></i>
-                    <span class="font-bold text-xl tracking-tight">禾安</span>
-                </div>
+                    <span class="font-bold text-xl tracking-tight" id="site-name">禾安</span>
+                </a>
                 <div class="hidden md:flex space-x-8">
-                    <a href="#home" class="hover:text-primary transition-colors">首页</a>
-                    <a href="#about" class="hover:text-primary transition-colors">关于我</a>
-                    <a href="#projects" class="hover:text-primary transition-colors">项目作品</a>
-                    <a href="blog/index.html" class="hover:text-primary transition-colors">博客</a>
-                    <a href="#contact" class="hover:text-primary transition-colors">联系合作</a>
+                    <a href="./index.html" data-nav="home" class="text-primary font-medium">首页</a>
+                    <a href="./about/index.html" data-nav="about" class="hover:text-primary transition-colors">关于我</a>
+                    <a href="./projects/index.html" data-nav="projects" class="hover:text-primary transition-colors">项目作品</a>
+                    <a href="./blog/index.html" data-nav="blog" class="hover:text-primary transition-colors">博客</a>
+                    <a href="./contact/index.html" data-nav="contact" class="hover:text-primary transition-colors">联系合作</a>
                 </div>
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-3">
                     <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <i class="fas fa-moon dark:hidden"></i>
                         <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
                     </button>
-                    <a href="https://github.com" target="_blank" class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors">
-                        <i class="fab fa-github text-xl"></i>
-                    </a>
+                    <button id="menu-toggle" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fas fa-bars" id="menu-icon-open"></i>
+                        <i class="fas fa-times hidden" id="menu-icon-close"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="pb-4 space-y-2 border-t border-slate-200 dark:border-slate-700 pt-4">
+                    <a href="./index.html" data-nav="home" class="block px-3 py-2 rounded-lg text-primary font-medium bg-blue-50 dark:bg-blue-900/20">首页</a>
+                    <a href="./about/index.html" data-nav="about" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">关于我</a>
+                    <a href="./projects/index.html" data-nav="projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">项目作品</a>
+                    <a href="./blog/index.html" data-nav="blog" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">博客</a>
+                    <a href="./contact/index.html" data-nav="contact" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">联系合作</a>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero 区域 -->
-    <section id="home" class="pt-32 pb-20 lg:pt-48 lg:pb-32 px-4">
+    <section class="pt-32 pb-20 lg:pt-48 lg:pb-32 px-4">
         <div class="max-w-7xl mx-auto text-center fade-in-up">
             <div class="inline-block p-2 px-4 rounded-full bg-blue-100 text-primary text-sm font-semibold mb-6 dark:bg-blue-900/30">
                 👋 你好，我是独立开发者
@@ -108,9 +71,7 @@
                 构建 <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">数字产品</span><br>
                 分享 <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary">技术洞察</span>
             </h1>
-            <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-600 dark:text-slate-400">
-                专注于 iOS 移动端开发与跨平台技术。持续探索小程序、Web 及 SaaS 定制开发，拥抱 AI 新时代。
-            </p>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-600 dark:text-slate-400" id="hero-bio" style="display:none"></p>
             <div class="mt-10 flex justify-center gap-4">
                 <a href="#projects" class="px-8 py-3 rounded-lg bg-primary text-white font-medium hover:bg-blue-600 transition-all shadow-lg hover:shadow-blue-500/30">
                     查看作品
@@ -122,42 +83,26 @@
         </div>
     </section>
 
-    <!-- 关于我 -->
-    <section id="about" class="py-20 bg-white dark:bg-slate-900/50">
+    <!-- 关于我（动态渲染） -->
+    <section class="py-20 bg-white dark:bg-slate-900/50" id="home-about-section">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
                 <div class="relative">
                     <div class="absolute -inset-4 bg-gradient-to-r from-primary to-secondary rounded-2xl opacity-30 blur-lg"></div>
-                    <img src="https://picsum.photos/600/400?tech" alt="开发者工作场景" class="relative rounded-2xl shadow-2xl w-full object-cover">
+                    <img src="https://picsum.photos/600/400?tech" alt="开发者工作场景" class="relative rounded-2xl shadow-2xl w-full object-cover" id="home-about-avatar">
                 </div>
                 <div class="mt-10 lg:mt-0">
                     <h2 class="text-3xl font-bold mb-6">关于我</h2>
-                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-                        我是一名拥有 10 年经验的 iOS 开发者，也是一个正在学习用技术 + 商业思维搭建自己数字资产的实践者。
-                    </p>
-                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-                        主攻移动端和小程序的定制开发，提供技术咨询、上架协助。
-                    </p>
-                    
+                    <div id="home-about-intro" class="text-lg text-slate-600 dark:text-slate-400 mb-6 leading-relaxed"></div>
                     <div class="space-y-4">
-                        <h3 class="font-semibold text-lg">技术栈</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">Objective-C</span>
-                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">Swift</span>
-                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">SwiftUI</span>
-                            <span class="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-md text-sm">Flutter</span>
+                        <div id="home-about-tech">
+                            <h3 class="font-semibold text-lg mb-3">技术栈</h3>
+                            <div class="flex flex-wrap gap-2" id="home-tech-stacks"></div>
                         </div>
-
-                        <h3 class="font-semibold text-lg mt-6">服务内容</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-md text-sm"><i class="fas fa-mobile-alt mr-1"></i>App 开发</span>
-                            <span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-md text-sm"><i class="fas fa-lightbulb mr-1"></i>技术咨询</span>
-                            <span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-md text-sm"><i class="fas fa-rocket mr-1"></i>上架协助</span>
+                        <div id="home-about-services">
+                            <h3 class="font-semibold text-lg mt-6 mb-3">服务内容</h3>
+                            <div class="flex flex-wrap gap-2" id="home-services"></div>
                         </div>
-
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-4 leading-relaxed">
-                            会持续更新新技术的学习、行业信息和个人思考。
-                        </p>
                     </div>
                 </div>
             </div>
@@ -167,19 +112,26 @@
     <!-- 项目作品 -->
     <section id="projects" class="py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold mb-4">精选项目</h2>
-                <p class="text-slate-600 dark:text-slate-400">近期独立开发或参与的核心产品</p>
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl font-bold mb-4">精选项目</h2>
+                    <p class="text-slate-600 dark:text-slate-400">近期独立开发或参与的核心产品</p>
+                </div>
+                <a href="projects/index.html" class="text-primary hover:underline hidden md:block">查看全部 -></a>
             </div>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
-                <!-- 项目卡片将通过 JS 动态生成 -->
+
+            <div class="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" id="projects-grid" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
+                <!-- 项目卡片由 JS 动态生成，限宽 + snap -->
+            </div>
+
+            <div class="mt-8 text-center md:hidden">
+                <a href="projects/index.html" class="text-primary hover:underline">查看全部 -></a>
             </div>
         </div>
     </section>
 
-    <!-- 技术博客 -->
-    <section id="blog" class="py-20 bg-white dark:bg-slate-900/50">
+    <!-- 博客预览 -->
+    <section class="py-20 bg-white dark:bg-slate-900/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-end mb-12">
                 <div>
@@ -192,7 +144,7 @@
             <div class="grid md:grid-cols-2 gap-8" id="blog-grid">
                 <!-- 博客卡片将通过 JS 动态生成 -->
             </div>
-            
+
             <div class="mt-8 text-center md:hidden">
                 <a href="blog/index.html" class="text-primary hover:underline">查看全部 -></a>
             </div>
@@ -203,25 +155,26 @@
     <section id="contact" class="py-20 relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800 -z-10"></div>
         <div class="max-w-4xl mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold mb-6">保持连接</h2>
+            <h2 class="text-3xl font-bold mb-6">联系我</h2>
             <p class="text-lg text-slate-600 dark:text-slate-400 mb-10">
                 订阅我的公众号，获取独家技术资料、源码下载权限及最新独立开发资讯。
             </p>
-            
+
             <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl inline-block w-full max-w-md">
                 <div class="w-48 h-48 bg-slate-100 dark:bg-slate-700 mx-auto rounded-lg flex items-center justify-center mb-6">
-                    <!-- 这里替换为你的公众号二维码图片 -->
                     <img src="https://picsum.photos/200/200?qr" alt="公众号二维码" class="w-full h-full object-cover rounded-lg">
                 </div>
                 <h3 class="font-bold text-xl mb-2">扫码关注「DevTech」</h3>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">回复“简历”获取我的完整技术履历</p>
-                
-                <form class="space-y-4 text-left" onsubmit="event.preventDefault(); alert('感谢订阅！请检查邮箱确认。');">
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">回复"简历"获取我的完整技术履历</p>
+
+                <form id="newsletter-form" class="space-y-4 text-left" onsubmit="return handleNewsletterSubmit(event);" style="display:none;">
                     <div>
                         <label class="block text-sm font-medium mb-1">邮箱地址</label>
-                        <input type="email" placeholder="your@email.com" class="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-primary outline-none">
+                        <input id="newsletter-email" type="email" placeholder="your@email.com" required
+                            class="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent focus:ring-2 focus:ring-primary outline-none">
                     </div>
-                    <button type="submit" class="w-full py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    <p id="newsletter-msg" class="text-sm text-center hidden"></p>
+                    <button id="newsletter-btn" type="submit" class="w-full py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors">
                         订阅 Newsletter
                     </button>
                 </form>
@@ -229,137 +182,175 @@
         </div>
     </section>
 
-    <!-- 页脚 -->
-    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0">
-                <span class="font-bold text-lg">禾安</span>
-                <p class="text-sm text-slate-500 mt-1">© 2026 All rights reserved.</p>
-            </div>
-            <div class="flex space-x-6">
-                <a href="#" class="text-slate-400 hover:text-primary"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="text-slate-400 hover:text-primary"><i class="fab fa-github"></i></a>
-                <a href="#" class="text-slate-400 hover:text-primary"><i class="fab fa-weixin"></i></a>
-                <a href="#" class="text-slate-400 hover:text-primary"><i class="fas fa-envelope"></i></a>
-            </div>
-        </div>
-    </footer>
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12"></footer>
 
-    <!-- JavaScript 逻辑 -->
+    <!-- JS 逻辑 -->
+    <script src="./js/api.js"></script>
+    <script src="./js/utils.js"></script>
+    <script src="./js/views.js"></script>
+    <script src="./js/theme.js"></script>
     <script>
-        // 模拟数据：项目
-        const projects = [
-            {
-                id: 0,
-                title: "SaaS 仪表盘模板",
-                desc: "基于 React + Tailwind 构建的高性能后台管理模板，支持暗黑模式。",
-                tags: ["React", "Tailwind"],
-                image: "https://picsum.photos/400/250?dashboard"
-            },
-            {
-                id: 1,
-                title: "极简待办清单",
-                desc: "一款注重体验的 Todo App，支持本地存储与多端同步。",
-                tags: ["Vue3", "Pinia"],
-                image: "https://picsum.photos/400/250?todo"
-            },
-            {
-                id: 2,
-                title: "技术博客引擎",
-                desc: "轻量级静态博客生成器，专为开发者打造，SEO 友好。",
-                tags: ["Node.js", "Markdown"],
-                image: "https://picsum.photos/400/250?blog"
+        initApp('home');
+
+        // ---------- Newsletter 订阅 ----------
+        async function handleNewsletterSubmit(event) {
+            event.preventDefault();
+            const emailInput = document.getElementById('newsletter-email');
+            const msgEl = document.getElementById('newsletter-msg');
+            const btn = document.getElementById('newsletter-btn');
+            const email = emailInput.value.trim();
+
+            if (!email) return;
+
+            btn.disabled = true;
+            btn.textContent = '提交中...';
+            msgEl.classList.add('hidden');
+
+            const result = await subscribeNewsletter(email);
+
+            msgEl.textContent = result.message;
+            msgEl.classList.remove('hidden');
+            msgEl.className = `text-sm text-center ${result.success ? 'text-green-600' : 'text-red-500'}`;
+
+            if (result.success) {
+                emailInput.value = '';
             }
-        ];
 
-        // 模拟数据：博客
-        const blogs = [
-            {
-                id: 0,
-                tagFolder: 'tech',
-                title: "SwiftUI 与 UIKit 混合开发实践指南",
-                date: "2026-06-28",
-                summary: "在实际项目中如何优雅地混用 SwiftUI 和 UIKit，包括桥接方案、状态管理策略以及性能优化技巧。",
-            },
-            {
-                id: 2,
-                tagFolder: 'business',
-                title: "独立开发者如何找到第一个付费客户",
-                date: "2026-06-10",
-                summary: "从 0 到 1 的获客之路：分享我在独立开发过程中找到第一批付费用户的经验和教训。",
-            }
-        ];
-
-        // 渲染项目
-        const projectsGrid = document.getElementById('projects-grid');
-        projects.forEach(project => {
-            const card = document.createElement('div');
-            card.className = "bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group cursor-pointer";
-            card.onclick = () => { window.location.href = `projects/detail.html?id=${project.id}`; };
-            card.innerHTML = `
-                <div class="overflow-hidden">
-                    <img src="${project.image}" alt="${project.title}" class="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-500">
-                </div>
-                <div class="p-6">
-                    <div class="flex gap-2 mb-3">
-                        ${project.tags.map(tag => `<span class="text-xs font-semibold px-2 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded">${tag}</span>`).join('')}
-                    </div>
-                    <h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">${project.title}</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">${project.desc}</p>
-                    <a href="projects/detail.html?id=${project.id}" class="inline-flex items-center text-primary font-medium hover:underline" onclick="event.stopPropagation()">
-                        查看详情 <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                    </a>
-                </div>
-            `;
-            projectsGrid.appendChild(card);
-        });
-
-        // 渲染博客
-        const blogGrid = document.getElementById('blog-grid');
-        blogs.forEach(blog => {
-            const card = document.createElement('a');
-            card.href = `blog/${blog.tagFolder}/detail.html?id=${blog.id}`;
-            card.className = "flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md hover:shadow-lg transition-all border border-slate-100 dark:border-slate-700 group";
-            card.innerHTML = `
-                <div class="flex-1">
-                    <div class="text-sm text-slate-500 mb-2">${blog.date}</div>
-                    <h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-colors">${blog.title}</h3>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4">${blog.summary}</p>
-                    <span class="text-primary text-sm font-medium hover:underline inline-flex items-center">阅读全文 <i class="fas fa-arrow-right ml-2 text-xs"></i></span>
-                </div>
-            `;
-            blogGrid.appendChild(card);
-        });
-
-        // 暗黑模式切换
-        const themeToggle = document.getElementById('theme-toggle');
-        const html = document.documentElement;
-        
-        // 检查本地存储或系统偏好
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            html.classList.add('dark');
-        } else {
-            html.classList.remove('dark');
+            btn.disabled = false;
+            btn.textContent = '订阅 Newsletter';
         }
 
-        themeToggle.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            if (html.classList.contains('dark')) {
-                localStorage.theme = 'dark';
-            } else {
-                localStorage.theme = 'light';
-            }
-        });
+        // ---------- 站点配置 & Profile ----------
+        async function applySiteConfig() {
+            const [cfgData, profileData] = await Promise.all([
+                loadBaseConfig(),
+                loadProfile()
+            ]);
 
-        // 导航栏滚动效果
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            if (window.scrollY > 20) {
-                navbar.classList.add('shadow-md');
-            } else {
-                navbar.classList.remove('shadow-md');
+            const cfg = (cfgData && cfgData.config) ? cfgData.config : {};
+            const services = (cfgData && cfgData.services) ? cfgData.services : [];
+            const about = (profileData && profileData.about) ? profileData.about : {};
+
+            // 网站名称
+            if (cfg.site_name) {
+                document.title = cfg.seo_title || `${cfg.site_name} | 独立开发者 & 技术博主`;
+                document.getElementById('meta-desc').content = cfg.seo_description || '';
+                document.querySelectorAll('#site-name').forEach(el => el.textContent = cfg.site_name);
             }
-        });
+
+            // Hero 描述
+            const heroBio = document.getElementById('hero-bio');
+            if (cfg.bio) {
+                heroBio.textContent = cfg.bio;
+                heroBio.style.display = '';
+            }
+
+            // 首页关于我模块（用 profile 数据）
+            const aboutSection = document.getElementById('home-about-section');
+            if (about.intro) {
+                document.getElementById('home-about-intro').innerHTML = about.intro.replace(/\n/g, '<br>');
+            } else {
+                aboutSection.style.display = 'none';
+                return;
+            }
+            if (about.avatar_url) {
+                document.getElementById('home-about-avatar').src = about.avatar_url;
+            }
+
+            // 技术栈（样式从后端获取）
+            const techStacks = about.tech_stacks || [];
+            const techEl = document.getElementById('home-about-tech');
+            const stacksEl = document.getElementById('home-tech-stacks');
+            if (techStacks.length > 0) {
+                stacksEl.innerHTML = techStacks.map(t =>
+                    `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium ${t.bg_color || 'bg-slate-50'} ${t.text_color || 'text-slate-700'} ${t.dark_bg_color || 'dark:bg-slate-900/20'} ${t.dark_text_color || 'dark:text-slate-400'}"><i class="${t.icon || 'fa-solid fa-code'}"></i>${t.name || ''}</span>`
+                ).join('');
+                techEl.style.display = '';
+            } else {
+                techEl.style.display = 'none';
+            }
+
+            // 服务内容（内容来自后端，样式保持本地设计）
+            const servicesEl = document.getElementById('home-about-services');
+            const svcEl = document.getElementById('home-services');
+            if (services.length > 0) {
+                svcEl.innerHTML = services.map(s =>
+                    `<span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-md text-sm"><i class="${s.icon} mr-1"></i>${s.title}</span>`
+                ).join('');
+                servicesEl.style.display = '';
+            } else {
+                servicesEl.style.display = 'none';
+            }
+
+            // 订阅入口：根据 subscribe_enabled 控制显隐
+            const contacts = about.contacts || {};
+            const newsletterForm = document.getElementById('newsletter-form');
+            if (newsletterForm) {
+                newsletterForm.style.display = contacts.subscribe_enabled ? '' : 'none';
+            }
+
+            // 页脚链接：用 about.contacts 中的链接更新
+            renderFooter(contacts);
+        }
+
+        // ---------- 项目 & 博客数据 ----------
+        async function loadHomeData() {
+            const [projectData, blogData] = await Promise.all([
+                loadProjects(),
+                loadBlogs()
+            ]);
+
+            if (projectData) {
+                const projectsGrid = document.getElementById('projects-grid');
+                const allProjects = [...(projectData.personal || []), ...(projectData.collab || [])];
+                allProjects.forEach(project => {
+                    const card = document.createElement('a');
+                    card.href = `projects/detail.html?id=${project.id}&from=home`;
+                    card.className = "block group flex-shrink-0 w-80 snap-start";
+                    card.innerHTML = `
+                        <article class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-slate-700 h-full">
+                            <div class="overflow-hidden">
+                                <img src="${project.cover_image}" alt="${project.title}" class="w-full h-44 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <div class="p-5">
+                                <div class="flex flex-wrap gap-2 mb-3">
+                                    ${(project.tags || []).map(tag => `<span class="text-xs font-semibold px-2 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded">${tag}</span>`).join('')}
+                                </div>
+                                <h3 class="text-lg font-bold mb-2 group-hover:text-primary transition-colors line-clamp-1">${project.title}</h3>
+                                <p class="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-2">${project.description}</p>
+                                <span class="inline-flex items-center text-primary text-sm font-medium group-hover:underline">
+                                    查看详情 <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                                </span>
+                            </div>
+                        </article>
+                    `;
+                    projectsGrid.appendChild(card);
+                });
+            }
+
+            if (blogData) {
+                const blogGrid = document.getElementById('blog-grid');
+                blogData.blogs.slice(0, 2).forEach(blog => {
+                    const card = document.createElement('a');
+                    card.href = `blog/detail.html?id=${blog.id}&from=home`;
+                    card.className = "flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md hover:shadow-lg transition-all border border-slate-100 dark:border-slate-700 group";
+                    card.innerHTML = `
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-3">
+                                ${getTagsHtml(blog.tags)}
+                                <span class="text-sm text-slate-400">${blog.date}</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-colors">${blog.title}</h3>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4">${blog.summary}</p>
+                            <span class="text-primary text-sm font-medium hover:underline inline-flex items-center">阅读全文 <i class="fas fa-arrow-right ml-2 text-xs"></i></span>
+                        </div>
+                    `;
+                    blogGrid.appendChild(card);
+                });
+            }
+        }
+        applySiteConfig();
+        loadHomeData();
     </script>
 </body>
 </html>

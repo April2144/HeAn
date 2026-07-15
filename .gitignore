@@ -1,0 +1,16 @@
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 环境变量
+.env
+.env.local
+
+# Continue 工具数据
+.continue/

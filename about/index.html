@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我 | 禾安</title>
+    <meta name="description" content="禾安 - 独立开发者，专注 iOS 移动端开发">
+    <!-- 暗黑模式防闪烁：在页面渲染前设置 dark 类 -->
+    <script>
+        (function() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <script src="../js/config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = TAILWIND_CONFIG;</script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../js/common.css">
+</head>
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
+
+    <!-- 导航栏：纯静态 HTML，JS 只做高亮和事件绑定 -->
+    <nav class="fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="../index.html" class="flex-shrink-0 flex items-center">
+                    <i class="fa-solid fa-code text-primary text-2xl mr-2"></i>
+                    <span class="font-bold text-xl tracking-tight" id="site-name">禾安</span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="../index.html" data-nav="home" class="hover:text-primary transition-colors">首页</a>
+                    <a href="../about/index.html" data-nav="about" class="text-primary font-medium">关于我</a>
+                    <a href="../projects/index.html" data-nav="projects" class="hover:text-primary transition-colors">项目作品</a>
+                    <a href="../blog/index.html" data-nav="blog" class="hover:text-primary transition-colors">博客</a>
+                    <a href="../contact/index.html" data-nav="contact" class="hover:text-primary transition-colors">联系合作</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+                    <button id="menu-toggle" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fas fa-bars" id="menu-icon-open"></i>
+                        <i class="fas fa-times hidden" id="menu-icon-close"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="pb-4 space-y-2 border-t border-slate-200 dark:border-slate-700 pt-4">
+                    <a href="../index.html" data-nav="home" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">首页</a>
+                    <a href="../about/index.html" data-nav="about" class="block px-3 py-2 rounded-lg text-primary font-medium bg-blue-50 dark:bg-blue-900/20">关于我</a>
+                    <a href="../projects/index.html" data-nav="projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">项目作品</a>
+                    <a href="../blog/index.html" data-nav="blog" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">博客</a>
+                    <a href="../contact/index.html" data-nav="contact" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">联系合作</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 fade-in-up">
+        <!-- 个人简介 -->
+        <div class="py-12">
+            <div class="flex flex-wrap gap-8 lg:gap-16 items-start">
+                <div class="relative flex-shrink-0 w-full sm:w-64 lg:w-72 mb-8 sm:mb-0">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-primary to-secondary rounded-2xl opacity-30 blur-lg"></div>
+                    <img id="about-avatar" src="https://picsum.photos/400/500?portrait" alt="头像" class="relative w-full sm:w-64 lg:w-72 h-80 lg:h-96 rounded-2xl shadow-2xl object-cover">
+                </div>
+                <div class="flex-1 min-w-[300px]">
+                    <h1 class="text-4xl font-extrabold mb-2" id="about-name">禾安</h1>
+                    <p class="text-primary text-lg font-medium mb-6" id="about-title"></p>
+                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-4 leading-relaxed" id="about-intro"></p>
+                    <div class="flex flex-wrap gap-3 mb-4" id="about-links"></div>
+                    <!-- 技术栈标签（紧接 GitHub/Twitter 下方） -->
+                    <div class="flex flex-wrap gap-2" id="about-tech-tags"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 工作经历 -->
+        <section class="py-12 border-t border-slate-200 dark:border-slate-700" id="about-experiences-section">
+            <h2 class="text-2xl font-bold mb-8 flex items-center"><i class="fas fa-briefcase text-primary mr-3"></i>工作经历</h2>
+            <div class="space-y-8" id="about-experiences"></div>
+        </section>
+
+        <!-- 服务内容 -->
+        <section class="py-12 border-t border-slate-200 dark:border-slate-700" id="about-services-section">
+            <h2 class="text-2xl font-bold mb-8 flex items-center"><i class="fas fa-handshake text-primary mr-3"></i>服务内容</h2>
+            <div class="grid md:grid-cols-3 gap-6" id="about-services"></div>
+        </section>
+    </main>
+
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12"></footer>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/views.js"></script>
+    <script src="../js/theme.js"></script>
+    <script>
+        initApp('about');
+
+        async function loadAboutPage() {
+            const [cfgData, profileData] = await Promise.all([
+                loadBaseConfig(),
+                loadProfile()
+            ]);
+
+            const cfg = (cfgData && cfgData.config) ? cfgData.config : {};
+            const about = (profileData && profileData.about) ? profileData.about : {};
+            if (!about.intro && !about.name) return;
+
+            // 网站名称
+            if (cfg.site_name) {
+                document.title = `关于我 | ${cfg.site_name}`;
+                document.querySelectorAll('#site-name').forEach(el => el.textContent = cfg.site_name);
+            }
+
+            // 个人简介
+            document.getElementById('about-name').textContent = about.name || '';
+            document.getElementById('about-title').textContent = about.title || '';
+            document.getElementById('about-intro').textContent = about.intro || '';
+            if (about.avatar_url) document.getElementById('about-avatar').src = about.avatar_url;
+
+            // 社交链接
+            const linksEl = document.getElementById('about-links');
+            const contacts = about.contacts || {};
+            let linksHtml = '';
+            if (contacts.github) linksHtml += `<a href="https://github.com/${contacts.github}" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-sm"><i class="fab fa-github"></i> GitHub</a>`;
+            if (contacts.twitter) linksHtml += `<a href="https://twitter.com/${contacts.twitter}" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-sm"><i class="fab fa-twitter"></i> Twitter</a>`;
+            linksEl.innerHTML = linksHtml;
+
+            // 技术栈（icon + 文字，小圆角矩形，样式从后端获取）
+            const techStacks = about.tech_stacks || [];
+            document.getElementById('about-tech-tags').innerHTML = techStacks.map(t =>
+                `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium ${t.bg_color || 'bg-slate-50'} ${t.text_color || 'text-slate-700'} ${t.dark_bg_color || 'dark:bg-slate-900/20'} ${t.dark_text_color || 'dark:text-slate-400'}"><i class="${t.icon || 'fa-solid fa-code'}"></i>${t.name || ''}</span>`
+            ).join('');
+
+            // 工作经历
+            const exps = about.experiences || [];
+            const expSection = document.getElementById('about-experiences-section');
+            if (exps.length > 0) {
+                const colors = ['bg-primary', 'bg-secondary', 'bg-slate-400', 'bg-amber-400'];
+                document.getElementById('about-experiences').innerHTML = exps.map((e, i) => `
+                    <div class="flex gap-6">
+                        <div class="flex-shrink-0 w-3 h-3 rounded-full ${colors[i % colors.length]} mt-2"></div>
+                        <div>
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1">
+                                <h3 class="font-bold text-lg">${e.position}</h3>
+                                <span class="text-sm text-slate-500">${e.period}</span>
+                            </div>
+                            <p class="text-primary text-sm font-medium mb-2">${e.company}</p>
+                            <p class="text-slate-600 dark:text-slate-400 leading-relaxed">${e.description}</p>
+                        </div>
+                    </div>`).join('');
+                expSection.style.display = '';
+            } else {
+                expSection.style.display = 'none';
+            }
+
+            // 服务内容
+            const services = (cfgData && cfgData.services) ? cfgData.services : [];
+            const svcSection = document.getElementById('about-services-section');
+            if (services.length > 0) {
+                document.getElementById('about-services').innerHTML = services.map(s => {
+                    const colorClass = s.color || 'bg-blue-100';
+                    return `<div class="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-md border border-slate-100 dark:border-slate-700"><div class="w-12 h-12 rounded-lg ${colorClass} dark:bg-opacity-20 flex items-center justify-center mb-4"><i class="${s.icon} text-primary text-xl"></i></div><h3 class="font-bold text-lg mb-2">${s.title}</h3><p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">${s.description}</p></div>`;
+                }).join('');
+                svcSection.style.display = '';
+            } else {
+                svcSection.style.display = 'none';
+            }
+        }
+        loadAboutPage();
+    </script>
+</body>
+</html>
