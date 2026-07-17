@@ -94,7 +94,7 @@
             document.getElementById('article-date').textContent = blog.date;
             document.getElementById('article-cover').src = blog.cover_image;
             document.getElementById('article-cover').alt = blog.title;
-            document.getElementById('article-body').innerHTML = blog.body || blog.content || '';
+            document.getElementById('article-body').innerHTML = blog.body || '';
 
             applyTagColor(document.getElementById('article-tag'), (blog.tags || [])[0] || '');
             applyTagColor(document.getElementById('article-tag-bottom'), (blog.tags || [])[0] || '');

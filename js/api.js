@@ -75,6 +75,8 @@ function mapProjectsGroups(groups) {
 function mapBlogsGroups(groups) {
     const blogs = [];
     (groups || []).forEach(group => {
+        // 跳过未分组的文章
+        if (group.group_id == null) return;
         const articles = (group.articles || []);
         // 跳过空分组（没有已发布文章的不展示）
         if (articles.length === 0) return;
@@ -95,6 +97,8 @@ function mapBlogsGroups(groups) {
 function findInGroups(groups, id, itemKey = 'projects') {
     const idNum = parseInt(id);
     for (const group of (groups || [])) {
+        // 跳过未分组的数据
+        if (group.group_id == null) continue;
         const items = group[itemKey] || [];
         for (const item of items) {
             if (parseInt(item.id) === idNum) {
