@@ -18,10 +18,16 @@ const API_BASE = (() => {
         : '';
 })();
 
+// 只读 Token（JWT），用于 API 鉴权
+// 生成方式：python3 -c "import jwt; print(jwt.encode({'role':'read'}, '你的ACCESS_TOKEN_SECRET', algorithm='HS256'))"
+const READ_TOKEN = '';
+
 // ---------- 统一请求封装 ----------
 async function apiGet(path) {
     try {
-        const res = await fetch(`${API_BASE}${path}`);
+        const headers = {};
+        if (READ_TOKEN) headers['Authorization'] = `Bearer ${READ_TOKEN}`;
+        const res = await fetch(`${API_BASE}${path}`, { headers });
         const json = await res.json();
         if (json.code !== 200) {
             console.error('API 错误:', json.msg);
@@ -217,9 +223,11 @@ async function loadProfile() {
 // ---------- Newsletter 订阅 ----------
 async function subscribeNewsletter(email) {
     try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (READ_TOKEN) headers['Authorization'] = `Bearer ${READ_TOKEN}`;
         const res = await fetch(`${API_BASE}/site/newsletter/subscribers`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers,
             body: JSON.stringify({ email }),
         });
         const json = await res.json();
