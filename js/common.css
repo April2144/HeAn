@@ -39,6 +39,30 @@ body.ready { transition: background-color 0.3s ease, color 0.3s ease !important;
 /* ========== 博客标签色块 ========== */
 .tag-badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 12px; font-weight: 600; }
 
+/* ========== 文章标签（矩形小圆角，详情页底部用）========== */
+.label-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    background: #e2e8f0;
+    color: #475569;
+}
+.dark .label-tag {
+    background: #334155;
+    color: #cbd5e1;
+}
+
+/* ========== 上下篇导航 ========== */
+.post-nav { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0; }
+.dark .post-nav { border-color: #334155; }
+.post-nav-link { color: #3B82F6; text-decoration: none; transition: color 0.2s; display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.post-nav-link:hover { color: #2563eb; text-decoration: underline; }
+.post-nav-disabled { color: #94a3b8; }
+.post-nav-label { font-size: 13px; color: #64748b; margin-bottom: 2px; }
+.dark .post-nav-label { color: #94a3b8; }
+
 /* ========== 文章正文排版 ========== */
 .article-content h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; padding-left: 0.75rem; border-left: 3px solid #3B82F6; }
 .article-content h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; }

@@ -41,7 +41,7 @@
                     <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">禾</div>
                     <div>
                         <p class="font-medium text-sm">禾安</p>
-                        <p class="text-xs text-slate-500">独立开发者 · 专注 iOS 移动端开发</p>
+                        <p class="text-xs text-slate-500">独立开发者 · 专注移动端iOS开发</p>
                     </div>
                 </div>
             </header>
@@ -49,18 +49,12 @@
                 <img id="article-cover" src="https://picsum.photos/1000/400?article" alt="文章封面" class="w-full object-cover">
             </div>
             <div class="article-content text-slate-700 dark:text-slate-300" id="article-body"></div>
-            <div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div class="flex flex-wrap gap-2">
-                        <span class="tag-badge" id="article-tag-bottom">分类</span>
-                    </div>
-                    <div class="flex gap-3">
-                        <button class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-sm">
-                            <i class="fas fa-share-alt"></i> 分享
-                        </button>
-                    </div>
-                </div>
+            <!-- 文章标签 -->
+            <div class="mt-10 pt-8" id="article-labels-section" style="display:none;">
+                <div class="flex flex-wrap gap-2" id="article-labels"></div>
             </div>
+            <!-- 上下篇导航 -->
+            <div class="post-nav flex justify-between items-start gap-4" id="post-nav-section"></div>
         </article>
     </main>
 
@@ -96,10 +90,47 @@
             document.getElementById('article-cover').alt = blog.title;
             document.getElementById('article-body').innerHTML = blog.body || '';
 
-            applyTagColor(document.getElementById('article-tag'), (blog.tags || [])[0] || '');
-            applyTagColor(document.getElementById('article-tag-bottom'), (blog.tags || [])[0] || '');
+            // 顶部：分组徽章
+            applyGroupColor(document.getElementById('article-tag'), blog.group || '');
+
+            // 底部：文章标签（矩形小圆角）
+            const labelsHtml = getLabelsHtml(blog.tags);
+            const labelsSection = document.getElementById('article-labels-section');
+            if (labelsHtml) {
+                document.getElementById('article-labels').innerHTML = labelsHtml;
+                labelsSection.style.display = '';
+            }
+
+            // 上下篇导航
+            try {
+                const allBlogs = await loadBlogs({ limit: 50 });
+                const all = (allBlogs && allBlogs.blogs) ? allBlogs.blogs : [];
+                const idx = all.findIndex(b => b.id === blogId);
+                let prevHtml = '', nextHtml = '';
+
+                if (idx > 0) {
+                    const prev = all[idx - 1];
+                    prevHtml = `<div><p class="post-nav-label">上一篇</p><a class="post-nav-link" href="?id=${prev.id}">${prev.title}</a></div>`;
+                } else {
+                    prevHtml = `<div><p class="post-nav-label">上一篇</p><span class="post-nav-disabled text-sm">已经是第一篇</span></div>`;
+                }
+
+                if (idx >= 0 && idx < all.length - 1) {
+                    const next = all[idx + 1];
+                    nextHtml = `<div style="text-align:right;"><p class="post-nav-label">下一篇</p><a class="post-nav-link" href="?id=${next.id}">${next.title}</a></div>`;
+                } else {
+                    nextHtml = `<div style="text-align:right;"><p class="post-nav-label">下一篇</p><span class="post-nav-disabled text-sm">已经是最后一篇</span></div>`;
+                }
+
+                document.getElementById('post-nav-section').innerHTML = prevHtml + nextHtml;
+            } catch (e) {
+                console.warn('加载文章导航失败', e);
+            }
         }
-        renderBlogDetail();
+        (async () => {
+            await initTagMapFromAPI();
+            renderBlogDetail();
+        })();
     </script>
 </body>
 </html>

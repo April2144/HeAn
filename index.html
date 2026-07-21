@@ -337,7 +337,7 @@
                     card.innerHTML = `
                         <div class="flex-1">
                             <div class="flex items-center gap-3 mb-3">
-                                ${getTagsHtml(blog.tags)}
+                                ${getGroupBadgeHtml(blog.group)}
                                 <span class="text-sm text-slate-400">${blog.date}</span>
                             </div>
                             <h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-colors">${blog.title}</h3>
@@ -349,8 +349,11 @@
                 });
             }
         }
-        applySiteConfig();
-        loadHomeData();
+        (async () => {
+            await initTagMapFromAPI();
+            applySiteConfig();
+            loadHomeData();
+        })();
     </script>
 </body>
 </html>

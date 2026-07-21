@@ -94,7 +94,7 @@
         function renderBlogs(filter = 'all') {
             const blogList = document.getElementById('blog-list');
             const emptyState = document.getElementById('empty-state');
-            const filtered = filter === 'all' ? blogsData : blogsData.filter(b => (b.tags || []).includes(filter));
+            const filtered = filter === 'all' ? blogsData : blogsData.filter(b => b.group === filter);
             if (filtered.length === 0) { blogList.innerHTML = ''; emptyState.classList.remove('hidden'); return; }
             emptyState.classList.add('hidden');
             blogList.innerHTML = filtered.map(blog => `
@@ -103,7 +103,7 @@
                         <div class="flex flex-col md:flex-row md:items-start gap-4">
                             <div class="flex-1">
                                 <div class="flex items-center gap-3 mb-3">
-                                    ${getTagsHtml(blog.tags)}
+                                    ${getGroupBadgeHtml(blog.group)}
                                     <span class="text-sm text-slate-400">${blog.date}</span>
                                 </div>
                                 <h2 class="text-xl md:text-2xl font-bold mb-3 group-hover:text-primary transition-colors">${blog.title}</h2>
@@ -125,9 +125,7 @@
             if (!data) return;
             blogsData = data.blogs;
 
-            // 动态生成分组 Tab：收集所有实际有数据的 tags，去重后生成按钮
-            const tagSet = new Set();
-            blogsData.forEach(b => (b.tags || []).forEach(t => tagSet.add(t)));
+            // 侧边栏：按 GROUP_LIST 固定顺序生成分组按钮
             const sidebar = document.getElementById('blog-sidebar');
             // "全部"按钮绑定点击事件
             const allBtn = sidebar.querySelector('[data-tag="all"]');
@@ -138,26 +136,28 @@
                     renderBlogs('all');
                 });
             }
-            // 保留"全部"按钮，追加各分组按钮
-            const tagIcons = { '技术博客': 'fa-code', '商业洞察': 'fa-chart-line', '个人思考': 'fa-lightbulb' };
-            const sortedTags = [...tagSet].sort();
-            sortedTags.forEach(tag => {
-                const icon = tagIcons[tag] || 'fa-tag';
+            // 按 GROUP_LIST 追加分组按钮
+            const groupIcons = { '技术博客': 'fa-code', '商业洞察': 'fa-chart-line', '个人思考': 'fa-lightbulb' };
+            GROUP_LIST.forEach(group => {
+                const icon = groupIcons[group] || 'fa-tag';
                 const btn = document.createElement('button');
                 btn.className = 'blog-side-btn w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2';
-                btn.dataset.tag = tag;
-                btn.innerHTML = `<i class="fas ${icon} text-xs"></i>${tag}`;
+                btn.dataset.tag = group;
+                btn.innerHTML = `<i class="fas ${icon} text-xs"></i>${group}`;
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.blog-side-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    renderBlogs(tag);
+                    renderBlogs(group);
                 });
                 sidebar.appendChild(btn);
             });
 
             renderBlogs();
         }
-        fetchBlogs();
+        (async () => {
+            await initTagMapFromAPI();
+            fetchBlogs();
+        })();
     </script>
 </body>
 </html>

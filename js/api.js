@@ -2,9 +2,21 @@
  * HeAn 数据加载层
  * 优先从 FastAPI 接口获取数据，失败时降级读取本地 JSON
  * 适配后端新接口：分组结构（groups）替代旧的分类结构
+ *
+ * API_BASE: 后端服务地址
+ * - 开发环境：默认 http://localhost:8000
+ * - 生产环境：部署前改为实际的 API 地址，或设为 '' 使用同源请求
  */
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = (() => {
+    // 可通过 URL 参数 ?api=xxx 动态指定，方便开发调试
+    const param = new URLSearchParams(window.location.search).get('api');
+    if (param) return param;
+    // 生产环境默认同源，开发环境使用 localhost
+    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:8000'
+        : '';
+})();
 
 // ---------- 统一请求封装 ----------
 async function apiGet(path) {
@@ -83,6 +95,7 @@ function mapBlogsGroups(groups) {
         articles.forEach(article => {
             blogs.push({
                 ...article,
+                group: group.group_name,
                 // 后端 tags 可能为空数组，此时用 group_name 作为默认标签
                 tags: (article.tags && article.tags.length > 0) ? article.tags : [group.group_name],
             });
@@ -102,7 +115,7 @@ function findInGroups(groups, id, itemKey = 'projects') {
         const items = group[itemKey] || [];
         for (const item of items) {
             if (parseInt(item.id) === idNum) {
-                return { ...item, id: String(item.id) };
+                return { ...item, id: String(item.id), group: group.group_name };
             }
         }
     }
@@ -149,10 +162,10 @@ async function loadBlogs(tag) {
     const apiData = await apiGet('/site/blogs?public_only=1');
     if (apiData && apiData.groups) {
         const mapped = mapBlogsGroups(apiData.groups);
-        // 前端过滤 tag（因为后端不再支持 tag 查询参数）
+        // 前端过滤分组（因为后端不再支持 tag 查询参数）
         if (tag && tag !== 'all') {
             mapped.blogs = mapped.blogs.filter(b =>
-                (b.tags || []).includes(tag)
+                b.group === tag
             );
         }
         return mapped;

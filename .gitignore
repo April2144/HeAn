@@ -12,5 +12,9 @@ Thumbs.db
 .env
 .env.local
 
+# 本地配置文档（仅本地保留，不上传 Git）
+LOCAL_*.md
+LocalConfig/
+
 # Continue 工具数据
 .continue/
