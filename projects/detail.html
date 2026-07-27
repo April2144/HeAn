@@ -10,9 +10,26 @@
     <script>
         tailwind.config = TAILWIND_CONFIG;
     </script>
+    <!-- 暗黑模式防闪烁 -->
+    <script>
+        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../js/common.css">
-    <style>.project-detail img { transition: transform 0.5s ease; } .project-detail img:hover { transform: scale(1.02); }</style>
+    <style>
+        .project-detail img { transition: transform 0.5s ease; }
+        .project-detail img:hover { transform: scale(1.02); }
+        .tech-stack-scroll { scrollbar-width: thin; }
+        .tech-stack-scroll::-webkit-scrollbar { height: 6px; }
+        .tech-stack-scroll::-webkit-scrollbar-track { background: transparent; }
+        .tech-stack-scroll::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.4); border-radius: 3px; }
+        .tech-card {
+            background: linear-gradient(135deg, var(--card-from, #f8fafc), var(--card-to, #f1f5f9));
+        }
+        .dark .tech-card {
+            background: linear-gradient(135deg, var(--card-from, #1e293b), var(--card-to, #0f172a));
+        }
+    </style>
 </head>
 <body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 transition-colors duration-300 font-sans">
 
@@ -37,10 +54,11 @@
                 <img id="project-image" src="https://picsum.photos/1200/600?dashboard" alt="项目封面" class="w-full object-cover">
             </div>
             <div class="mb-8">
-                <h1 class="text-3xl md:text-4xl font-extrabold mb-4" id="project-title">SaaS 仪表盘模板</h1>
-                <div class="flex flex-wrap gap-2 mb-4" id="project-tags">
-                    <span class="text-xs font-semibold px-3 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">React</span>
-                    <span class="text-xs font-semibold px-3 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">Tailwind</span>
+                <h1 class="text-3xl md:text-4xl font-extrabold mb-3" id="project-title">SaaS 仪表盘模板</h1>
+                <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-4" id="project-meta">
+                    <span class="font-medium text-primary" id="project-version">v1.0.0</span>
+                    <span class="text-slate-300 dark:text-slate-600">·</span>
+                    <span id="project-date">2024-01-01</span>
                 </div>
             </div>
             <div class="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-md border border-slate-100 dark:border-slate-700 mb-8">
@@ -51,16 +69,19 @@
                 <h2 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-star text-yellow-500 mr-2"></i>核心特性</h2>
                 <ul class="space-y-3" id="project-features"></ul>
             </div>
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-md border border-slate-100 dark:border-slate-700 mb-8">
+            <div id="project-tech-container" class="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-md border border-slate-100 dark:border-slate-700 mb-8" style="display:none;">
                 <h2 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-layer-group text-primary mr-2"></i>技术栈</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="project-tech-stack">
-                    <div class="text-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg"><i class="fab fa-react text-3xl text-blue-500 mb-2"></i><p class="text-sm font-medium">React 18</p></div>
-                    <div class="text-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg"><i class="fab fa-css3-alt text-3xl text-cyan-500 mb-2"></i><p class="text-sm font-medium">Tailwind CSS</p></div>
-                    <div class="text-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg"><i class="fas fa-chart-bar text-3xl text-green-500 mb-2"></i><p class="text-sm font-medium">ECharts</p></div>
-                    <div class="text-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg"><i class="fas fa-code text-3xl text-purple-500 mb-2"></i><p class="text-sm font-medium">TypeScript</p></div>
+                <div class="tech-stack-scroll overflow-x-auto pb-2">
+                    <div class="flex gap-3" id="project-tech"></div>
                 </div>
             </div>
-            <div class="flex flex-col sm:flex-row gap-4 mb-10">
+            <div id="project-screenshots-container" class="bg-white dark:bg-slate-800 rounded-xl p-8 shadow-md border border-slate-100 dark:border-slate-700 mb-8" style="display:none;">
+                <h2 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-images text-primary mr-2"></i>项目截图</h2>
+                <div class="tech-stack-scroll overflow-x-auto pb-2">
+                    <div class="flex gap-4" id="project-screenshots"></div>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 mb-10" id="project-links-container">
                 <a id="project-demo-link" href="#" target="_blank" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-white font-medium hover:bg-blue-600 transition-all shadow-lg hover:shadow-blue-500/30"><i class="fas fa-external-link-alt"></i> 在线预览</a>
                 <a id="project-source-link" href="#" target="_blank" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"><i class="fab fa-github"></i> 源码仓库</a>
             </div>
@@ -98,21 +119,59 @@
             document.getElementById('project-image').alt = project.title;
             document.getElementById('project-title').textContent = project.title;
             document.getElementById('project-desc').textContent = project.description;
-            document.getElementById('project-tags').innerHTML = (project.tags || []).map(tag =>
-                `<span class="text-xs font-semibold px-3 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">${tag}</span>`
-            ).join('');
-            document.getElementById('project-features').innerHTML = project.features.map(f =>
+
+            // 版本号 · 发布日期（只要年月日），版本号默认 V1.0.0
+            const versionStr = project.version ? project.version : 'V1.0.0';
+            const dateStr = project.published_at ? project.published_at.slice(0, 10) : (project.created_at ? project.created_at.slice(0, 10) : '');
+            const metaEl = document.getElementById('project-meta');
+            const versionEl = document.getElementById('project-version');
+            const dateEl = document.getElementById('project-date');
+            versionEl.textContent = versionStr;
+            versionEl.style.display = '';
+            if (dateStr) {
+                dateEl.textContent = dateStr;
+                dateEl.style.display = '';
+                metaEl.style.display = '';
+            } else {
+                dateEl.style.display = 'none';
+                metaEl.style.display = '';
+            }
+
+            // 核心特性
+            document.getElementById('project-features').innerHTML = (project.features || []).map(f =>
                 `<li class="flex items-start"><i class="fas fa-check-circle text-secondary mt-1 mr-3"></i><span class="text-slate-600 dark:text-slate-400">${f}</span></li>`
             ).join('');
 
-            const techStackEl = document.getElementById('project-tech-stack');
-            techStackEl.innerHTML = project.tags.map(tag => {
-                const tech = TECH_ICONS[tag] || { icon: 'fas fa-code', color: 'text-slate-500' };
-                return `<div class="text-center p-4 bg-slate-50 dark:bg-slate-700/50 rounded-lg"><i class="${tech.icon} text-3xl ${tech.color} mb-2"></i><p class="text-sm font-medium">${tag}</p></div>`;
-            }).join('');
+            // 技术栈（用 tags 数据作为技术栈展示，card 列表水平布局）
+            const tags = project.tags || [];
+            if (tags.length > 0) {
+                document.getElementById('project-tech').innerHTML = tags.map(tag =>
+                    `<div class="tech-card flex-shrink-0 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <span class="text-sm font-medium text-slate-700 dark:text-slate-300">${tag}</span>
+                    </div>`
+                ).join('');
+                document.getElementById('project-tech-container').style.display = '';
+            }
 
-            document.getElementById('project-demo-link').href = project.demo_url;
-            document.getElementById('project-source-link').href = project.source_url;
+            // 项目截图（card 列表水平布局）
+            if (project.screenshots && project.screenshots.length > 0) {
+                document.getElementById('project-screenshots').innerHTML = project.screenshots.map(url =>
+                    `<img src="${url}" alt="项目截图" class="w-64 h-40 object-cover rounded-lg flex-shrink-0 shadow-sm" onerror="this.style.display='none'">`
+                ).join('');
+                document.getElementById('project-screenshots-container').style.display = '';
+            }
+
+            // 演示链接/源码链接：无URL时隐藏
+            const demoLink = document.getElementById('project-demo-link');
+            const sourceLink = document.getElementById('project-source-link');
+            const linksContainer = document.getElementById('project-links-container');
+            const hasDemo = project.demo_url && project.demo_url !== '#' && project.demo_url.trim() !== '';
+            const hasSource = project.source_url && project.source_url !== '#' && project.source_url.trim() !== '';
+            demoLink.style.display = hasDemo ? 'flex' : 'none';
+            sourceLink.style.display = hasSource ? 'flex' : 'none';
+            if (hasDemo) demoLink.href = project.demo_url;
+            if (hasSource) sourceLink.href = project.source_url;
+            linksContainer.style.display = (hasDemo || hasSource) ? '' : 'none';
         }
         renderProjectDetail();
     </script>

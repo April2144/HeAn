@@ -42,6 +42,17 @@ async function apiGet(path) {
 
 // ---------- 降级：读取本地 JSON ----------
 function getRoot() {
+    // 通过 <script src=".../api.js"> 的相对路径推导根目录
+    // 根页面: src="./js/api.js" → 返回 "."
+    // 子页面: src="../js/api.js" → 返回 ".."
+    const script = document.querySelector('script[src*="api.js"]');
+    if (script) {
+        const src = script.getAttribute('src');
+        const match = src.match(/^((?:\.\.\/)+)js\//);
+        if (match) return match[1].replace(/\/$/, '');
+        return '.';
+    }
+    // fallback: 路径深度计算
     const path = window.location.pathname;
     const depth = (path.match(/\//g) || []).length - 1;
     return depth <= 0 ? '.' : Array(depth).fill('..').join('/');

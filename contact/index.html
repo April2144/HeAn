@@ -5,13 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>联系合作 | 禾安</title>
     <meta name="description" content="" id="meta-desc">
-    <!-- 暗黑模式防闪烁：在页面渲染前设置 dark 类 -->
+    <!-- 暗黑模式防闪烁 -->
     <script>
-        (function() {
-            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            }
-        })();
+        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
     </script>
     <script src="../js/config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -31,15 +27,16 @@
                 </a>
                 <div class="hidden md:flex space-x-8">
                     <a href="../index.html" data-nav="home" class="hover:text-primary transition-colors">首页</a>
-                    <a href="../about/index.html" data-nav="about" class="hover:text-primary transition-colors">关于我</a>
-                    <a href="../projects/index.html" data-nav="projects" class="hover:text-primary transition-colors">项目作品</a>
+                    <a href="../projects/index.html" data-nav="projects" class="hover:text-primary transition-colors">项目</a>
                     <a href="../blog/index.html" data-nav="blog" class="hover:text-primary transition-colors">博客</a>
-                    <a href="../contact/index.html" data-nav="contact" class="text-primary font-medium">联系合作</a>
+                    <a href="../about/index.html" data-nav="about" class="hover:text-primary transition-colors">关于我</a>
+                    <a href="../contact/index.html" data-nav="contact" class="text-primary font-medium">联系</a>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="切换主题 (亮色/暗色/跟随系统)">
+                        <span class="theme-icon-light"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+                        <span class="theme-icon-dark" style="display:none"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+                        <span class="theme-icon-system" style="display:none"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
                     </button>
                     <button id="menu-toggle" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <i class="fas fa-bars" id="menu-icon-open"></i>
@@ -50,10 +47,10 @@
             <div class="md:hidden hidden" id="mobile-menu">
                 <div class="pb-4 space-y-2 border-t border-slate-200 dark:border-slate-700 pt-4">
                     <a href="../index.html" data-nav="home" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">首页</a>
-                    <a href="../about/index.html" data-nav="about" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">关于我</a>
-                    <a href="../projects/index.html" data-nav="projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">项目作品</a>
+                    <a href="../projects/index.html" data-nav="projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">项目</a>
                     <a href="../blog/index.html" data-nav="blog" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">博客</a>
-                    <a href="../contact/index.html" data-nav="contact" class="block px-3 py-2 rounded-lg text-primary font-medium bg-blue-50 dark:bg-blue-900/20">联系合作</a>
+                    <a href="../about/index.html" data-nav="about" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">关于我</a>
+                    <a href="../contact/index.html" data-nav="contact" class="block px-3 py-2 rounded-lg text-primary font-medium bg-blue-50 dark:bg-blue-900/20">联系</a>
                 </div>
             </div>
         </div>

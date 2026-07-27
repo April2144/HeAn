@@ -5,13 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>关于我 | 禾安</title>
     <meta name="description" content="禾安 - 独立开发者，专注移动端iOS开发">
-    <!-- 暗黑模式防闪烁：在页面渲染前设置 dark 类 -->
+    <!-- 暗黑模式防闪烁 -->
     <script>
-        (function() {
-            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            }
-        })();
+        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
     </script>
     <script src="../js/config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -31,15 +27,16 @@
                 </a>
                 <div class="hidden md:flex space-x-8">
                     <a href="../index.html" data-nav="home" class="hover:text-primary transition-colors">首页</a>
-                    <a href="../about/index.html" data-nav="about" class="text-primary font-medium">关于我</a>
-                    <a href="../projects/index.html" data-nav="projects" class="hover:text-primary transition-colors">项目作品</a>
+                    <a href="../projects/index.html" data-nav="projects" class="hover:text-primary transition-colors">项目</a>
                     <a href="../blog/index.html" data-nav="blog" class="hover:text-primary transition-colors">博客</a>
-                    <a href="../contact/index.html" data-nav="contact" class="hover:text-primary transition-colors">联系合作</a>
+                    <a href="../about/index.html" data-nav="about" class="text-primary font-medium">关于我</a>
+                    <a href="../contact/index.html" data-nav="contact" class="hover:text-primary transition-colors">联系</a>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="切换主题 (亮色/暗色/跟随系统)">
+                        <span class="theme-icon-light"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+                        <span class="theme-icon-dark" style="display:none"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+                        <span class="theme-icon-system" style="display:none"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
                     </button>
                     <button id="menu-toggle" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                         <i class="fas fa-bars" id="menu-icon-open"></i>
@@ -50,10 +47,10 @@
             <div class="md:hidden hidden" id="mobile-menu">
                 <div class="pb-4 space-y-2 border-t border-slate-200 dark:border-slate-700 pt-4">
                     <a href="../index.html" data-nav="home" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">首页</a>
-                    <a href="../about/index.html" data-nav="about" class="block px-3 py-2 rounded-lg text-primary font-medium bg-blue-50 dark:bg-blue-900/20">关于我</a>
-                    <a href="../projects/index.html" data-nav="projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">项目作品</a>
+                    <a href="../projects/index.html" data-nav="projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">项目</a>
                     <a href="../blog/index.html" data-nav="blog" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">博客</a>
-                    <a href="../contact/index.html" data-nav="contact" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">联系合作</a>
+                    <a href="../about/index.html" data-nav="about" class="block px-3 py-2 rounded-lg text-primary font-medium bg-blue-50 dark:bg-blue-900/20">关于我</a>
+                    <a href="../contact/index.html" data-nav="contact" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">联系</a>
                 </div>
             </div>
         </div>
@@ -61,19 +58,22 @@
 
     <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 fade-in-up">
         <!-- 个人简介 -->
-        <div class="py-12">
-            <div class="flex flex-wrap gap-8 lg:gap-16 items-start">
+        <div class="py-8">
+            <div class="flex flex-wrap gap-8 lg:gap-16 items-center">
                 <div class="relative flex-shrink-0 w-full sm:w-64 lg:w-72 mb-8 sm:mb-0">
                     <div class="absolute -inset-4 bg-gradient-to-r from-primary to-secondary rounded-2xl opacity-30 blur-lg"></div>
                     <img id="about-avatar" src="https://picsum.photos/400/500?portrait" alt="头像" class="relative w-full sm:w-64 lg:w-72 h-80 lg:h-96 rounded-2xl shadow-2xl object-cover">
                 </div>
                 <div class="flex-1 min-w-[300px]">
                     <h1 class="text-4xl font-extrabold mb-2" id="about-name">禾安</h1>
-                    <p class="text-primary text-lg font-medium mb-6" id="about-title"></p>
-                    <p class="text-lg text-slate-600 dark:text-slate-400 mb-4 leading-relaxed" id="about-intro"></p>
+                    <p class="text-primary text-lg font-medium mb-4" id="about-title"></p>
+                    <div class="text-base text-slate-600 dark:text-slate-400 mb-4 leading-relaxed" id="about-intro"></div>
                     <div class="flex flex-wrap gap-3 mb-4" id="about-links"></div>
-                    <!-- 技术栈标签（紧接 GitHub/Twitter 下方） -->
-                    <div class="flex flex-wrap gap-2" id="about-tech-tags"></div>
+                    <!-- 技术栈标签 -->
+                    <div id="about-tech-section">
+                        <h3 class="font-semibold text-lg mb-2">技术栈</h3>
+                        <div class="flex flex-wrap gap-2" id="about-tech-tags"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -88,6 +88,17 @@
         <section class="py-12 border-t border-slate-200 dark:border-slate-700" id="about-services-section">
             <h2 class="text-2xl font-bold mb-8 flex items-center"><i class="fas fa-handshake text-primary mr-3"></i>服务内容</h2>
             <div class="grid md:grid-cols-3 gap-6" id="about-services"></div>
+        </section>
+
+        <!-- 联系 CTA -->
+        <section class="py-12 border-t border-slate-200 dark:border-slate-700 text-center" id="about-cta-section">
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-800/50 rounded-2xl p-8 md:p-12">
+                <h2 class="text-2xl font-bold mb-4">有项目想法或技术问题？</h2>
+                <p class="text-slate-600 dark:text-slate-400 mb-6 text-lg">欢迎聊聊，一起探讨技术方案与产品可能性。</p>
+                <a href="../contact/index.html" onclick="if(typeof setActiveNav==='function')setActiveNav('contact')" class="inline-block px-8 py-3 rounded-lg bg-primary text-white font-medium hover:bg-blue-600 transition-all shadow-lg hover:shadow-blue-500/30">
+                    联系我
+                </a>
+            </div>
         </section>
     </main>
 
@@ -118,7 +129,7 @@
             // 个人简介
             document.getElementById('about-name').textContent = about.name || '';
             document.getElementById('about-title').textContent = about.title || '';
-            document.getElementById('about-intro').textContent = about.intro || '';
+            document.getElementById('about-intro').innerHTML = (about.intro || '').replace(/\n/g, '<br>');
             if (about.avatar_url) document.getElementById('about-avatar').src = about.avatar_url;
 
             // 社交链接
@@ -129,14 +140,25 @@
             if (contacts.twitter) linksHtml += `<a href="https://twitter.com/${contacts.twitter}" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-sm"><i class="fab fa-twitter"></i> Twitter</a>`;
             linksEl.innerHTML = linksHtml;
 
-            // 技术栈（icon + 文字，小圆角矩形，样式从后端获取）
+            // 技术栈（从 profile 读取，样式已由后端合并模板库）
             const techStacks = about.tech_stacks || [];
-            document.getElementById('about-tech-tags').innerHTML = techStacks.map(t =>
-                `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium ${t.bg_color || 'bg-slate-50'} ${t.text_color || 'text-slate-700'} ${t.dark_bg_color || 'dark:bg-slate-900/20'} ${t.dark_text_color || 'dark:text-slate-400'}"><i class="${t.icon || 'fa-solid fa-code'}"></i>${t.name || ''}</span>`
-            ).join('');
+            const techSection = document.getElementById('about-tech-section');
+            if (techStacks.length > 0) {
+                document.getElementById('about-tech-tags').innerHTML = techStacks.map(t => {
+                    const bg = t.bg_color || 'bg-blue-50';
+                    const txt = t.text_color || 'text-blue-700';
+                    const darkBg = t.dark_bg_color || 'dark:bg-blue-900/30';
+                    const darkTxt = t.dark_text_color || 'dark:text-blue-400';
+                    const icon = t.icon || 'fa-solid fa-code';
+                    return `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium ${bg} ${txt} ${darkBg} ${darkTxt}"><i class="${icon}"></i>${t.name || ''}</span>`;
+                }).join('');
+                techSection.style.display = '';
+            } else {
+                techSection.style.display = 'none';
+            }
 
-            // 工作经历
-            const exps = about.experiences || [];
+            // 工作经历（过滤隐藏）
+            const exps = (about.experiences || []).filter(e => !e.hidden);
             const expSection = document.getElementById('about-experiences-section');
             if (exps.length > 0) {
                 const colors = ['bg-primary', 'bg-secondary', 'bg-slate-400', 'bg-amber-400'];
@@ -157,8 +179,8 @@
                 expSection.style.display = 'none';
             }
 
-            // 服务内容
-            const services = (cfgData && cfgData.services) ? cfgData.services : [];
+            // 服务内容（过滤隐藏）
+            const services = (cfgData && cfgData.services) ? cfgData.services.filter(s => !s.hidden) : [];
             const svcSection = document.getElementById('about-services-section');
             if (services.length > 0) {
                 document.getElementById('about-services').innerHTML = services.map(s => {

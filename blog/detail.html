@@ -10,6 +10,10 @@
     <script>
         tailwind.config = TAILWIND_CONFIG;
     </script>
+    <!-- 暗黑模式防闪烁 -->
+    <script>
+        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../js/common.css">
 </head>
@@ -35,6 +39,7 @@
                 <div class="flex items-center gap-3 mb-4">
                     <span class="tag-badge" id="article-tag">分类</span>
                     <span class="text-sm text-slate-400" id="article-date">2026-06-28</span>
+                    <span class="text-sm text-primary font-medium" id="article-series" style="display:none;"></span>
                 </div>
                 <h1 class="text-3xl md:text-4xl font-extrabold mb-6 leading-tight" id="article-title">加载中...</h1>
                 <div class="flex items-center gap-3 pb-6 border-b border-slate-200 dark:border-slate-700">
@@ -92,6 +97,15 @@
 
             // 顶部：分组徽章
             applyGroupColor(document.getElementById('article-tag'), blog.group || '');
+
+            // 系列信息（如果有系列分组标签和进度）
+            const seriesEl = document.getElementById('article-series');
+            if (blog.series_name && blog.series_progress) {
+                seriesEl.textContent = `${blog.series_name} · ${blog.series_progress}`;
+                seriesEl.style.display = '';
+            } else {
+                seriesEl.style.display = 'none';
+            }
 
             // 底部：文章标签（矩形小圆角）
             const labelsHtml = getLabelsHtml(blog.tags);
