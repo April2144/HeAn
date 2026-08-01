@@ -20,7 +20,8 @@ const API_BASE = (() => {
 
 // 只读 Token（JWT），用于 API 鉴权
 // 生成方式：python3 -c "import jwt; print(jwt.encode({'role':'read'}, '你的ACCESS_TOKEN_SECRET', algorithm='HS256'))"
-const READ_TOKEN = '';
+// const READ_TOKEN = '';
+const READ_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoicmVhZCJ9.GvryC3oRA2aGr4AmMSTY3jcf7fL_3Yr1FQ8gOmgoliE';
 
 // ---------- 统一请求封装 ----------
 async function apiGet(path) {

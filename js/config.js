@@ -58,36 +58,11 @@ async function initTagMapFromAPI() {
         const json = await resp.json();
         const data = json.data || json;
 
-        // 重建 TAG_MAP（内容分组 + 项目分组 + 系列，使用扁平结构）
+        // 重建 TAG_MAP（系列标签，使用扁平结构）
         const newMap = {};
-        const newGroups = [];
         let colorIdx = 0;
 
-        const contentGroups = data.content_groups || [];
-        const projectGroups = data.project_groups || [];
         const seriesTags = data.series_tags || [];
-
-        // 内容分组
-        contentGroups.forEach(g => {
-            newGroups.push(g.name);
-            newMap[g.name] = {
-                icon: g.icon || GROUP_ICONS[colorIdx % GROUP_ICONS.length],
-                class: g.color || GROUP_COLORS[colorIdx % GROUP_COLORS.length],
-                scope: 'content',
-            };
-            colorIdx++;
-        });
-
-        // 项目分组（带 proj- 前缀避免重名冲突）
-        projectGroups.forEach(g => {
-            const key = 'proj-' + g.name;
-            newMap[key] = {
-                icon: g.icon || 'fa-folder',
-                class: g.color || GROUP_COLORS[colorIdx % GROUP_COLORS.length],
-                scope: 'project',
-            };
-            colorIdx++;
-        });
 
         // 系列
         seriesTags.forEach(s => {
@@ -99,9 +74,8 @@ async function initTagMapFromAPI() {
             colorIdx++;
         });
 
-        if (newGroups.length > 0) {
+        if (Object.keys(newMap).length > 0) {
             TAG_MAP = { ...TAG_MAP_FALLBACK, ...newMap };
-            GROUP_LIST = newGroups;
         }
     } catch (e) {
         // API 不可用时使用本地兜底

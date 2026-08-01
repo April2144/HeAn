@@ -89,4 +89,14 @@ function initApp(activePage) {
     requestAnimationFrame(() => {
         document.body.classList.add('ready');
     });
+
+    // 加载 contacts 后重新渲染 footer（使联系入口在所有页面生效）
+    (async () => {
+        try {
+            const data = await loadProfile();
+            if (data && data.about && data.about.contacts) {
+                renderFooter(data.about.contacts);
+            }
+        } catch(e) {}
+    })();
 }

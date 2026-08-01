@@ -32,7 +32,6 @@
                     <a href="../projects/index.html" data-nav="projects" class="hover:text-primary transition-colors">项目</a>
                     <a href="../blog/index.html" data-nav="blog" class="text-primary font-medium">博客</a>
                     <a href="../about/index.html" data-nav="about" class="hover:text-primary transition-colors">关于我</a>
-                    <a href="../contact/index.html" data-nav="contact" class="hover:text-primary transition-colors">联系</a>
                 </div>
                 <div class="flex items-center space-x-3">
                     <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="切换主题 (亮色/暗色/跟随系统)">
@@ -52,7 +51,6 @@
                     <a href="../projects/index.html" data-nav="projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">项目</a>
                     <a href="../blog/index.html" data-nav="blog" class="block px-3 py-2 rounded-lg text-primary font-medium bg-blue-50 dark:bg-blue-900/20">博客</a>
                     <a href="../about/index.html" data-nav="about" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">关于我</a>
-                    <a href="../contact/index.html" data-nav="contact" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">联系</a>
                 </div>
             </div>
         </div>
@@ -122,7 +120,7 @@
             if (!data) return;
             blogsData = data.blogs;
 
-            // 侧边栏：按 GROUP_LIST 固定顺序生成分组按钮
+            // 侧边栏：从博客数据动态生成分组按钮
             const sidebar = document.getElementById('blog-sidebar');
             // "全部"按钮绑定点击事件
             const allBtn = sidebar.querySelector('[data-tag="all"]');
@@ -133,9 +131,17 @@
                     renderBlogs('all');
                 });
             }
-            // 按 GROUP_LIST 追加分组按钮
+            // 从博客数据提取分组（保持后端返回顺序）
+            const seenGroups = new Set();
+            const dynamicGroups = [];
+            blogsData.forEach(b => {
+                if (b.group && !seenGroups.has(b.group)) {
+                    seenGroups.add(b.group);
+                    dynamicGroups.push(b.group);
+                }
+            });
             const groupIcons = { '技术博客': 'fa-code', '商业洞察': 'fa-chart-line', '个人思考': 'fa-lightbulb' };
-            GROUP_LIST.forEach(group => {
+            dynamicGroups.forEach(group => {
                 const icon = groupIcons[group] || 'fa-tag';
                 const btn = document.createElement('button');
                 btn.className = 'blog-side-btn w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2';
