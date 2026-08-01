@@ -4,18 +4,19 @@
  * 适配后端新接口：分组结构（groups）替代旧的分类结构
  *
  * API_BASE: 后端服务地址
- * - 开发环境：默认 http://localhost:8000
- * - 生产环境：部署前改为实际的 API 地址，或设为 '' 使用同源请求
+ * - 本地开发（localhost/127.0.0.1）：默认 http://localhost:8000
+ * - 本地开发（dev.hacore.cn）：默认 http://dev.hacore.cn:8000
+ * - 生产环境（hacore.cn）：同源请求（空字符串）
  */
 
 const API_BASE = (() => {
     // 可通过 URL 参数 ?api=xxx 动态指定，方便开发调试
     const param = new URLSearchParams(window.location.search).get('api');
     if (param) return param;
-    // 生产环境默认同源，开发环境使用 localhost
-    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:8000'
-        : '';
+    const h = window.location.hostname;
+    if (h === 'dev.hacore.cn') return 'http://dev.hacore.cn:8000';
+    if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:8000';
+    return '';
 })();
 
 // 只读 Token（JWT），用于 API 鉴权
