@@ -49,10 +49,9 @@ function renderFooter(contacts = {}) {
 
     const icons = [];
 
-    // 邮箱：mailto 带主题
+    // 邮箱：点击弹出联系意向弹窗
     if (contacts.email) {
-        const subject = encodeURIComponent('项目合作咨询');
-        icons.push(`<a href="mailto:${contacts.email}?subject=${subject}" class="footer-contact-icon text-slate-400 hover:text-primary" title="mailto:${contacts.email}?subject=项目合作咨询"><i class="fas fa-envelope"></i></a>`);
+        icons.push(`<a href="#" class="footer-contact-icon footer-email text-slate-400 hover:text-primary" title="发送邮件"><i class="fas fa-envelope"></i></a>`);
     }
 
     // 微信：hover 显示微信号，点击复制
@@ -112,6 +111,14 @@ function renderFooter(contacts = {}) {
             showToast('小红书号已复制，请打开小红书搜索关注');
         });
     });
+
+    // 绑定邮箱点击事件 → 弹出联系弹窗
+    footer.querySelectorAll('.footer-email').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            openContactModal();
+        });
+    });
 }
 
 /** 复制文本到剪贴板 */
@@ -148,4 +155,100 @@ function showToast(message) {
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 300);
     }, 2000);
+}
+
+// ========== 联系意向弹窗 ==========
+
+let _contactModalInitialized = false;
+
+function openContactModal() {
+    if (!_contactModalInitialized) {
+        _createContactModal();
+        _contactModalInitialized = true;
+    }
+    const modal = document.getElementById('contact-modal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closeContactModal() {
+    const modal = document.getElementById('contact-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function _createContactModal() {
+    const isDark = document.documentElement.classList.contains('dark');
+    const modal = document.createElement('div');
+    modal.id = 'contact-modal';
+    modal.className = 'hidden fixed inset-0 z-[9999] flex items-center justify-center p-4';
+    modal.innerHTML = `
+        <div class="absolute inset-0 bg-black/50" onclick="closeContactModal()"></div>
+        <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-md p-6 space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-bold">发送合作意向</h3>
+                <button onclick="closeContactModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <p class="text-sm text-slate-500 dark:text-slate-400">填写以下信息，我会尽快回复您。</p>
+            <form id="contact-modal-form" class="space-y-3">
+                <div>
+                    <label class="block text-sm font-medium mb-1">您的称呼</label>
+                    <input type="text" id="modal-contact-name" placeholder="怎么称呼您" required
+                        class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent text-sm focus:ring-2 focus:ring-primary outline-none transition-colors">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">联系方式</label>
+                    <input type="text" id="modal-contact-info" placeholder="邮箱或微信号" required
+                        class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent text-sm focus:ring-2 focus:ring-primary outline-none transition-colors">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">需求描述</label>
+                    <textarea id="modal-contact-content" rows="3" placeholder="简单描述您的需求..." required
+                        class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent text-sm focus:ring-2 focus:ring-primary outline-none transition-colors resize-none"></textarea>
+                </div>
+                <button type="submit" id="modal-contact-btn"
+                    class="w-full py-2.5 rounded-lg bg-primary text-white font-medium text-sm hover:bg-blue-600 transition-colors">
+                    <i class="fas fa-paper-plane mr-2"></i>发送
+                </button>
+                <div id="modal-contact-success" class="hidden text-center py-2 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-sm">
+                    <i class="fas fa-check-circle mr-1"></i> 已发送，我会尽快回复您！
+                </div>
+                <div id="modal-contact-error" class="hidden text-center py-2 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-sm">
+                    <i class="fas fa-exclamation-circle mr-1"></i> <span id="modal-contact-error-msg">发送失败</span>
+                </div>
+            </form>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const form = modal.querySelector('#contact-modal-form');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = modal.querySelector('#modal-contact-name').value.trim();
+        const contact = modal.querySelector('#modal-contact-info').value.trim();
+        const content = modal.querySelector('#modal-contact-content').value.trim();
+        if (!name || !contact || !content) return;
+
+        const btn = modal.querySelector('#modal-contact-btn');
+        const okEl = modal.querySelector('#modal-contact-success');
+        const errEl = modal.querySelector('#modal-contact-error');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>发送中...';
+        okEl.classList.add('hidden');
+        errEl.classList.add('hidden');
+
+        const result = await sendContactEmail({ name, contact, content, cooperation_type: '' });
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>发送';
+
+        if (result.success) {
+            okEl.classList.remove('hidden');
+            form.reset();
+            setTimeout(() => closeContactModal(), 2000);
+        } else {
+            modal.querySelector('#modal-contact-error-msg').textContent = result.message || '发送失败';
+            errEl.classList.remove('hidden');
+        }
+    });
 }

@@ -250,3 +250,21 @@ async function subscribeNewsletter(email) {
         return { success: false, message: '网络错误，请稍后重试' };
     }
 }
+
+// ---------- 联系邮件（合作意向） ----------
+async function sendContactEmail(payload) {
+    try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (READ_TOKEN) headers['Authorization'] = `Bearer ${READ_TOKEN}`;
+        const res = await fetch(`${API_BASE}/site/contact/email`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload),
+        });
+        const json = await res.json();
+        return { success: json.code === 200, message: json.msg || '发送失败' };
+    } catch (err) {
+        console.error('邮件发送失败:', err.message);
+        return { success: false, message: '网络错误，请稍后重试' };
+    }
+}
