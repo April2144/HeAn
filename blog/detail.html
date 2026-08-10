@@ -17,23 +17,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../js/common.css">
 </head>
-<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 transition-colors duration-300 font-sans">
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
 
-    <!-- 详情页顶栏：面包屑(左) + 返回(右)，无主导航 -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-            <nav class="flex items-center space-x-2 text-sm text-slate-500">
-                <span class="text-slate-400" id="breadcrumb-from">首页</span>
-                <i class="fas fa-chevron-right text-xs"></i>
-                <span class="text-slate-800 dark:text-slate-200" id="breadcrumb-title">文章详情</span>
-            </nav>
-            <button id="btn-back" class="flex items-center gap-1.5 text-sm text-primary font-medium hover:underline">
-                <i class="fas fa-arrow-left text-xs"></i> 返回
+    <!-- 导航栏：纯静态 HTML，JS 只做高亮和事件绑定 -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 h-16 flex items-center">
+        <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-4">
+            <button onclick="goBack()" class="flex items-center gap-1 p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="返回">
+                <i class="fa-solid fa-angle-left text-lg"></i>
+                <span class="text-base">返回</span>
             </button>
+            <span id="back-label" class="text-base font-medium hidden"></span>
         </div>
     </header>
 
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-20">
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
         <article class="fade-in-up">
             <header class="mb-10">
                 <div class="flex items-center gap-3 mb-4">
@@ -60,8 +57,6 @@
             <div class="mt-10 pt-8" id="article-labels-section" style="display:none;">
                 <div class="flex flex-wrap gap-2" id="article-labels"></div>
             </div>
-            <!-- 上下篇导航 -->
-            <div class="post-nav flex justify-between items-start gap-4" id="post-nav-section"></div>
         </article>
     </main>
 
@@ -72,24 +67,13 @@
     <script src="../js/views.js"></script>
     <script src="../js/theme.js"></script>
     <script>
-        // 不调用 initApp，详情页不渲染主导航栏
-        initTheme();
-
-        // 根据 from 参数决定面包屑和返回目标
-        const params = new URLSearchParams(window.location.search);
-        const from = params.get('from') || 'blog';
-        const backUrl = from === 'home' ? '../index.html#blog' : './index.html';
-        document.getElementById('breadcrumb-from').innerHTML = from === 'home'
-            ? '<a href="../index.html#blog" class="hover:text-primary transition-colors"><i class="fas fa-home mr-1"></i>首页</a>'
-            : '<a href="./index.html" class="hover:text-primary transition-colors">博客列表</a>';
-        document.getElementById('btn-back').addEventListener('click', () => { window.location.href = backUrl; });
+        initApp('blog');
 
         async function renderBlogDetail() {
-            const blogId = parseInt(params.get('id')) || 0;
+            const blogId = parseInt(new URLSearchParams(location.search).get('id')) || 0;
             const blog = await loadBlog(blogId);
             if (!blog) return;
 
-            document.getElementById('breadcrumb-title').textContent = blog.title;
             document.title = `${blog.title} | ${SITE.name}`;
             document.getElementById('article-title').textContent = blog.title;
             document.getElementById('article-date').textContent = blog.date;
@@ -137,32 +121,33 @@
                 labelsSection.style.display = '';
             }
 
-            // 上下篇导航
-            try {
-                const allBlogs = await loadBlogs({ limit: 50 });
-                const all = (allBlogs && allBlogs.blogs) ? allBlogs.blogs : [];
-                const idx = all.findIndex(b => b.id === blogId);
-                let prevHtml = '', nextHtml = '';
-
-                if (idx > 0) {
-                    const prev = all[idx - 1];
-                    prevHtml = `<div><p class="post-nav-label">上一篇</p><a class="post-nav-link" href="?id=${prev.id}">${prev.title}</a></div>`;
-                } else {
-                    prevHtml = `<div><p class="post-nav-label">上一篇</p><span class="post-nav-disabled text-sm">已经是第一篇</span></div>`;
-                }
-
-                if (idx >= 0 && idx < all.length - 1) {
-                    const next = all[idx + 1];
-                    nextHtml = `<div style="text-align:right;"><p class="post-nav-label">下一篇</p><a class="post-nav-link" href="?id=${next.id}">${next.title}</a></div>`;
-                } else {
-                    nextHtml = `<div style="text-align:right;"><p class="post-nav-label">下一篇</p><span class="post-nav-disabled text-sm">已经是最后一篇</span></div>`;
-                }
-
-                document.getElementById('post-nav-section').innerHTML = prevHtml + nextHtml;
-            } catch (e) {
-                console.warn('加载文章导航失败', e);
+        }
+        // 返回上级页面：根据来源智能返回，保持与专题/项目详情页一致
+        function goBack() {
+            const from = new URLSearchParams(location.search).get('from');
+            if (from === 'home') {
+                window.history.back();
+            } else if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
             }
         }
+        // 返回按钮后显示来源文字
+        function updateBackLabel() {
+            const labelEl = document.getElementById('back-label');
+            if (!labelEl) return;
+            const from = new URLSearchParams(location.search).get('from');
+            const text = from === 'home' ? '首页' : (from === 'blog' ? '博客' : '');
+            if (text) {
+                labelEl.textContent = text;
+                labelEl.classList.remove('hidden');
+            } else {
+                labelEl.classList.add('hidden');
+            }
+        }
+        updateBackLabel();
+
         (async () => {
             await initTagMapFromAPI();
             renderBlogDetail();

@@ -20,15 +20,16 @@
 <body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
 
     <!-- 导航栏：纯静态 HTML，JS 只做高亮和事件绑定 -->
-    <nav class="fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-all duration-300" id="navbar">
+    <nav class="fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-shadow duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <a href="./index.html" class="flex-shrink-0 flex items-center">
-                    <i class="fa-solid fa-code text-primary text-2xl mr-2"></i>
+                    <img src="./logo/logo-mark.svg" alt="禾安" class="h-8 w-8 mr-2">
                     <span class="font-bold text-xl tracking-tight" id="site-name">禾安</span>
                 </a>
                 <div class="hidden md:flex space-x-8">
-                    <a href="./index.html" data-nav="home" class="text-primary font-medium">首页</a>
+                    <a href="./index.html" data-nav="home" class="hover:text-primary transition-colors">首页</a>
+                    <a href="./topics/index.html" data-nav="topics" class="hover:text-primary transition-colors">专题</a>
                     <a href="./projects/index.html" data-nav="projects" class="hover:text-primary transition-colors">项目</a>
                     <a href="./blog/index.html" data-nav="blog" class="hover:text-primary transition-colors">博客</a>
                     <a href="./about/index.html" data-nav="about" class="hover:text-primary transition-colors">关于我</a>
@@ -47,7 +48,8 @@
             </div>
             <div class="md:hidden hidden" id="mobile-menu">
                 <div class="pb-4 space-y-2 border-t border-slate-200 dark:border-slate-700 pt-4">
-                    <a href="./index.html" data-nav="home" class="block px-3 py-2 rounded-lg text-primary font-medium bg-blue-50 dark:bg-blue-900/20">首页</a>
+                    <a href="./index.html" data-nav="home" class="block px-3 py-2 rounded-lg text-primary hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">首页</a>
+                    <a href="./topics/index.html" data-nav="topics" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">专题</a>
                     <a href="./projects/index.html" data-nav="projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">项目</a>
                     <a href="./blog/index.html" data-nav="blog" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">博客</a>
                     <a href="./about/index.html" data-nav="about" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">关于我</a>
@@ -68,10 +70,10 @@
             </h1>
             <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-600 dark:text-slate-400" id="hero-bio" style="display:none"></p>
             <div class="mt-10 flex justify-center gap-4">
-                <a href="#projects" class="px-8 py-3 rounded-lg bg-primary text-white font-medium hover:bg-blue-600 transition-all shadow-lg hover:shadow-blue-500/30">
+                <a href="#projects" class="btn-primary px-8 py-3 rounded-lg">
                     查看作品
                 </a>
-                <a href="./about/index.html#about-cta-section" class="px-8 py-3 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                <a href="./about/index.html#about-cta-section" class="btn-ghost px-8 py-3 rounded-lg">
                     联系我
                 </a>
             </div>
@@ -79,7 +81,7 @@
     </section>
 
     <!-- 关于我（动态渲染） -->
-    <section class="py-12 bg-white dark:bg-slate-900/50" id="home-about-section">
+    <section class="py-12" id="home-about-section">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-stretch">
                 <div class="relative">
@@ -91,11 +93,11 @@
                         <h2 class="text-3xl font-bold mb-6">关于我</h2>
                         <div id="home-about-intro" class="text-base text-slate-600 dark:text-slate-400 mb-6 leading-relaxed"></div>
                         <div class="space-y-5">
-                            <div id="home-about-tech">
+                            <div id="home-about-tech" style="display:none;">
                                 <h3 class="font-semibold text-lg mb-3">技术栈</h3>
                                 <div class="flex flex-wrap gap-2" id="home-tech-stacks"></div>
                             </div>
-                            <div id="home-about-services">
+                            <div id="home-about-services" style="display:none;">
                                 <h3 class="font-semibold text-lg mt-6 mb-3">服务内容</h3>
                                 <div class="flex flex-wrap gap-2" id="home-services"></div>
                             </div>
@@ -106,15 +108,36 @@
         </div>
     </section>
 
+    <!-- 精选专题（横向滚动） -->
+    <section id="topics" class="pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-3xl font-bold mb-4">精选专题</h2>
+                    <p class="text-slate-600 dark:text-slate-400">系统化学习路线，构建完整知识体系</p>
+                </div>
+                <a href="topics/index.html" class="text-primary hover:underline hidden md:block">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
+            </div>
+
+            <div class="flex gap-6 overflow-x-auto pb-4 pt-4 -mt-4 snap-x snap-mandatory scrollbar-hide" id="topics-grid" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
+                <!-- 精选专题卡片由 JS 动态生成 -->
+            </div>
+
+            <div class="mt-8 text-center md:hidden">
+                <a href="topics/index.html" class="text-primary hover:underline">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
+            </div>
+        </div>
+    </section>
+
     <!-- 项目作品 -->
-    <section id="projects" class="py-20">
+    <section id="projects" class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-end mb-12">
                 <div>
                     <h2 class="text-3xl font-bold mb-4">精选项目</h2>
                     <p class="text-slate-600 dark:text-slate-400">近期独立开发或参与的核心产品</p>
                 </div>
-                <a href="projects/index.html" class="text-primary hover:underline hidden md:block">查看全部 -></a>
+                <a href="projects/index.html" class="text-primary hover:underline hidden md:block">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
             </div>
 
             <div class="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" id="projects-grid" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
@@ -122,20 +145,20 @@
             </div>
 
             <div class="mt-8 text-center md:hidden">
-                <a href="projects/index.html" class="text-primary hover:underline">查看全部 -></a>
+                <a href="projects/index.html" class="text-primary hover:underline">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
             </div>
         </div>
     </section>
 
     <!-- 博客预览 -->
-    <section class="py-20 bg-white dark:bg-slate-900/50">
+    <section class="pt-12 pb-16" id="blogs">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-end mb-12">
                 <div>
                     <h2 class="text-3xl font-bold mb-4">最新博文</h2>
                     <p class="text-slate-600 dark:text-slate-400">同步自掘金与个人思考</p>
                 </div>
-                <a href="blog/index.html" class="text-primary hover:underline hidden md:block">查看全部 -></a>
+                <a href="blog/index.html" class="text-primary hover:underline hidden md:block">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8" id="blog-grid">
@@ -143,7 +166,7 @@
             </div>
 
             <div class="mt-8 text-center md:hidden">
-                <a href="blog/index.html" class="text-primary hover:underline">查看全部 -></a>
+                <a href="blog/index.html" class="text-primary hover:underline">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
             </div>
         </div>
     </section>
@@ -154,6 +177,7 @@
     <script src="./js/api.js"></script>
     <script src="./js/utils.js"></script>
     <script src="./js/views.js"></script>
+    <script src="./js/topics.js"></script>
     <script src="./js/theme.js"></script>
     <script>
         initApp('home');
@@ -234,7 +258,7 @@
                     const darkBg = t.dark_bg_color || 'dark:bg-blue-900/30';
                     const darkTxt = t.dark_text_color || 'dark:text-blue-400';
                     const icon = t.icon || 'fa-solid fa-code';
-                    return `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-sm font-medium ${bg} ${txt} ${darkBg} ${darkTxt}"><i class="${icon}"></i>${t.name || ''}</span>`;
+                    return `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-sm ${bg} ${txt} ${darkBg} ${darkTxt}"><i class="${icon}"></i>${t.name || ''}</span>`;
                 }).join('');
                 techEl.style.display = '';
             } else {
@@ -268,25 +292,30 @@
 
             if (projectData) {
                 const projectsGrid = document.getElementById('projects-grid');
-                const allProjects = [...(projectData.personal || []), ...(projectData.collab || [])];
+                // 只展示后台开启"首页推荐"的项目，并按推荐序号(features_order)升序排列
+                const allProjects = [...(projectData.personal || []), ...(projectData.collab || [])]
+                    .filter(p => (p.is_featured ?? 0) === 1)
+                    .sort((a, b) => (a.featured_order ?? 0) - (b.featured_order ?? 0));
+                if (!allProjects.length) {
+                    // 没有任何首页推荐项目时不显示该模块（不影响下方博客模块渲染）
+                    const projectsSection = document.getElementById('projects');
+                    if (projectsSection) projectsSection.style.display = 'none';
+                }
                 allProjects.forEach(project => {
                     const card = document.createElement('a');
                     card.href = `projects/detail.html?id=${project.id}&from=home`;
                     card.className = "block group flex-shrink-0 w-80 snap-start";
                     card.innerHTML = `
-                        <article class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-slate-700 h-full">
-                            <div class="overflow-hidden">
-                                <img src="${project.cover_image}" alt="${project.title}" class="w-full h-44 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                        <article class="card-hover bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700 h-full">
+                            <div class="overflow-hidden aspect-[16/9]">
+                                <img src="${project.cover_image}" alt="${project.title}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
                             </div>
                             <div class="p-5">
                                 <div class="flex flex-wrap gap-2 mb-3">
-                                    ${(project.tags || []).map(tag => `<span class="text-xs font-semibold px-2 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded">${tag}</span>`).join('')}
+                                    ${getTagListHtml(project.tags)}
                                 </div>
-                                <h3 class="text-lg font-bold mb-2 group-hover:text-primary transition-colors line-clamp-1">${project.title}</h3>
+                                <h3 class="text-lg font-bold mb-2 group-hover:text-primary transition-theme-color line-clamp-1">${project.title}</h3>
                                 <p class="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-2">${project.description}</p>
-                                <span class="inline-flex items-center text-primary text-sm font-medium group-hover:underline">
-                                    查看详情 <i class="fas fa-arrow-right ml-2 text-xs"></i>
-                                </span>
                             </div>
                         </article>
                     `;
@@ -296,17 +325,26 @@
 
             if (blogData) {
                 const blogGrid = document.getElementById('blog-grid');
-                blogData.blogs.slice(0, 2).forEach(blog => {
+                // 只展示后台开启"首页推荐"的博文，并按推荐序号(featured_order)升序排列
+                const featuredBlogs = blogData.blogs
+                    .filter(b => (b.is_featured || 0) === 1)
+                    .sort((a, b) => (a.featured_order || 0) - (b.featured_order || 0));
+                if (!featuredBlogs.length) {
+                    // 没有任何首页推荐博文时不显示该模块（与精选项目逻辑一致）
+                    const blogsSection = document.getElementById('blogs');
+                    if (blogsSection) blogsSection.style.display = 'none';
+                }
+                featuredBlogs.slice(0, 2).forEach(blog => {
                     const card = document.createElement('a');
                     card.href = `blog/detail.html?id=${blog.id}&from=home`;
-                    card.className = "flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md hover:shadow-lg transition-all border border-slate-100 dark:border-slate-700 group";
+                    card.className = "card-hover flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md border border-slate-100 dark:border-slate-700 group";
                     card.innerHTML = `
                         <div class="flex-1">
                             <div class="flex items-center gap-3 mb-3">
                                 ${getGroupBadgeHtml(blog.group)}
                                 <span class="text-sm text-slate-400">${blog.date}</span>
                             </div>
-                            <h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-colors">${blog.title}</h3>
+                            <h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-theme-color">${blog.title}</h3>
                             <p class="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4">${blog.summary}</p>
                             <span class="text-primary text-sm font-medium hover:underline inline-flex items-center">阅读全文 <i class="fas fa-arrow-right ml-2 text-xs"></i></span>
                         </div>
@@ -319,6 +357,7 @@
             await initTagMapFromAPI();
             applySiteConfig();
             loadHomeData();
+            loadHomeTopics();
         })();
     </script>
 </body>

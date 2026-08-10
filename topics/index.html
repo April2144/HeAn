@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专题领域 | 禾安</title>
+    <meta name="description" content="禾安 - 系统化学习专题，构建完整知识体系">
+    <!-- 暗黑模式防闪烁 -->
+    <script>
+        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
+    </script>
+    <script src="../js/config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = TAILWIND_CONFIG;
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../js/common.css">
+</head>
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
+
+    <!-- 导航栏 -->
+    <nav class="fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-shadow duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="../index.html" class="flex-shrink-0 flex items-center">
+                    <img src="../logo/logo-mark.svg" alt="禾安" class="h-8 w-8 mr-2">
+                    <span class="font-bold text-xl tracking-tight" id="site-name">禾安</span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="../index.html" data-nav="home" class="hover:text-primary transition-colors">首页</a>
+                    <a href="../topics/index.html" data-nav="topics" class="text-primary font-medium">专题</a>
+                    <a href="../projects/index.html" data-nav="projects" class="hover:text-primary transition-colors">项目</a>
+                    <a href="../blog/index.html" data-nav="blog" class="hover:text-primary transition-colors">博客</a>
+                    <a href="../about/index.html" data-nav="about" class="hover:text-primary transition-colors">关于我</a>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="切换主题 (亮色/暗色/跟随系统)">
+                        <span class="theme-icon-light"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+                        <span class="theme-icon-dark" style="display:none"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+                        <span class="theme-icon-system" style="display:none"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+                    </button>
+                    <button id="menu-toggle" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fas fa-bars" id="menu-icon-open"></i>
+                        <i class="fas fa-times hidden" id="menu-icon-close"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="md:hidden hidden" id="mobile-menu">
+                <div class="pb-4 space-y-2 border-t border-slate-200 dark:border-slate-700 pt-4">
+                    <a href="../index.html" data-nav="home" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">首页</a>
+                    <a href="../topics/index.html" data-nav="topics" class="block px-3 py-2 rounded-lg text-primary font-medium bg-blue-50 dark:bg-blue-900/20">专题</a>
+                    <a href="../projects/index.html" data-nav="projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">项目</a>
+                    <a href="../blog/index.html" data-nav="blog" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">博客</a>
+                    <a href="../about/index.html" data-nav="about" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">关于我</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 专题列表区域 -->
+    <section class="pt-32 pb-12 fade-in-up text-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-bold mb-3">全栈开发成长之路</h1>
+            <p class="text-lg text-slate-500 dark:text-slate-400">按领域系统化学习，构建完整知识体系。涵盖 6 大技术方向，从入门到精通。</p>
+        </div>
+    </section>
+
+    <section class="pb-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- 左侧：竖向筛选分类 -->
+                <aside class="lg:w-60 flex-shrink-0">
+                    <div class="sticky top-28">
+                        <h3 class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-3 px-1">分类筛选</h3>
+                        <div id="topic-filter" class="space-y-1.5"></div>
+                    </div>
+                </aside>
+
+                <!-- 右侧：搜索框 + 专题卡片列表 -->
+                <div class="flex-1 min-w-0">
+                    <div id="topic-search" class="mb-6"></div>
+                    <div id="series-list" class="flex flex-wrap gap-4"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12"></footer>
+
+    <!-- JS -->
+    <script src="../js/api.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/views.js"></script>
+    <script src="../js/topics.js"></script>
+    <script src="../js/theme.js"></script>
+    <script>
+        initApp('topics');
+        loadTopicsPage();
+    </script>
+</body>
+</html>

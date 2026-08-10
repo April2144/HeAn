@@ -18,3 +18,13 @@ LocalConfig/
 
 # Continue 工具数据
 .continue/
+
+# Node 依赖与构建产物（本地安装，不纳入版本管理）
+node_modules/
+package.json
+package-lock.json
+.package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+

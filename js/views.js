@@ -7,13 +7,13 @@ function initNavbar(activePage) {
     const nav = document.getElementById('navbar');
     if (!nav) return;
 
-    // 移除可能因浏览器缓存残留的联系 tab
+    // 移除可能因浏览器缓存残留的无效 tab
     nav.querySelectorAll('[data-nav="contact"]').forEach(el => el.remove());
 
-    // 高亮当前页 tab
+    // 高亮当前页 tab（仅用颜色区分，不加粗，避免 flex 导航行重排位移）
     nav.querySelectorAll('[data-nav]').forEach(link => {
         if (link.dataset.nav === activePage) {
-            link.classList.add('text-primary', 'font-medium');
+            link.classList.add('text-primary');
             link.classList.remove('hover:text-primary');
         }
     });
@@ -77,14 +77,18 @@ function renderFooter(contacts = {}) {
 
     // Twitter：新窗口跳转
     if (contacts.twitter_url) {
-        icons.push(`<a href="${contacts.twitter_url}" target="_blank" rel="noopener" class="text-slate-400 hover:text-primary" title="Twitter"><i class="fab fa-twitter"></i></a>`);
+        icons.push(`<a href="${contacts.twitter_url}" target="_blank" rel="noopener" class="footer-contact-icon text-slate-400 hover:text-primary" title="Twitter"><i class="fab fa-twitter"></i></a>`);
     }
 
     footer.innerHTML = `
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0">
-                <a href="${root}/index.html" class="font-bold text-lg">${SITE.name}</a>
-                <p class="text-sm text-slate-500 mt-1">&copy; ${new Date().getFullYear()} All rights reserved.</p>
+            <div class="mb-4 md:mb-0 flex items-center gap-3">
+                <img src="${root}/logo/logo-mark.svg" alt="${SITE.name}" class="h-8 w-8"
+                     style="width:32px;height:32px;">
+                <div>
+                    <a href="${root}/index.html" class="font-bold text-lg leading-tight block">${SITE.name}</a>
+                    <p class="text-xs text-slate-500 mt-0.5">&copy; ${new Date().getFullYear()} All rights reserved.</p>
+                </div>
             </div>
             <div class="flex space-x-6 text-xl">
                 ${icons.reverse().join('')}

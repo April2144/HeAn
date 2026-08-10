@@ -39,39 +39,42 @@ const GROUP_LIST_FALLBACK = ['技术博客', '商业洞察', '个人思考'];
 // 运行时分组列表（优先从 API）
 let GROUP_LIST = [...GROUP_LIST_FALLBACK];
 
-// 默认分组颜色序列（API 未提供颜色时使用）
-const GROUP_COLORS = [
-    'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
-    'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-    'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
-    'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400',
-    'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400',
-];
-
 const GROUP_ICONS = ['fa-code', 'fa-chart-line', 'fa-lightbulb', 'fa-cube', 'fa-heart'];
 
 /** 从后端 API 获取分组标签数据，失败则用本地兜底 */
 async function initTagMapFromAPI() {
     try {
-        const resp = await fetch('/site/tags/grouped');
-        if (!resp.ok) throw new Error('API unavailable');
-        const json = await resp.json();
-        const data = json.data || json;
+        const data = await apiGet('/site/tags/grouped');
+        if (!data) throw new Error('API unavailable');
 
-        // 重建 TAG_MAP（系列标签，使用扁平结构）
+        // 重建 TAG_MAP：专题标签统一复用 tech_stacks，避免 series/general 冗余
+        // 颜色取法与「关于我-技术栈」保持一致（独立颜色字段，全空则降级蓝系）
         const newMap = {};
-        let colorIdx = 0;
 
-        const seriesTags = data.series_tags || [];
-
-        // 系列
-        seriesTags.forEach(s => {
-            newMap[s.name] = {
-                icon: s.icon || 'fa-bookmark',
-                class: s.color || GROUP_COLORS[colorIdx % GROUP_COLORS.length],
-                scope: 'series',
+        const buildEntry = (t, defaultIcon) => {
+            const bg = t.bg_color || 'bg-blue-100';
+            const txt = t.text_color || 'text-blue-600';
+            const darkBg = t.dark_bg_color || 'dark:bg-blue-900/30';
+            const darkTxt = t.dark_text_color || 'dark:text-blue-400';
+            // 字号/粗细：后端配置存在则读取，不存在用默认值（默认不加粗）
+            const fontSize = t.font_size || '';   // 如 '12px'，缺省空串走 CSS 默认 12px
+            const fontWeight = t.font_weight || 'normal';
+            return {
+                icon: t.icon || defaultIcon,
+                class: `${bg} ${txt} ${darkBg} ${darkTxt}`,
+                fontSize,
+                fontWeight,
             };
-            colorIdx++;
+        };
+
+        // 技术栈（关于我/专题/项目共用的标签库）
+        (data.tech_stacks || []).forEach(t => {
+            newMap[t.name] = buildEntry(t, 'fa-code');
+        });
+
+        // 系列（兼容历史数据，tech_stacks 已覆盖则不再覆盖）
+        (data.series_tags || []).forEach(s => {
+            if (!newMap[s.name]) newMap[s.name] = buildEntry(s, 'fa-bookmark');
         });
 
         if (Object.keys(newMap).length > 0) {

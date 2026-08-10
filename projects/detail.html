@@ -31,24 +31,21 @@
         }
     </style>
 </head>
-<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 transition-colors duration-300 font-sans">
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
 
-    <!-- 详情页顶栏：面包屑(左) + 返回(右)，无主导航 -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-            <nav class="flex items-center space-x-2 text-sm text-slate-500">
-                <span class="text-slate-400" id="breadcrumb-from">首页</span>
-                <i class="fas fa-chevron-right text-xs"></i>
-                <span class="text-slate-800 dark:text-slate-200" id="breadcrumb-title">项目详情</span>
-            </nav>
-            <button id="btn-back" class="flex items-center gap-1.5 text-sm text-primary font-medium hover:underline">
-                <i class="fas fa-arrow-left text-xs"></i> 返回
+    <!-- 导航栏：纯静态 HTML，JS 只做高亮和事件绑定 -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 h-16 flex items-center">
+        <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-4">
+            <button onclick="goBack()" class="flex items-center gap-1 p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="返回">
+                <i class="fa-solid fa-angle-left text-lg"></i>
+                <span class="text-base">返回</span>
             </button>
+            <span id="back-label" class="text-base font-medium hidden"></span>
         </div>
     </header>
 
     <!-- 项目详情 -->
-    <main class="project-detail max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-20">
+    <main class="project-detail max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
         <div class="fade-in-up">
             <div class="rounded-2xl overflow-hidden shadow-xl mb-10">
                 <img id="project-image" src="https://picsum.photos/1200/600?dashboard" alt="项目封面" class="w-full object-cover">
@@ -97,25 +94,13 @@
     <script src="../js/views.js"></script>
     <script src="../js/theme.js"></script>
     <script>
-        // 不调用 initApp，详情页不渲染主导航栏
-        initTheme();
-
-        // 根据 from 参数决定面包屑和返回目标
-        const params = new URLSearchParams(window.location.search);
-        const from = params.get('from') || 'projects';
-        const fromLabel = from === 'home' ? '首页' : '项目列表';
-        const backUrl = from === 'home' ? '../index.html#projects' : 'index.html';
-        document.getElementById('breadcrumb-from').innerHTML = from === 'home'
-            ? '<a href="../index.html#projects" class="hover:text-primary transition-colors"><i class="fas fa-home mr-1"></i>首页</a>'
-            : '<a href="index.html" class="hover:text-primary transition-colors">项目列表</a>';
-        document.getElementById('btn-back').addEventListener('click', () => { window.location.href = backUrl; });
+        initApp('projects');
 
         async function renderProjectDetail() {
-            const projectId = params.get('id') || '0';
+            const projectId = new URLSearchParams(location.search).get('id') || '0';
             const project = await loadProject(projectId);
             if (!project) return;
 
-            document.getElementById('breadcrumb-title').textContent = project.title;
             document.title = `${project.title} | ${SITE.name}`;
             document.getElementById('project-image').src = project.cover_image;
             document.getElementById('project-image').alt = project.title;
@@ -158,7 +143,7 @@
             // 项目截图（card 列表水平布局）
             if (project.screenshots && project.screenshots.length > 0) {
                 document.getElementById('project-screenshots').innerHTML = project.screenshots.map(url =>
-                    `<img src="${url}" alt="项目截图" class="w-64 h-40 object-cover rounded-lg flex-shrink-0 shadow-sm" onerror="this.style.display='none'">`
+                    `<img src="${url}" alt="项目截图" class="w-64 aspect-[16/9] object-cover rounded-lg flex-shrink-0 shadow-sm" onerror="this.style.display='none'">`
                 ).join('');
                 document.getElementById('project-screenshots-container').style.display = '';
             }
@@ -197,6 +182,32 @@
                 }
             })();
         }
+        // 返回上级页面：根据来源智能返回，保持与专题/博客详情页一致
+        function goBack() {
+            const from = new URLSearchParams(location.search).get('from');
+            if (from === 'home') {
+                window.history.back();
+            } else if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        // 返回按钮后显示来源文字
+        function updateBackLabel() {
+            const labelEl = document.getElementById('back-label');
+            if (!labelEl) return;
+            const from = new URLSearchParams(location.search).get('from');
+            const text = from === 'home' ? '首页' : (from === 'projects' ? '项目' : '');
+            if (text) {
+                labelEl.textContent = text;
+                labelEl.classList.remove('hidden');
+            } else {
+                labelEl.classList.add('hidden');
+            }
+        }
+        updateBackLabel();
+
         renderProjectDetail();
     </script>
 </body>

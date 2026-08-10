@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专题详情 | 禾安</title>
+    <meta name="description" content="禾安 - 专题详情">
+    <!-- 暗黑模式防闪烁 -->
+    <script>
+        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
+    </script>
+    <script src="../js/config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = TAILWIND_CONFIG;
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Markdown 渲染 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="../js/common.css">
+    <style>
+        /* ===== 专题详情布局 ===== */
+        /* 底部上一篇/下一篇标题 hover 变主题蓝，无下划线 */
+        .nav-title {
+            transition: color 0.15s ease;
+        }
+        .nav-title:hover {
+            color: #3B82F6 !important;
+        }
+        .topics-detail-layout {
+            display: flex;
+            min-height: calc(100vh - 4rem);
+        }
+
+        /* --- 左侧栏 --- */
+        .outline-sidebar {
+            width: 280px;
+            min-width: 280px;
+            background: #f8fafc;
+            border-right: 1px solid #e2e8f0;
+            height: calc(100vh - 4rem);
+            position: sticky;
+            top: 4rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+        }
+        .dark .outline-sidebar {
+            background: #0f172a;
+            border-right-color: #1e293b;
+        }
+
+        .outline-sidebar-header {
+            padding: 16px 16px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+        .dark .outline-sidebar-header {
+            border-bottom-color: #1e293b;
+        }
+
+        .outline-tree {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        .outline-level-btn {
+            text-align: left;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .outline-articles {
+            border-left: 2px solid #e2e8f0;
+            margin-left: 16px;
+        }
+        .dark .outline-articles {
+            border-left-color: #334155;
+        }
+
+        .outline-article {
+            display: block;
+            border-left: 2px solid transparent;
+            margin-left: -2px;
+        }
+        .outline-article.active {
+            color: #3b82f6 !important;
+            border-left-color: #3b82f6;
+            background: #eff6ff;
+        }
+        .dark .outline-article.active {
+            color: #60a5fa !important;
+            background: rgba(59,130,246,0.15);
+        }
+
+        .outline-subhead {
+            text-decoration: none;
+        }
+        .outline-subhead:hover {
+            color: #3b82f6;
+        }
+
+        .outline-chevron.rotate-90 {
+            transform: rotate(90deg);
+        }
+
+        /* --- 右侧内容区 --- */
+        .detail-content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            background: #ffffff;
+        }
+        .dark .detail-content-area {
+            background: #1e293b;
+        }
+
+        .detail-content-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 48px 32px 80px;
+        }
+
+        /* 文章内容排版 */
+        .article-body h1 { font-size: 1.75rem; font-weight: 700; margin: 2rem 0 1rem; }
+        .article-body h2 { font-size: 1.4rem; font-weight: 700; margin: 1.75rem 0 0.75rem; padding-bottom: 0.4rem; border-bottom: 1px solid #e5e7eb; }
+        .dark .article-body h2 { border-bottom-color: #374151; }
+        .article-body h3 { font-size: 1.15rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+        .article-body p { margin: 0.75rem 0; line-height: 1.75; }
+        .article-body ul, .article-body ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+        .article-body li { margin: 0.25rem 0; line-height: 1.7; }
+        .article-body code {
+            background: #f1f5f9;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.875em;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+        .dark .article-body code { background: #334155; }
+        .article-body pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        .article-body pre code {
+            background: transparent !important;
+            padding: 0;
+            color: inherit;
+        }
+        .article-body blockquote {
+            border-left: 3px solid #3b82f6;
+            padding: 0.5rem 1rem;
+            margin: 1rem 0;
+            background: #f8fafc;
+            color: #475569;
+        }
+        .dark .article-body blockquote {
+            background: #1e293b;
+            color: #94a3b8;
+        }
+        .article-body img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .article-body a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+
+        /* 移动端侧边栏 */
+        @media (max-width: 768px) {
+            .outline-sidebar {
+                position: fixed;
+                left: 0;
+                top: 4rem;
+                z-index: 40;
+                transform: translateX(-100%);
+                box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+            }
+            .outline-sidebar.show {
+                transform: translateX(0);
+            }
+            .detail-content-inner {
+                padding: 24px 16px 60px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
+
+    <!-- 简化顶栏 -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 h-16 flex items-center">
+        <div class="max-w-full w-full mx-auto px-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+                <button onclick="goBack()" class="flex items-center gap-1 p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="返回">
+                    <i class="fa-solid fa-angle-left text-lg"></i>
+                    <span class="text-base">返回</span>
+                </button>
+                <span id="back-label" class="text-base font-medium hidden"></span>
+            </div>
+        </header>
+
+        <!-- 主体：侧边栏 + 内容 -->
+        <div class="topics-detail-layout pt-16">
+
+            <!-- 左侧大纲侧边栏 -->
+            <aside class="outline-sidebar" id="outline-sidebar">
+                <!-- 移动端遮罩 -->
+                <div class="md:hidden absolute inset-0" style="display:none" id="sidebar-backdrop" onclick="toggleSidebar()"></div>
+                <div class="outline-sidebar-header" style="border-bottom:none;padding-bottom:0;"></div>
+                <div class="outline-tree" id="outline-tree">
+                    <!-- JS 动态生成三级目录 -->
+                </div>
+            </aside>
+
+            <!-- 右侧内容区 -->
+            <main class="detail-content-area" id="detail-content-area">
+                <div class="detail-content-inner">
+                    <!-- 文章标题 -->
+                    <h1 class="text-3xl font-bold mb-2" id="article-title">请从左侧选择文章</h1>
+
+                    <!-- 发布/更新时间 -->
+                    <p class="text-sm text-slate-400 dark:text-slate-500 mb-6" id="article-time" style="display:none"></p>
+
+                    <!-- 标签 -->
+                    <div class="flex flex-wrap gap-2 mb-4" id="article-tags"></div>
+
+                    <!-- 摘要 -->
+                    <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg mb-6 text-sm text-slate-600 dark:text-slate-400 leading-relaxed" id="article-summary" style="display:none"></div>
+
+                    <!-- 实践项目 -->
+                    <div class="mb-6" id="article-practice-section" style="display:none">
+                        <h3 class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">实践项目</h3>
+                        <div class="text-sm" id="article-practice"></div>
+                    </div>
+
+                    <!-- 分割线 -->
+                    <hr class="my-6 border-slate-200 dark:border-slate-700">
+
+                    <!-- Markdown 正文 -->
+                    <div class="article-body" id="article-body">
+                        <div class="text-slate-400 text-center py-16">
+                            <i class="fa-solid fa-hand-point-left text-3xl mb-3 block"></i>
+                            <p>从左侧目录选择一篇文章开始阅读</p>
+                        </div>
+                    </div>
+
+                    <!-- 上一篇 / 下一篇 -->
+                    <div class="mt-12 pt-6 border-t border-slate-200 dark:border-slate-700 grid grid-cols-2 gap-x-6 gap-y-1" id="article-nav">
+                        <div id="nav-prev" class="text-left"></div>
+                        <div id="nav-next" class="text-right"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- JS -->
+        <script src="../js/api.js"></script>
+        <script src="../js/utils.js"></script>
+        <script src="../js/topics.js"></script>
+        <script src="../js/theme.js"></script>
+        <script>
+        (function() {
+            // 初始化主题（参考 theme.js 中的 initTheme）
+            const t = localStorage.getItem('theme-mode') || 'system';
+            const u = new URLSearchParams(location.search).get('theme');
+            const m = (u && ['light','dark','system'].includes(u)) ? u : t;
+            const d = m === 'system' ? (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light') : m;
+            document.documentElement.classList.toggle('dark', d === 'dark');
+            // 绑定主题按钮
+            const btn = document.getElementById('theme-toggle');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const current = d === 'dark' ? 'dark' : 'light';
+                    const next = current === 'dark' ? 'light' : 'dark';
+                    localStorage.setItem('theme-mode', next);
+                    document.documentElement.classList.toggle('dark', next === 'dark');
+                    location.reload();
+                });
+            }
+        })();
+
+        // 返回上级页面：根据来源智能返回
+        function goBack() {
+            const from = new URLSearchParams(location.search).get('from');
+            if (from === 'home') {
+                window.history.back();
+            } else if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        // 返回按钮后显示来源文字
+        function updateBackLabel() {
+            const from = new URLSearchParams(location.search).get('from');
+            const labelEl = document.getElementById('back-label');
+            if (!labelEl) return;
+            const text = from === 'home' ? '首页' : (from === 'topics' ? '专题' : (from === 'projects' ? '项目' : (from === 'blog' ? '博客' : '')));
+            if (text) {
+                labelEl.textContent = text;
+                labelEl.classList.remove('hidden');
+            } else {
+                labelEl.classList.add('hidden');
+            }
+        }
+        updateBackLabel();
+        loadTopicDetailPage();
+        </script>
+</body>
+</html>

@@ -4,19 +4,27 @@
  * 适配后端新接口：分组结构（groups）替代旧的分类结构
  *
  * API_BASE: 后端服务地址
- * - 本地开发（localhost/127.0.0.1）：默认 http://localhost:8000
- * - 本地开发（dev.hacore.cn）：默认 http://dev.hacore.cn:8000
- * - 生产环境（hacore.cn）：同源请求（空字符串）
+ * 优先级：URL 参数 ?api=xxx > localStorage['env-mode'] > 自动检测
+ * - localStorage 切换：通过右下角环境切换按钮设置（offline/cloud/auto）
+ * - 自动检测：根据当前页面域名推断后端地址
  */
 
 const API_BASE = (() => {
-    // 可通过 URL 参数 ?api=xxx 动态指定，方便开发调试
+    // 1. URL 参数覆盖（最高优先级，临时调试用）
     const param = new URLSearchParams(window.location.search).get('api');
     if (param) return param;
+
+    // 2. localStorage 环境切换（通过右下角按钮设置）
+    const envMode = localStorage.getItem('env-mode');
+    if (envMode === 'offline') return 'http://localhost:8000';
+    if (envMode === 'cloud') return 'http://175.178.7.7:8000';
+
+    // 3. 自动检测
     const h = window.location.hostname;
+    if (h === '175.178.7.7') return 'http://175.178.7.7:8000';
     if (h === 'dev.hacore.cn') return 'http://dev.hacore.cn:8000';
     if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:8000';
-    return '';
+    return ''; // 生产环境（hacore.cn）同源请求
 })();
 
 // 只读 Token（JWT），用于 API 鉴权
@@ -231,6 +239,40 @@ async function loadProfile() {
     if (data) return data; // { about: {...} }
 
     return null;
+}
+
+// ---------- 专题（学习领域 → 专题 → 层级 → 文章） ----------
+
+/**
+ * 获取单个专题详情（含层级和文章）
+ * 个人网站走 public_only=1，后端在无任何已发布文章时返回 null
+ */
+async function loadTopicDetail(topicId) {
+    const apiData = await apiGet(`/site/learning/series/${topicId}?public_only=1`);
+    console.log('[Topics] loadTopicDetail:', topicId, '=>', apiData ? 'OK' : 'NULL');
+    return apiData || null;
+}
+
+/**
+ * 获取全部已发布专题（用于首页最新专题卡片 & 专题列表页筛选/搜索）
+ * 返回: [{ id, domain_id, series_key, name, cover_image, description, tags, updated_at, ... }]
+ */
+async function loadAllSeries() {
+    const apiData = await apiGet('/site/learning/series?public_only=1');
+    console.log('[Topics] loadAllSeries =>', apiData ? apiData.items?.length : 'NULL');
+    if (apiData && Array.isArray(apiData.items)) return apiData.items;
+    return [];
+}
+
+// 拉取学习领域配置（数据库 learning_domains，仅已启用的）
+async function loadDomains() {
+    try {
+        const apiData = await apiGet('/site/learning/domains?public_only=1');
+        if (apiData && Array.isArray(apiData.items)) return apiData.items;
+    } catch (err) {
+        console.error('[Topics] loadDomains 失败:', err.message);
+    }
+    return [];
 }
 
 // ---------- Newsletter 订阅 ----------
