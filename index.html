@@ -175,8 +175,10 @@
     <script src="./js/views.js"></script>
     <script src="./js/topics.js"></script>
     <script src="./js/theme.js"></script>
+    <script src="./js/auth.js"></script>
     <script>
         initApp('home');
+        HeAnAuth.mountLoginButton();
 
         // ---------- Newsletter 订阅 ----------
         async function handleNewsletterSubmit(event) {
@@ -286,7 +288,6 @@
                     card.href = `projects/detail.html?id=${project.id}&from=home`;
                     card.className = "block group flex-shrink-0 w-80 snap-start";
                     card.onclick = () => trackClick('click_project', 'open_project', 'project_card', 'home', 'project', project.id);
-                    trackShow('home', 'project_card', 'project', project.id);
                     card.innerHTML = `
                         <article class="card-hover bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700 h-full">
                             <div class="overflow-hidden aspect-[16/9]">
@@ -321,7 +322,6 @@
                     card.href = `blog/detail.html?id=${blog.id}&from=home`;
                     card.className = "card-hover flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md border border-slate-100 dark:border-slate-700 group";
                     card.onclick = () => trackClick('click_blog', 'open_blog', 'blog_card', 'home', 'blog', blog.id);
-                    trackShow('home', 'blog_card', 'blog', blog.id);
                     card.innerHTML = `
                         <div class="flex-1">
                             <div class="flex items-center gap-3 mb-3">

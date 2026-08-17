@@ -190,4 +190,9 @@ function initApp(activePage) {
             }
         } catch(e) {}
     })();
+
+    // 页面级浏览埋点（统一由 initApp 上报，详情页/列表页共用，互不重复）
+    if (typeof autoTrackPageView === 'function') {
+        autoTrackPageView(activePage);
+    }
 }

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 | 禾安</title>
+    <!-- 暗黑模式防闪烁 -->
+    <script>
+        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
+    </script>
+    <script src="./js/config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = TAILWIND_CONFIG;
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./js/common.css">
+</head>
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans min-h-screen flex items-center justify-center">
+
+    <div class="w-full max-w-md p-8">
+        <div class="text-center mb-8">
+            <a href="./index.html" class="inline-flex items-center mb-4">
+                <img src="./logo/logo-mark.svg" alt="禾安" class="h-10 w-10 mr-2">
+                <span class="font-bold text-2xl tracking-tight">禾安</span>
+            </a>
+            <h1 class="text-xl font-semibold">登录到你的账户</h1>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">使用用户名或邮箱登录</p>
+        </div>
+
+        <form id="login-form" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">账号</label>
+                <input id="account" type="text" autocomplete="username" required
+                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none transition">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">密码</label>
+                <input id="password" type="password" autocomplete="current-password" required
+                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none transition">
+            </div>
+            <div id="err" class="text-sm text-red-500 hidden"></div>
+            <button type="submit" id="submit-btn"
+                class="w-full py-2.5 rounded-lg bg-primary text-white font-medium hover:opacity-90 transition disabled:opacity-50">
+                登录
+            </button>
+        </form>
+
+        <p class="text-center text-sm text-slate-500 dark:text-slate-400 mt-6">
+            <a href="./index.html" class="hover:text-primary transition-colors">← 返回首页</a>
+        </p>
+    </div>
+
+    <script src="./js/api.js"></script>
+    <script src="./js/auth.js"></script>
+    <script>
+        (function () {
+            if (HeAnAuth.isLoggedIn()) {
+                // 已登录：直接回到来源页（不强制首页）
+                const back = new URLSearchParams(location.search).get('back');
+                location.href = back || './index.html';
+                return;
+            }
+            const form = document.getElementById('login-form');
+            const errEl = document.getElementById('err');
+            const btn = document.getElementById('submit-btn');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                errEl.classList.add('hidden');
+                btn.disabled = true;
+                btn.textContent = '登录中…';
+                try {
+                    const account = document.getElementById('account').value.trim();
+                    const password = document.getElementById('password').value;
+                    await HeAnAuth.login(account, password);
+                    const back = new URLSearchParams(location.search).get('back');
+                    // 刷新来源页（恢复当前页状态），不强制跳首页
+                    location.href = back || './index.html';
+                } catch (err) {
+                    errEl.textContent = err.message || '登录失败';
+                    errEl.classList.remove('hidden');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = '登录';
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

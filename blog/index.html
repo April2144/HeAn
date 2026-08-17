@@ -84,8 +84,10 @@
     <script src="../js/utils.js"></script>
     <script src="../js/views.js"></script>
     <script src="../js/theme.js"></script>
+    <script src="../js/auth.js"></script>
     <script>
         initApp('blog');
+        HeAnAuth.mountLoginButton();
         let blogsData = [];
 
         function renderBlogs(filter = 'all') {

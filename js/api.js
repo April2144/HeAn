@@ -50,50 +50,106 @@ async function apiGet(path) {
     }
 }
 
-// ---------- 统计事件：隐形埋点（前端不展示，仅上报后端） ----------
-// 埋点命名规范（一眼可读，前端两类入口）：
-//   展示类：trackShow(page, section)              → event_type='show'   extra={page, section}
-//   操作类：trackClick(action, event, section, page) → event_type='click' extra={action, event, section, page}
-//     - action：具体按钮动作标识，如 'click_follow_btn'
-//     - event ：业务事件语义，如 'follow' / 'subscribe' / 'like' / 'favorite'
-//     - section / page：发生位置（区域 / 页面），如 'zhuanti_card' / 'home'
-// 注：HeAn 仅持 read token（无 user_id），后端按匿名事件记录并按 ip_hash 去重
-async function recordEvent(resourceType, resourceId, eventType, extra = {}, page = '', section = '') {
+// ---------- 统计分析埋点（前端不展示，仅上报后端） ----------
+// 架构：后端中间件记录基础数据（visitor_id/IP/User-Agent），前端只补业务数据。
+//   展示类：trackPageView(page_type, page_id)         → POST /site/analytics/pageview
+//   操作类：trackClick(action, event, section, page)  → POST /site/analytics/action
+//     - action ：具体按钮动作标识，如 'click_follow_btn'
+//     - event  ：业务事件语义，如 'follow' / 'subscribe' / 'like' / 'favorite'
+//     - section：发生位置区域，如 'zhuanti_card'
+//     - page   ：发生位置页面，如 'home'
+// 页面加载自动上报 pageview；关闭前上报停留时长 stay_duration。
+function _buildHeaders() {
+    const headers = { 'Content-Type': 'application/json' };
+    if (READ_TOKEN) headers['Authorization'] = `Bearer ${READ_TOKEN}`;
+    return headers;
+}
+
+// 展示类埋点：页面浏览（自动触发，页面加载即上报）
+//   trackPageView('blog', 12) / trackPageView('home', 0)
+function trackPageView(pageType, pageId = 0, stayDuration = 0) {
     try {
         if (!API_BASE) return; // 本地静态环境（无后端）不上报
-        // 合并 UI 维度（page/section）进 extra，与资源维度（resource_type/id）解耦
-        const mergedExtra = { ...extra };
-        if (page) mergedExtra.page = page;
-        if (section) mergedExtra.section = section;
-        const headers = { 'Content-Type': 'application/json' };
-        if (READ_TOKEN) headers['Authorization'] = `Bearer ${READ_TOKEN}`;
-        await fetch(`${API_BASE}/site/analytics/event`, {
+        const payload = {
+            path: window.location.pathname,
+            page_type: pageType,
+            page_id: pageId || 0,
+            referer: document.referrer || '',
+        };
+        if (stayDuration > 0) payload.stay_duration = stayDuration;
+        fetch(`${API_BASE}/site/analytics/pageview`, {
             method: 'POST',
-            headers,
-            body: JSON.stringify({
-                resource_type: resourceType,
-                resource_id: resourceId,
-                event_type: eventType,
-                referer: document.referrer || window.location.pathname,
-                extra: Object.keys(mergedExtra).length ? mergedExtra : undefined,
-            }),
+            headers: _buildHeaders(),
+            body: JSON.stringify(payload),
+            keepalive: true,
         });
     } catch (err) {
-        // 埋点失败静默处理，不影响页面功能
-        console.debug('[analytics] 上报失败:', err.message);
+        console.debug('[analytics] pageview 上报失败:', err.message);
     }
 }
 
-// 展示类埋点：页面/区域展示（如首页专题卡曝光）
-//   trackShow('home', 'zhuanti_card')
-function trackShow(page, section, resourceType = '', resourceId = 0) {
-    recordEvent(resourceType, resourceId, 'show', {}, page, section);
+// 操作类埋点：点击/操作
+//   trackClick('click_follow_btn', 'follow', 'zhuanti_card', 'home')
+function trackClick(action, event, section = '', page = '', targetType = '', targetId = 0, extra = {}) {
+    try {
+        if (!API_BASE) return;
+        const payload = {
+            action_type: 'click',
+            target_type: targetType || section || '',
+            target_id: targetId || null,
+            target_path: window.location.pathname,
+            result: event || action,
+            extra: { action, event, section, page, ...extra },
+        };
+        fetch(`${API_BASE}/site/analytics/action`, {
+            method: 'POST',
+            headers: _buildHeaders(),
+            body: JSON.stringify(payload),
+            keepalive: true,
+        });
+    } catch (err) {
+        console.debug('[analytics] action 上报失败:', err.message);
+    }
 }
 
-// 操作类埋点：点击/操作（业务语义看 extra.event）
-//   trackClick('click_follow_btn', 'follow', 'zhuanti_card', 'home')
-function trackClick(action, event, section, page, resourceType = '', resourceId = 0) {
-    recordEvent(resourceType, resourceId, 'click', { action, event }, page, section);
+// 页面加载自动上报一次 pageview（需页面在引入 api.js 后调用 trackPageViewAuto）
+let _pageLoadTime = null;
+let _stayReported = false;
+function trackPageViewAuto(pageType, pageId = 0) {
+    _pageLoadTime = Date.now();
+    _stayReported = false;
+    trackPageView(pageType, pageId);
+    // 关闭/跳转前上报停留时长（仅补报一次，避免 beforeunload 与 visibilitychange 重复）
+    const reportStay = () => {
+        if (!_pageLoadTime || _stayReported) return;
+        const stay = Math.round((Date.now() - _pageLoadTime) / 1000);
+        _stayReported = true;
+        if (stay > 0) trackPageView(pageType, pageId, stay);
+    };
+    window.addEventListener('beforeunload', reportStay);
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') reportStay();
+    });
+}
+
+// 由页面 activePage 与 URL 参数自动解析 page_type/page_id 并上报（列表页/详情页统一入口）
+const _PAGE_TYPE_MAP = {
+    home: 'home',
+    blog: 'blog',
+    blogs: 'blog_list',
+    project: 'project',
+    projects: 'project_list',
+    topics: 'topics_list',
+    series: 'series',
+    about: 'about',
+};
+function autoTrackPageView(activePage) {
+    const pageType = _PAGE_TYPE_MAP[activePage] || activePage || 'page';
+    let pageId = 0;
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id') || params.get('series') || params.get('article') || params.get('topic');
+    if (id) pageId = parseInt(id) || 0;
+    trackPageViewAuto(pageType, pageId);
 }
 
 // ---------- 降级：读取本地 JSON ----------

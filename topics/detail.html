@@ -282,6 +282,7 @@
         <script src="../js/utils.js"></script>
         <script src="../js/topics.js"></script>
         <script src="../js/theme.js"></script>
+        <script src="../js/auth.js"></script>
         <script>
         (function() {
             // 初始化主题（参考 theme.js 中的 initTheme）
@@ -301,6 +302,7 @@
                     location.reload();
                 });
             }
+            if (window.HeAnAuth) HeAnAuth.mountLoginButton();
         })();
 
         // 返回上级页面：根据来源智能返回

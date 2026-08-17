@@ -75,8 +75,6 @@
             if (!blog) return;
 
             document.title = `${blog.title} | ${SITE.name}`;
-            // 隐形埋点：博客详情曝光（前端不展示，仅上报后端统计）
-            trackShow('detail', 'blog_detail', 'blog', blogId);
             document.getElementById('article-title').textContent = blog.title;
             document.getElementById('article-date').textContent = blog.date;
             document.getElementById('article-cover').src = blog.cover_image;

@@ -126,7 +126,6 @@ async function loadHomeTopics() {
                         </div>
                     </article>
                 </a>`;
-            trackShow('home', 'zhuanti_card', 'series', t.id);
             return `
                 <a href="topics/detail.html?series=${t.id}&from=home" class="block group flex-shrink-0 w-56 snap-start"
                    onclick="trackClick('click_zhuanti','open_series','zhuanti_card','home','series',${t.id})">
@@ -153,7 +152,6 @@ async function loadHomeTopics() {
             const title = (t.name || '').length > 20 ? (t.name.slice(0, 20) + '…') : (t.name || '');
             const desc = (t.description || '点击查看专题详情');
             const shortDesc = desc.length > 40 ? (desc.slice(0, 40) + '…') : desc;
-            trackShow('topics', 'topics_list', 'series', t.id);
             return `
                 <li class="topic-simple-item">
                     <span class="topic-simple-index">${i + 1}</span>
@@ -431,7 +429,6 @@ async function loadTopicDetailPage() {
 
     // 隐形埋点：专题详情曝光 + 开始学习（前端不展示，仅上报后端统计）
     const seriesId = parseInt(topicId) || 0;
-    trackShow('detail', 'series_detail', 'series', seriesId);
     trackClick('start_learn', 'learn_start', 'series_detail', 'detail', 'series', seriesId);
 
     // 顶部左侧显示该专题标题
