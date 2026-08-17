@@ -59,29 +59,46 @@
     </nav>
 
     <!-- 专题列表区域 -->
-    <section class="pt-32 pb-12 fade-in-up text-center">
+    <section class="pt-32 pb-12 fade-in-up text-left">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-4xl font-bold mb-3">全栈开发成长之路</h1>
-            <p class="text-lg text-slate-500 dark:text-slate-400">按领域系统化学习，构建完整知识体系。涵盖 6 大技术方向，从入门到精通。</p>
+            <h1 class="text-4xl font-bold mb-3">独立开发者的实践笔记 · 全栈开发成长之路</h1>
+            <p class="text-lg text-slate-500 dark:text-slate-400">按领域系统化学习，构建完整知识体系。涵盖7大技术方向，从入门到精通。</p>
         </div>
     </section>
 
     <section class="pb-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row gap-8">
-                <!-- 左侧：竖向筛选分类 -->
-                <aside class="lg:w-60 flex-shrink-0">
-                    <div class="sticky top-28">
-                        <h3 class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-3 px-1">分类筛选</h3>
-                        <div id="topic-filter" class="space-y-1.5"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left">
+            <div class="flex flex-col lg:flex-row gap-10">
+                <!-- 左侧：分类 tab + 专题卡片列表 -->
+                <div class="flex-1 min-w-0">
+                    <!-- 分类 tab -->
+                    <div id="topic-domain-tabs" class="topic-domain-tabs"></div>
+                    <!-- 专题卡片列表（4 列网格） -->
+                    <div id="series-list" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4"></div>
+                </div>
+
+                <!-- 右侧侧边栏：搜索框 + 技术栈（顶部）、热门专题、产品推荐 -->
+                <aside class="lg:w-64 flex-shrink-0">
+                    <div class="sticky top-28 space-y-8">
+                        <!-- 搜索框 + 技术栈（置于侧边栏顶部） -->
+                        <div id="topic-search" class="max-w-7xl"></div>
+                        <div id="topic-tags" class="topic-tags">
+                            <div class="topic-tags-title">技术栈筛选</div>
+                        </div>
+
+                        <!-- 热门专题区（简单标题 + 简介列表） -->
+                        <div id="topics" class="topic-side-block">
+                            <h2 class="text-xl font-bold mb-4">热门专题</h2>
+                            <ul id="topics-list" class="topic-simple-list"></ul>
+                        </div>
+
+                        <!-- 产品推荐（简单产品名 + 介绍列表） -->
+                        <div id="projects" class="topic-side-block">
+                            <h2 class="text-xl font-bold mb-4">产品推荐</h2>
+                            <ul id="projects-list" class="topic-simple-list"></ul>
+                        </div>
                     </div>
                 </aside>
-
-                <!-- 右侧：搜索框 + 专题卡片列表 -->
-                <div class="flex-1 min-w-0">
-                    <div id="topic-search" class="mb-6"></div>
-                    <div id="series-list" class="flex flex-wrap gap-4"></div>
-                </div>
             </div>
         </div>
     </section>

@@ -72,11 +72,6 @@ async function initTagMapFromAPI() {
             newMap[t.name] = buildEntry(t, 'fa-code');
         });
 
-        // 系列（兼容历史数据，tech_stacks 已覆盖则不再覆盖）
-        (data.series_tags || []).forEach(s => {
-            if (!newMap[s.name]) newMap[s.name] = buildEntry(s, 'fa-bookmark');
-        });
-
         if (Object.keys(newMap).length > 0) {
             TAG_MAP = { ...TAG_MAP_FALLBACK, ...newMap };
         }

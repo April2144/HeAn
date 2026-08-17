@@ -71,17 +71,16 @@ function renderTagChip(name, withIcon = true, isDomain = false) {
     return `<span class="text-xs px-2.5 py-1 rounded-md ${cls} whitespace-nowrap"${style}>${icon}${escapeHtml(name)}</span>`;
 }
 
-// ---------- 首页精选专题（横向滚动的多卡片列表，按后台 is_featured 配置读取） ----------
+// ---------- 首页精选专题（按后台 is_featured 配置读取；首页用横向卡片，专题页用简单列表） ----------
+// 隐藏逻辑与渲染容器解耦：无论哪个页面，无推荐数据都先隐藏 #topics 模块，再按页面容器渲染
 async function loadHomeTopics() {
     console.log('[Topics] loadHomeTopics 开始');
-    // 拉取统一标签系统（series_tags），供详情页/卡片/筛选使用
+    // 拉取统一标签系统（general_tags / tech_stacks），供详情页/卡片/筛选使用
     await initTagMapFromAPI();
     // 先拉取后端领域配置，确保领域名/图标正确显示
     _domainList = await loadDomains();
     const series = await loadAllSeries();
     console.log('[Topics] loadHomeTopics 获取到', series.length, '个专题');
-    const grid = document.getElementById('topics-grid');
-    if (!grid) { console.warn('[Topics] #topics-grid 未找到'); return; }
 
     // 仅保留「首页推荐」且「有已发布文章」的专题，按 featured_order 升序
     const sorted = (series || [])
@@ -89,43 +88,83 @@ async function loadHomeTopics() {
         .slice()
         .sort((a, b) => (a.featured_order || 0) - (b.featured_order || 0));
 
+    // 无推荐数据：直接隐藏模块（首页 #topics 与专题页 #topics 通用），不再依赖渲染容器是否存在
+    const section = document.getElementById('topics');
     if (!sorted.length) {
-        // 没有任何推荐专题时不显示模块内容
-        const section = document.getElementById('topics');
         if (section) section.style.display = 'none';
         return;
     }
 
-    grid.className = 'flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide';
-    grid.style.overflowX = 'auto';
-    grid.innerHTML = sorted.map(t => {
-        const meta = getDomainMeta(t.domain_key);
-        const tags = normalizeTags(t.tags).slice(0, 4);
-        const cover = t.cover_image || '';
-        const title = (t.name || '').length > 20 ? (t.name.slice(0, 20) + '…') : (t.name || '');
-        const desc = (t.description || '点击查看专题详情');
-        const shortDesc = desc.length > 60 ? (desc.slice(0, 60) + '…') : desc;
-        const updatedAt = (t.updated_at || '').slice(0, 10);
-        const domainName = t.domain_name || getDomainDisplayName({ domain_key: t.domain_key });
-        return `
-            <a href="topics/detail.html?series=${t.id}&from=home" class="block group flex-shrink-0 w-56 snap-start">
-                <article class="card-hover relative w-56 aspect-[3/4] rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
-                    <img src="${cover}" alt="${escapeHtml(t.name || '')}" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
-                        <h3 class="font-bold text-lg mb-1.5 line-clamp-1 drop-shadow" title="${escapeHtml(t.name || '')}">${escapeHtml(title)}</h3>
-                        <p class="text-white/90 text-sm mb-2 line-clamp-2">${escapeHtml(shortDesc)}</p>
-                        <div class="flex flex-wrap gap-1.5 mb-2">
-                            ${tags.map(tag => `<span class="tag-chip" style="background:rgba(255,255,255,0.25);color:#fff;">${escapeHtml(tag)}</span>`).join('')}
+    // 首页容器：横向卡片（#topics-grid）
+    const grid = document.getElementById('topics-grid');
+    if (grid) {
+        grid.className = 'flex gap-6 overflow-x-auto pb-4 pt-4 -mt-4 snap-x snap-mandatory scrollbar-hide';
+        grid.style.overflowX = 'auto';
+        grid.innerHTML = sorted.map(t => {
+            const meta = getDomainMeta(t.domain_key);
+            const tags = normalizeTags(t.tags).slice(0, 4);
+            const cover = t.cover_image || '';
+            const title = (t.name || '').length > 20 ? (t.name.slice(0, 20) + '…') : (t.name || '');
+            const desc = (t.description || '点击查看专题详情');
+            const shortDesc = desc.length > 60 ? (desc.slice(0, 60) + '…') : desc;
+            const updatedAt = (t.updated_at || '').slice(0, 10);
+            const domainName = t.domain_name || getDomainDisplayName({ domain_key: t.domain_key });
+            return `
+                <a href="topics/detail.html?series=${t.id}&from=home" class="block group flex-shrink-0 w-56 snap-start">
+                    <article class="card-hover relative w-56 aspect-[3/4] rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
+                        <img src="${cover}" alt="${escapeHtml(t.name || '')}" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+                            <h3 class="font-bold text-lg mb-1.5 line-clamp-1 drop-shadow" title="${escapeHtml(t.name || '')}">${escapeHtml(title)}</h3>
+                            <p class="text-white/90 text-sm mb-2 line-clamp-2">${escapeHtml(shortDesc)}</p>
+                            <div class="flex flex-wrap gap-1.5 mb-2">
+                                ${tags.map(tag => `<span class="tag-chip" style="background:rgba(255,255,255,0.25);color:#fff;">${escapeHtml(tag)}</span>`).join('')}
+                            </div>
+                            <div class="flex items-center text-white/80 text-xs whitespace-nowrap">
+                                <span><i class="fas fa-clock mr-1"></i>${updatedAt}</span>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between text-white/80 text-xs whitespace-nowrap">
-                            <span><i class="fas fa-eye mr-1"></i>${t.view_count || 0}</span>
-                            <span><i class="fas fa-clock mr-1"></i>${updatedAt}</span>
+                    </article>
+                </a>`;
+            trackShow('home', 'zhuanti_card', 'series', t.id);
+            return `
+                <a href="topics/detail.html?series=${t.id}&from=home" class="block group flex-shrink-0 w-56 snap-start"
+                   onclick="trackClick('click_zhuanti','open_series','zhuanti_card','home','series',${t.id})">
+                    <article class="card-hover relative w-56 aspect-[3/4] rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
+                        <img src="${cover}" alt="${escapeHtml(t.name || '')}" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+                            <h3 class="font-bold text-lg mb-1.5 line-clamp-1 drop-shadow" title="${escapeHtml(t.name || '')}">${escapeHtml(title)}</h3>
+                            <p class="text-white/90 text-sm mb-2 line-clamp-2">${escapeHtml(shortDesc)}</p>
+                            <div class="flex flex-wrap gap-1.5 mb-2">
+                                ${tags.map(tag => `<span class="tag-chip" style="background:rgba(255,255,255,0.25);color:#fff;">${escapeHtml(tag)}</span>`).join('')}
+                            </div>
+                            <div class="flex items-center text-white/80 text-xs whitespace-nowrap">
+                                <span><i class="fas fa-clock mr-1"></i>${updatedAt}</span>
+                            </div>
                         </div>
-                    </div>
-                </article>
-            </a>`;
-    }).join('');
+                    </article>
+                </a>`;
+        }).join('');
+    }
+    const list = document.getElementById('topics-list');
+    if (list) {
+        list.innerHTML = sorted.map((t, i) => {
+            const title = (t.name || '').length > 20 ? (t.name.slice(0, 20) + '…') : (t.name || '');
+            const desc = (t.description || '点击查看专题详情');
+            const shortDesc = desc.length > 40 ? (desc.slice(0, 40) + '…') : desc;
+            trackShow('topics', 'topics_list', 'series', t.id);
+            return `
+                <li class="topic-simple-item">
+                    <span class="topic-simple-index">${i + 1}</span>
+                    <a href="detail.html?series=${t.id}&from=topics" class="block group min-w-0"
+                       onclick="trackClick('click_topic','open_series','topics_list','topics','series',${t.id})">
+                        <h4 class="font-semibold text-sm text-slate-800 dark:text-slate-100 group-hover:text-primary transition-theme-color truncate">${escapeHtml(title)}</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5">${escapeHtml(shortDesc)}</p>
+                    </a>
+                </li>`;
+        }).join('');
+    }
 }
 
 // ---------- 专题列表页（筛选分类 + 搜索 + 卡片列表） ----------
@@ -136,7 +175,7 @@ let _currentKeyword = '';   // 当前搜索关键词
 
 async function loadTopicsPage() {
     console.log('[Topics] loadTopicsPage 开始');
-    // 拉取统一标签系统（series_tags），供卡片/筛选使用
+    // 拉取统一标签系统（general_tags / tech_stacks），供卡片/筛选使用
     await initTagMapFromAPI();
 
     // 先拉取后端领域配置（数据库 learning_domains，仅已启用的）
@@ -150,26 +189,78 @@ async function loadTopicsPage() {
     renderFilterSidebar();
     renderSearchBox();
     renderSeriesList();
+
+    // 右侧侧边栏：热门专题（复用首页精选专题逻辑，渲染到 #topics-grid）
+    loadHomeTopics();
+    // 右侧侧边栏：产品推荐（复用首页项目逻辑，渲染到 #projects-grid）
+    renderSidebarProjects();
 }
 
-// 渲染左侧竖向筛选分类（分类来自后端领域配置）
-// 标签严格从 tags 系统读取（TAG_MAP / tech_stacks），与后端配置一致，不读 articles.tags 作为标签来源
+// 渲染筛选分类：领域 tab（搜索框上方）→ 其下方平铺对应技术栈标签（搜索框上方），整体左对齐
 function renderFilterSidebar() {
-    const el = document.getElementById('topic-filter');
+    renderDomainTabs();
+    renderTagFilter();
+}
+
+// 右侧侧边栏「产品推荐」：复用首页项目推荐逻辑，渲染为简单列表（仅产品名 + 介绍，无封面）
+async function renderSidebarProjects() {
+    const projectData = await loadProjects();
+    if (!projectData) { document.getElementById('projects').style.display = 'none'; return; }
+
+    const list = document.getElementById('projects-list');
+    if (!list) return;
+
+    // 只展示后台开启「首页推荐」的项目，按推荐序号升序（与首页逻辑一致）
+    const allProjects = (projectData.projects || [])
+        .filter(p => (p.is_featured ?? 0) === 1)
+        .sort((a, b) => (a.featured_order ?? 0) - (b.featured_order ?? 0));
+
+    if (!allProjects.length) {
+        document.getElementById('projects').style.display = 'none';
+        return;
+    }
+
+    // 简单列表：仅产品名 + 介绍，无封面，带图标点缀
+    list.innerHTML = allProjects.map(project => {
+        const desc = (project.description || '').length > 40 ? (project.description.slice(0, 40) + '…') : (project.description || '');
+        return `
+            <li class="topic-simple-item">
+                <i class="fa-solid fa-cube topic-simple-icon"></i>
+                <a href="../projects/detail.html?id=${project.id}&from=topics" class="block group min-w-0">
+                    <h4 class="font-semibold text-sm text-slate-800 dark:text-slate-100 group-hover:text-primary transition-theme-color truncate">${escapeHtml(project.title)}</h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5">${escapeHtml(desc)}</p>
+                </a>
+            </li>`;
+    }).join('');
+}
+
+// 领域分类：水平 tab，放搜索框上方，相对搜索框居中（无「分类筛选」标题）
+function renderDomainTabs() {
+    const el = document.getElementById('topic-domain-tabs');
     if (!el) return;
 
     // 动态构建分类列表：全部(固定) + 后端领域（按 display_order 排序）
+    // 仅保留「当前有已发布专题」的领域，无内容的领域不展示分组名
+    const usedDomainKeys = new Set(_allSeriesCache.map(s => s.domain_key).filter(Boolean));
     const filters = [{ key: 'all', name: '全部', icon: DOMAIN_DEFAULT_STYLE.icon }]
-        .concat((_domainList || []).slice().sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+        .concat((_domainList || []).filter(d => usedDomainKeys.has(d.domain_key)).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
             .map(d => ({ key: d.domain_key, name: d.name, icon: d.icon || DOMAIN_DEFAULT_STYLE.icon })));
 
-    // 领域按钮（仅切领域，不堆标签）
-    const filterBtns = filters.map(f => {
+    // 若当前选中的领域因无已发布专题被移除，则回退到「全部」（专事专用，避免选中态悬空）
+    if (_currentFilter !== 'all' && !filters.some(f => f.key === _currentFilter)) {
+        _currentFilter = 'all';
+    }
+
+    el.innerHTML = filters.map(f => {
         const active = _currentFilter === f.key ? 'filter-selected' : '';
-        return `<button class="topic-filter-item ${active} flex items-center gap-2" onclick="selectTopicFilter('${f.key}')">
-            <i class="fas ${f.icon}"></i><span>${escapeHtml(f.name)}</span>
-        </button>`;
+        return `<button class="topic-domain-item ${active}" onclick="selectTopicFilter('${f.key}')">${escapeHtml(f.name)}</button>`;
     }).join('');
+}
+
+// 技术栈筛选：放在分类 tab 下方平铺展示（点不同分类 tab 自动切换对应技术栈），无标题
+function renderTagFilter() {
+    const el = document.getElementById('topic-tags');
+    if (!el) return;
 
     // 标签筛选区：严格从 TAG_MAP（tags 系统 tech_stacks）读取
     // 取「当前领域下专题真实使用 ∩ TAG_MAP 存在」的标签，保证既来自 tags 系统、又在该领域有专题使用
@@ -195,27 +286,20 @@ function renderFilterSidebar() {
         ? `<button class="topic-tag-clear" onclick="selectTagFilter('')">清除筛选</button>`
         : '';
 
-    el.innerHTML = `
-        <div class="topic-filter-list">${filterBtns}</div>
-        <div class="topic-tag-filter">
-            <div class="topic-tag-filter-head">
-                <span>技术栈筛选</span>${clearBtn}
-            </div>
-            <div class="topic-tag-filter-body">${tagChips}</div>
-        </div>`;
+    el.innerHTML = `<div class="topic-tag-body">${tagChips}${clearBtn}</div>`;
 }
 
 function selectTopicFilter(key) {
     _currentFilter = key;
     _currentTagFilter = ''; // 切领域时清空标签筛选（专事专用，互不干涉）
 
-    // 增量更新选中态 class，不整块重写 innerHTML（避免标题重绘闪烁）
-    document.querySelectorAll('#topic-filter .topic-filter-item').forEach(b => {
+    // 增量更新领域 tab 选中态 class，不整块重写 innerHTML（避免标题重绘闪烁）
+    document.querySelectorAll('#topic-domain-tabs .topic-domain-item').forEach(b => {
         const k = (b.getAttribute('onclick') || '').match(/'([^']+)'\)/);
         b.classList.toggle('filter-selected', k && k[1] === key);
     });
-    // 切领域后标签筛选区需按新领域重建（标签集合变了），但领域按钮态只增量切换
-    renderFilterSidebarKeepSelection();
+    // 切领域后技术栈筛选区需按新领域重建（标签集合变了），但领域按钮态只增量切换
+    renderTagFilter();
     renderSeriesList();
 }
 
@@ -223,7 +307,7 @@ function selectTopicFilter(key) {
 function selectTagFilter(tag) {
     _currentTagFilter = (_currentTagFilter === tag) ? '' : tag; // 点同一个则取消
     // 增量切换标签按钮选中态，不整块重写（避免闪烁）
-    document.querySelectorAll('#topic-filter .topic-tag-item').forEach(item => {
+    document.querySelectorAll('#topic-tags .topic-tag-item').forEach(item => {
         const t = (item.getAttribute('onclick') || '').match(/'([^']+)'\)/);
         item.classList.toggle('filter-selected', t && t[1] === _currentTagFilter && _currentTagFilter !== '');
     });
@@ -233,47 +317,36 @@ function selectTagFilter(tag) {
     renderSeriesList();
 }
 
-// 领域切换后重建标签筛选区，但保留领域按钮当前选中态（不闪烁）
-function renderFilterSidebarKeepSelection() {
-    const el = document.getElementById('topic-filter');
-    if (!el) return;
-    const prevFilter = _currentFilter;
-
-    const tagSet = new Set();
-    const scopeSeries = prevFilter === 'all'
-        ? _allSeriesCache
-        : _allSeriesCache.filter(s => s.domain_key === prevFilter);
-    scopeSeries.forEach(s => {
-        normalizeTags(s.tags).forEach(tag => { if (TAG_MAP[tag]) tagSet.add(tag); });
-    });
-    const tagList = Array.from(tagSet).sort();
-    const tagChips = tagList.length
-        ? tagList.map(tag => {
-            const active = _currentTagFilter === tag ? 'filter-selected' : '';
-            return `<span class="topic-tag-item ${active}" onclick="selectTagFilter('${escapeHtml(tag)}')">${renderTagChip(tag, false)}</span>`;
-        }).join('')
-        : '<span class="topic-tag-empty">该分类下暂无标签</span>';
-    const clearBtn = _currentTagFilter
-        ? `<button class="topic-tag-clear" onclick="selectTagFilter('')">清除筛选</button>`
-        : '';
-
-    // 只替换「标签筛选区」子块，领域按钮列表不变（无闪烁）
-    const body = el.querySelector('.topic-tag-filter-body');
-    const head = el.querySelector('.topic-tag-filter-head');
-    if (body) body.innerHTML = tagChips;
-    if (head) head.innerHTML = `<span>技术栈筛选</span>${clearBtn}`;
-}
-
 function renderSearchBox() {
     const el = document.getElementById('topic-search');
     if (!el) return;
-    el.innerHTML = `<input type="text" id="topic-search-input" placeholder="搜索专题标题或技术栈…"
-        class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
-        value="${escapeHtml(_currentKeyword)}" oninput="onTopicSearchInput(this.value)">`;
+    el.innerHTML = `
+        <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+            <input type="text" id="topic-search-input" placeholder="搜索专题标题或技术栈…"
+                class="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+                value="${escapeHtml(_currentKeyword)}" oninput="onTopicSearchInput(this.value)">
+            <button id="topic-search-clear" type="button" onclick="clearTopicSearch()"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 ${_currentKeyword ? '' : 'hidden'}">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>`;
 }
 
 function onTopicSearchInput(val) {
     _currentKeyword = val.trim().toLowerCase();
+    const clearBtn = document.getElementById('topic-search-clear');
+    if (clearBtn) clearBtn.classList.toggle('hidden', !_currentKeyword);
+    renderSeriesList();
+}
+
+// 一键清空搜索框：清空输入、隐藏 X、重置关键词并重新渲染
+function clearTopicSearch() {
+    const input = document.getElementById('topic-search-input');
+    const clearBtn = document.getElementById('topic-search-clear');
+    if (input) input.value = '';
+    if (clearBtn) clearBtn.classList.add('hidden');
+    _currentKeyword = '';
     renderSeriesList();
 }
 
@@ -308,7 +381,7 @@ function renderSeriesList() {
 
     // 列表为空则不显示任何专题卡片（空态提示）
     if (!list.length) {
-        grid.innerHTML = '<div class="col-span-full text-center py-16 text-slate-400"><i class="fa-solid fa-magnifying-glass text-3xl mb-3 block"></i><p>没有符合条件的专题</p></div>';
+        grid.innerHTML = '<div class="w-full flex flex-col items-center justify-center py-16 text-slate-400"><i class="fa-solid fa-magnifying-glass text-3xl mb-3"></i><p>没有符合条件的专题</p></div>';
         return;
     }
 
@@ -318,8 +391,8 @@ function renderSeriesList() {
         const cover = s.cover_image || '';
         const updatedAt = (s.updated_at || '').slice(0, 10);
         return `
-        <a href="detail.html?series=${s.id}&from=topics" class="block group w-56">
-            <article class="card-hover relative w-56 aspect-[3/4] rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
+        <a href="detail.html?series=${s.id}&from=topics" class="block group">
+            <article class="card-hover relative aspect-[3/4] rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
                 <img src="${cover}" alt="${escapeHtml(s.name)}" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
@@ -328,8 +401,7 @@ function renderSeriesList() {
                     <div class="flex flex-wrap gap-1.5 mb-2">
                         ${tags.map(tag => `<span class="tag-chip" style="background:rgba(255,255,255,0.25);color:#fff;">${escapeHtml(tag)}</span>`).join('')}
                     </div>
-                    <div class="flex items-center justify-between text-white/80 text-xs whitespace-nowrap">
-                        <span><i class="fas fa-eye mr-1"></i>${s.view_count || 0}</span>
+                    <div class="flex items-center text-white/80 text-xs whitespace-nowrap">
                         <span><i class="fas fa-clock mr-1"></i>${updatedAt}</span>
                     </div>
                 </div>
@@ -347,7 +419,7 @@ async function loadTopicDetailPage() {
     const topicId = params.get('series');
     if (!topicId) { showDetailError('缺少专题 ID'); return; }
 
-    // 拉取统一标签系统（series_tags），供详情页文章标签使用
+    // 拉取统一标签系统（general_tags / tech_stacks），供详情页文章标签使用
     await initTagMapFromAPI();
 
     // 调用 api.js 中的真实加载函数（该函数名与本文定义过的加载函数冲突，故本页加载入口单独命名）
@@ -356,6 +428,11 @@ async function loadTopicDetailPage() {
 
     // 更新页面标题
     document.title = `${currentTopic.name} | 禾安`;
+
+    // 隐形埋点：专题详情曝光 + 开始学习（前端不展示，仅上报后端统计）
+    const seriesId = parseInt(topicId) || 0;
+    trackShow('detail', 'series_detail', 'series', seriesId);
+    trackClick('start_learn', 'learn_start', 'series_detail', 'detail', 'series', seriesId);
 
     // 顶部左侧显示该专题标题
     const titleEl = document.getElementById('detail-topic-title');
@@ -483,7 +560,50 @@ function selectArticle(articleId) {
 
     if (!article) return;
     currentArticle = article;
+
+    // 隐形埋点：文章打开（前端不展示，仅上报后端统计）
+    const artId = article.id || article.article_key;
+    if (artId) {
+        trackClick('open_article', 'learn_start', 'article_item', 'detail', 'article', parseInt(artId) || artId);
+        startArticleProgressTracking(parseInt(artId) || artId);
+    }
+
     renderArticleDetail(article);
+}
+
+// 阅读进度追踪：监听内容区滚动，按最大可见比例上报 learn_progress（去抖 + 完成标记）
+let _progressTimer = null;
+let _progressMax = 0;
+let _progressCompleted = false;
+function startArticleProgressTracking(articleId) {
+    const area = document.getElementById('detail-content-area');
+    const bodyEl = document.getElementById('article-body');
+    if (!area || !bodyEl) return;
+
+    _progressMax = 0;
+    _progressCompleted = false;
+
+    const report = () => {
+        const scrollTop = area.scrollTop;
+        const scrollHeight = area.scrollHeight - area.clientHeight;
+        let ratio = scrollHeight > 0 ? scrollTop / scrollHeight : (bodyEl.scrollHeight <= area.clientHeight ? 1 : 0);
+        ratio = Math.max(0, Math.min(1, ratio));
+        const percent = Math.round(ratio * 100);
+        if (percent > _progressMax) _progressMax = percent;
+        const completed = _progressMax >= 90;
+        if (completed && !_progressCompleted) {
+            _progressCompleted = true;
+        }
+        trackClick('read_progress', 'learn_progress', 'article_body', 'detail', 'article', articleId, {
+            progress: _progressMax,
+            completed: completed,
+        });
+    };
+
+    area.onscroll = () => {
+        if (_progressTimer) clearTimeout(_progressTimer);
+        _progressTimer = setTimeout(report, 800);
+    };
 }
 
 // 点击文章内重点章节标题：先确保选中该文章，再滚动到对应锚点

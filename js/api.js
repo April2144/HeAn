@@ -50,6 +50,52 @@ async function apiGet(path) {
     }
 }
 
+// ---------- 统计事件：隐形埋点（前端不展示，仅上报后端） ----------
+// 埋点命名规范（一眼可读，前端两类入口）：
+//   展示类：trackShow(page, section)              → event_type='show'   extra={page, section}
+//   操作类：trackClick(action, event, section, page) → event_type='click' extra={action, event, section, page}
+//     - action：具体按钮动作标识，如 'click_follow_btn'
+//     - event ：业务事件语义，如 'follow' / 'subscribe' / 'like' / 'favorite'
+//     - section / page：发生位置（区域 / 页面），如 'zhuanti_card' / 'home'
+// 注：HeAn 仅持 read token（无 user_id），后端按匿名事件记录并按 ip_hash 去重
+async function recordEvent(resourceType, resourceId, eventType, extra = {}, page = '', section = '') {
+    try {
+        if (!API_BASE) return; // 本地静态环境（无后端）不上报
+        // 合并 UI 维度（page/section）进 extra，与资源维度（resource_type/id）解耦
+        const mergedExtra = { ...extra };
+        if (page) mergedExtra.page = page;
+        if (section) mergedExtra.section = section;
+        const headers = { 'Content-Type': 'application/json' };
+        if (READ_TOKEN) headers['Authorization'] = `Bearer ${READ_TOKEN}`;
+        await fetch(`${API_BASE}/site/analytics/event`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+                resource_type: resourceType,
+                resource_id: resourceId,
+                event_type: eventType,
+                referer: document.referrer || window.location.pathname,
+                extra: Object.keys(mergedExtra).length ? mergedExtra : undefined,
+            }),
+        });
+    } catch (err) {
+        // 埋点失败静默处理，不影响页面功能
+        console.debug('[analytics] 上报失败:', err.message);
+    }
+}
+
+// 展示类埋点：页面/区域展示（如首页专题卡曝光）
+//   trackShow('home', 'zhuanti_card')
+function trackShow(page, section, resourceType = '', resourceId = 0) {
+    recordEvent(resourceType, resourceId, 'show', {}, page, section);
+}
+
+// 操作类埋点：点击/操作（业务语义看 extra.event）
+//   trackClick('click_follow_btn', 'follow', 'zhuanti_card', 'home')
+function trackClick(action, event, section, page, resourceType = '', resourceId = 0) {
+    recordEvent(resourceType, resourceId, 'click', { action, event }, page, section);
+}
+
 // ---------- 降级：读取本地 JSON ----------
 function getRoot() {
     // 通过 <script src=".../api.js"> 的相对路径推导根目录
@@ -82,49 +128,49 @@ async function loadLocalJson(filename) {
 // ---------- 工具：API 分组结构 → 旧结构兼容 ----------
 
 /**
- * 将 API 的 groups 结构转为兼容旧代码的 { personal, collab } 结构
- * groups: [{ group_id, group_name, projects: [...] }, ...]
+ * 将 API 的 groups 结构转为统一 { projects } 结构
+ * groups: [{ folder_id, folder_name, projects: [...] }, ...]
+ * 注：旧代码曾用 { personal, collab } 结构，现已统一为 projects，调用方直接用 projectData.projects
  */
 function mapProjectsGroups(groups) {
-    const personal = [];
-    const collab = [];
+    const projects = [];
     (groups || []).forEach(group => {
+        // 跳过未分组的项目
+        if (group.folder_id == null) return;
         const items = (group.projects || []);
         // 跳过空分组（没有已发布项目的不展示）
         if (items.length === 0) return;
-        const isPersonal = /个人|personal/i.test(group.group_name || '');
-        const mapped = items.map(p => ({
-            ...p,
-            id: String(p.id),
-            category: isPersonal ? 'personal' : 'collab',
-        }));
-        if (isPersonal) {
-            personal.push(...mapped);
-        } else {
-            collab.push(...mapped);
-        }
+        items.forEach(p => {
+            projects.push({
+                ...p,
+                id: String(p.id),
+                group: group.folder_name,
+                // 后端 tags 可能为空数组，此时用 folder_name 作为默认标签
+                tags: (p.tags && p.tags.length > 0) ? p.tags : [group.folder_name],
+            });
+        });
     });
-    return { personal, collab };
+    return { projects };
 }
 
 /**
  * 将 API 的 groups 结构转为兼容旧代码的 { blogs: [...] } 结构
- * groups: [{ group_id, group_name, articles: [...] }, ...]
+ * groups: [{ folder_id, folder_name, articles: [...] }, ...]
  */
 function mapBlogsGroups(groups) {
     const blogs = [];
     (groups || []).forEach(group => {
         // 跳过未分组的文章
-        if (group.group_id == null) return;
+        if (group.folder_id == null) return;
         const articles = (group.articles || []);
         // 跳过空分组（没有已发布文章的不展示）
         if (articles.length === 0) return;
         articles.forEach(article => {
             blogs.push({
                 ...article,
-                group: group.group_name,
-                // 后端 tags 可能为空数组，此时用 group_name 作为默认标签
-                tags: (article.tags && article.tags.length > 0) ? article.tags : [group.group_name],
+                group: group.folder_name,
+                // 后端 tags 可能为空数组，此时用 folder_name 作为默认标签
+                tags: (article.tags && article.tags.length > 0) ? article.tags : [group.folder_name],
             });
         });
     });
@@ -138,11 +184,11 @@ function findInGroups(groups, id, itemKey = 'projects') {
     const idNum = parseInt(id);
     for (const group of (groups || [])) {
         // 跳过未分组的数据
-        if (group.group_id == null) continue;
+        if (group.folder_id == null) continue;
         const items = group[itemKey] || [];
         for (const item of items) {
             if (parseInt(item.id) === idNum) {
-                return { ...item, id: String(item.id), group: group.group_name };
+                return { ...item, id: String(item.id), group: group.folder_name };
             }
         }
     }
@@ -151,22 +197,22 @@ function findInGroups(groups, id, itemKey = 'projects') {
 
 // ---------- 项目 ----------
 async function loadProjects() {
-    // 优先 API（新分组结构，只获取已发布内容）
+    // 优先 API（按 folder 动态分区，只获取已发布内容）
     const apiData = await apiGet('/site/projects?public_only=1');
     if (apiData && apiData.groups) {
         return mapProjectsGroups(apiData.groups);
     }
-    // 兼容旧 API 结构
-    if (apiData && (apiData.personal || apiData.collab)) {
-        return apiData;
-    }
 
-    // 降级本地 JSON
+    // 降级本地 JSON（旧结构含 category: personal/collab，转换为 projects 结构）
     const local = await loadLocalJson('projects.json');
     if (!local || !local.projects) return null;
-    const personal = local.projects.filter(p => p.category === 'personal');
-    const collab = local.projects.filter(p => p.category === 'collab');
-    return { personal, collab };
+    const projects = local.projects.map(p => ({
+        ...p,
+        id: String(p.id),
+        group: p.category === 'collab' ? '合作项目' : '个人项目',
+        tags: (p.tags && p.tags.length > 0) ? p.tags : [p.category === 'collab' ? '合作项目' : '个人项目'],
+    }));
+    return { projects };
 }
 
 async function loadProject(projectId) {

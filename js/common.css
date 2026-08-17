@@ -244,59 +244,104 @@ body.ready { transition: background-color 0.3s ease, color 0.3s ease !important;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
 }
 
-/* ========== 专题列表页：竖向筛选分类 ========== */
-.topic-filter-item {
-    display: flex; align-items: center; gap: 0.5rem; width: 100%; text-align: left;
-    padding: 0.65rem 0.85rem; border-radius: 0.75rem;
-    background: transparent; border: 1px solid transparent;
-    transition: all .2s ease; cursor: pointer;
+/* ========== 专题列表页：左右双栏（左侧列表 + 右侧侧边栏） ========== */
+/* 右侧栏各区域模块：顶部分割线区分层次 */
+.topic-side-block {
+    padding-top: 1.25rem;
+    border-top: 1px solid #e2e8f0;
 }
-.topic-filter-item:hover {
-    background: rgba(59,130,246,0.06);
-    border-color: rgba(59,130,246,0.18);
+.topic-side-block:first-of-type { padding-top: 0; border-top: none; }
+.dark .topic-side-block { border-top-color: #334155; }
+/* 右侧栏模块大标题：强化层次（比内容更大更重更深） */
+.topic-side-block > h2 {
+    font-size: 1.1rem; font-weight: 700; color: #0f172a;
+    margin-bottom: 0.75rem; letter-spacing: .01em;
 }
-.topic-filter-item.active {
-    background: rgba(59,130,246,0.12);
-    border-color: rgba(59,130,246,0.4);
+.dark .topic-side-block > h2 { color: #f1f5f9; }
+/* 右侧栏「技术栈筛选」区域名（相对标签列表左对齐） */
+.topic-tags-title {
+    font-size: 0.85rem; font-weight: 600; color: #475569;
+    margin-bottom: 0.5rem; text-align: left;
 }
-.topic-filter-item span {
-    font-weight: 600; font-size: 0.9rem;
+.dark .topic-tags-title { color: #cbd5e1; }
+/* 右侧栏简单列表（热门专题 / 产品推荐） */
+.topic-simple-list { display: flex; flex-direction: column; gap: 0.4rem; }
+.topic-simple-item {
+    display: flex; align-items: flex-start; gap: 0.5rem;
+    padding: 0.4rem 0;
 }
-.topic-filter-item i { margin-right: 0.4rem; }
-.topic-filter-tags {
-    display: flex; flex-wrap: wrap; gap: 0.3rem;
+/* 热门专题序号点缀 */
+.topic-simple-index {
+    flex-shrink: 0; font-size: 0.7rem; font-weight: 700;
+    color: #2563eb; background: #eff6ff; border-radius: 0.35rem;
+    min-width: 1.25rem; height: 1.25rem; line-height: 1.25rem; text-align: center;
 }
-.topic-tag {
+.dark .topic-simple-index { color: #60a5fa; background: rgba(96,165,250,0.15); }
+/* 产品推荐点缀（小图标） */
+.topic-simple-icon {
+    flex-shrink: 0; margin-top: 0.1rem; color: #94a3b8; font-size: 0.8rem;
+}
+.dark .topic-simple-icon { color: #64748b; }
+
+/* ========== 专题列表页：分类 tab + 技术栈标签（均置于搜索框上方，左对齐平铺） ========== */
+/* 分类 tab：水平左对齐平铺 */
+.topic-domain-tabs {
+    display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 1rem; margin-bottom: 0.5rem;
+}
+/* 分类 tab：纯文字，无背景无边框，选中仅文字变色（专事专用） */
+.topic-domain-item {
+    background: none; border: none; padding: 0.25rem 0;
+    color: #1a1a1a; font-size: 0.95rem; font-weight: normal;
+    transition: color .2s ease; cursor: pointer;
+}
+.topic-domain-item:hover { color: #334155; }
+/* 分类 tab 选中：专事专用，强制去背景（覆盖全局 .filter-selected 的 !important 蓝底），只保留文字变色 */
+.topic-domain-item.filter-selected {
+    background: none !important; border-color: transparent !important;
+    color: #2563eb !important; font-weight: 700;
+}
+.dark .topic-domain-item { color: #e5e7eb; }
+.dark .topic-domain-item:hover { color: #fff; }
+.dark .topic-domain-item.filter-selected {
+    background: none !important; border-color: transparent !important;
+    color: #60a5fa !important; font-weight: 700;
+}
+
+/* 技术栈标签区：分类 tab 下方平铺，无标题 */
+.topic-tags {
+    margin: 0.25rem 0 0.75rem;
+}
+.topic-tag-body {
+    display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: center; gap: 0.5rem;
+}
+/* 技术栈标签：带边框 chip，hover/选中加边框，圆角不变 */
+.topic-tag-item {
+    cursor: pointer; display: inline-flex;
+    transition: transform .15s ease;
+}
+.topic-tag-item:hover { transform: scale(1.06); }
+.topic-tag-item.filter-selected { transform: scale(1.06); }
+.topic-tag-item .topic-tag {
     font-size: 0.68rem; line-height: 1.4;
     padding: 0.1rem 0.45rem; border-radius: 0.5rem;
-    background: #f1f5f9; color: #64748b;
+    background: #f8fafc; color: #64748b;
+    border: 1px solid transparent;
+    transition: border-color .2s ease, color .2s ease;
 }
-.dark .topic-tag { background: #334155; color: #94a3b8; }
-
-/* 技术栈标签筛选区（标签来自 tags 系统，可点击筛选） */
-.topic-tag-filter {
-    margin-top: 1rem; padding-top: 1rem;
-    border-top: 1px dashed #e2e8f0;
+.topic-tag-item:hover .topic-tag { border-color: #cbd5e1; color: #475569; }
+.topic-tag-item.filter-selected .topic-tag {
+    border-color: #2563eb; color: #2563eb; background: #eff6ff;
 }
-.dark .topic-tag-filter { border-top-color: #334155; }
-.topic-tag-filter-head {
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 0.8rem; font-weight: 600; color: #475569;
-    margin-bottom: 0.6rem;
-}
-.dark .topic-tag-filter-head { color: #cbd5e1; }
-.topic-tag-filter-body {
-    display: flex; flex-wrap: wrap; gap: 0.4rem;
-}
-.topic-tag-item { cursor: pointer; transition: transform .15s; display: inline-flex; }
-.topic-tag-item:hover { transform: translateY(-1px); }
+.dark .topic-tag-item .topic-tag { background: #1e293b; color: #94a3b8; border-color: transparent; }
+.dark .topic-tag-item:hover .topic-tag { border-color: #475569; color: #e2e8f0; }
+.dark .topic-tag-item.filter-selected .topic-tag { border-color: #60a5fa; color: #60a5fa; background: rgba(96,165,250,0.12); }
 .topic-tag-empty { font-size: 0.75rem; color: #94a3b8; }
 .topic-tag-clear {
-    font-size: 0.7rem; padding: 0.1rem 0.5rem; border-radius: 0.4rem;
+    font-size: 0.72rem; padding: 0.1rem 0.5rem; border-radius: 0.4rem;
     border: 1px solid #cbd5e1; background: #f8fafc; color: #475569; cursor: pointer;
 }
 .topic-tag-clear:hover { background: #eef2ff; color: #2563eb; border-color: #2563eb; }
 .dark .topic-tag-clear { background: #1e293b; border-color: #475569; color: #cbd5e1; }
 .dark .topic-tag-clear:hover { background: #312e81; color: #93c5fd; }
 
-/* ========== 专题列表页：竖向筛选分类 ========== */
+/* ========== 专题列表页：竖向筛选分类（旧版，已废弃保留位） ========== */

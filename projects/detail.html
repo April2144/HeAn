@@ -102,6 +102,8 @@
             if (!project) return;
 
             document.title = `${project.title} | ${SITE.name}`;
+            // 隐形埋点：项目详情曝光（前端不展示，仅上报后端统计）
+            trackShow('detail', 'project_detail', 'project', parseInt(projectId) || 0);
             document.getElementById('project-image').src = project.cover_image;
             document.getElementById('project-image').alt = project.title;
             document.getElementById('project-title').textContent = project.title;

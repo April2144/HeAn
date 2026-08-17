@@ -83,20 +83,16 @@
     <!-- 关于我（动态渲染） -->
     <section class="py-12" id="home-about-section">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-stretch">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
                 <div class="relative">
                     <div class="absolute -inset-4 bg-gradient-to-r from-primary to-secondary rounded-2xl opacity-30 blur-lg"></div>
                     <img src="https://picsum.photos/600/400?tech" alt="开发者工作场景" class="relative rounded-2xl shadow-2xl w-full object-cover" id="home-about-avatar">
                 </div>
-                <div class="mt-8 lg:mt-0 flex flex-col justify-between">
+                <div class="mt-8 lg:mt-0 flex flex-col justify-center">
                     <div>
                         <h2 class="text-3xl font-bold mb-6">关于我</h2>
                         <div id="home-about-intro" class="text-base text-slate-600 dark:text-slate-400 mb-6 leading-relaxed"></div>
                         <div class="space-y-5">
-                            <div id="home-about-tech" style="display:none;">
-                                <h3 class="font-semibold text-lg mb-3">技术栈</h3>
-                                <div class="flex flex-wrap gap-2" id="home-tech-stacks"></div>
-                            </div>
                             <div id="home-about-services" style="display:none;">
                                 <h3 class="font-semibold text-lg mt-6 mb-3">服务内容</h3>
                                 <div class="flex flex-wrap gap-2" id="home-services"></div>
@@ -247,23 +243,7 @@
                 document.getElementById('home-about-avatar').src = about.avatar_url;
             }
 
-            // 技术栈（从 profile 读取，样式已由后端合并模板库）
-            const techEl = document.getElementById('home-about-tech');
-            const stacksEl = document.getElementById('home-tech-stacks');
-            const techStacks = about.tech_stacks || [];
-            if (techStacks.length > 0) {
-                stacksEl.innerHTML = techStacks.map(t => {
-                    const bg = t.bg_color || 'bg-blue-50';
-                    const txt = t.text_color || 'text-blue-700';
-                    const darkBg = t.dark_bg_color || 'dark:bg-blue-900/30';
-                    const darkTxt = t.dark_text_color || 'dark:text-blue-400';
-                    const icon = t.icon || 'fa-solid fa-code';
-                    return `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-sm ${bg} ${txt} ${darkBg} ${darkTxt}"><i class="${icon}"></i>${t.name || ''}</span>`;
-                }).join('');
-                techEl.style.display = '';
-            } else {
-                techEl.style.display = 'none';
-            }
+            // 技术栈模块已按需求隐藏，不渲染
 
             // 服务内容（过滤隐藏内容）
             const servicesEl = document.getElementById('home-about-services');
@@ -292,8 +272,8 @@
 
             if (projectData) {
                 const projectsGrid = document.getElementById('projects-grid');
-                // 只展示后台开启"首页推荐"的项目，并按推荐序号(features_order)升序排列
-                const allProjects = [...(projectData.personal || []), ...(projectData.collab || [])]
+                // 只展示后台开启"首页推荐"的项目，并按推荐序号(featured_order)升序排列
+                const allProjects = (projectData.projects || [])
                     .filter(p => (p.is_featured ?? 0) === 1)
                     .sort((a, b) => (a.featured_order ?? 0) - (b.featured_order ?? 0));
                 if (!allProjects.length) {
@@ -305,6 +285,8 @@
                     const card = document.createElement('a');
                     card.href = `projects/detail.html?id=${project.id}&from=home`;
                     card.className = "block group flex-shrink-0 w-80 snap-start";
+                    card.onclick = () => trackClick('click_project', 'open_project', 'project_card', 'home', 'project', project.id);
+                    trackShow('home', 'project_card', 'project', project.id);
                     card.innerHTML = `
                         <article class="card-hover bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700 h-full">
                             <div class="overflow-hidden aspect-[16/9]">
@@ -338,6 +320,8 @@
                     const card = document.createElement('a');
                     card.href = `blog/detail.html?id=${blog.id}&from=home`;
                     card.className = "card-hover flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md border border-slate-100 dark:border-slate-700 group";
+                    card.onclick = () => trackClick('click_blog', 'open_blog', 'blog_card', 'home', 'blog', blog.id);
+                    trackShow('home', 'blog_card', 'blog', blog.id);
                     card.innerHTML = `
                         <div class="flex-1">
                             <div class="flex items-center gap-3 mb-3">

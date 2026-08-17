@@ -74,20 +74,37 @@
             if (!data) return;
             const page = document.getElementById('projects-page');
 
-            const personal = data.personal || [];
-            const collab = data.collab || [];
+            const projects = data.projects || [];
 
-            function renderSection(title, icon, projects) {
-                if (!projects.length) return '';
+            // 项目分区图标映射（与博客 groupIcons 一致，缺省用文件夹图标）
+            const projectIcons = {
+                '个人项目': 'fa-user',
+                '合作项目': 'fa-handshake',
+            };
+            function iconForGroup(name) {
+                return projectIcons[name] || 'fa-folder';
+            }
+
+            // 按 group 动态分区（保持原网格样式，UI 布局不变）
+            const order = [];
+            const byGroup = {};
+            projects.forEach(p => {
+                const g = p.group || '未分组';
+                if (!byGroup[g]) { byGroup[g] = []; order.push(g); }
+                byGroup[g].push(p);
+            });
+
+            function renderSection(title, icon, items) {
+                if (!items.length) return '';
                 return `
                     <div class="mb-16 fade-in-up">
                         <div class="flex items-center gap-3 mb-8">
                             <i class="fas ${icon} text-primary text-xl"></i>
                             <h2 class="text-2xl font-bold">${title}</h2>
-                            <span class="text-sm text-slate-400">${projects.length} 个项目</span>
+                            <span class="text-sm text-slate-400">${items.length} 个项目</span>
                         </div>
                         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            ${projects.map(project => `
+                            ${items.map(project => `
                                 <a href="detail.html?id=${project.id}&from=projects" class="block group">
                                     <article class="card-hover bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700 h-full">
                                         <div class="overflow-hidden aspect-[16/9]">
@@ -108,7 +125,7 @@
                 `;
             }
 
-            page.innerHTML = renderSection('个人项目', 'fa-user', personal) + renderSection('合作项目', 'fa-handshake', collab);
+            page.innerHTML = order.map(g => renderSection(g, iconForGroup(g), byGroup[g])).join('');
         }
         renderProjectsPage();
     </script>
