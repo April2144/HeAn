@@ -14,48 +14,12 @@
     <script>tailwind.config = TAILWIND_CONFIG;</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../js/common.css">
+    <link rel="icon" href="data:,">
 </head>
 <body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
 
-    <!-- 导航栏：纯静态 HTML，JS 只做高亮和事件绑定 -->
-    <nav class="fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-shadow duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <a href="../index.html" class="flex-shrink-0 flex items-center">
-                    <img src="../logo/logo-mark.svg" alt="禾安" class="h-8 w-8 mr-2">
-                    <span class="font-bold text-xl tracking-tight" id="site-name">禾安</span>
-                </a>
-                <div class="hidden md:flex space-x-8">
-                    <a href="../index.html" data-nav="home" class="hover:text-primary transition-colors">首页</a>
-                    <a href="../topics/index.html" data-nav="topics" class="hover:text-primary transition-colors">专题</a>
-                    <a href="../projects/index.html" data-nav="projects" class="hover:text-primary transition-colors">项目</a>
-                    <a href="../blog/index.html" data-nav="blog" class="hover:text-primary transition-colors">博客</a>
-                    <a href="../about/index.html" data-nav="about" class="text-primary font-medium">关于我</a>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="切换主题 (亮色/暗色/跟随系统)">
-                        <span class="theme-icon-light"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
-                        <span class="theme-icon-dark" style="display:none"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
-                        <span class="theme-icon-system" style="display:none"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
-                    </button>
-                    <button id="menu-toggle" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-                        <i class="fas fa-bars" id="menu-icon-open"></i>
-                        <i class="fas fa-times hidden" id="menu-icon-close"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="md:hidden hidden" id="mobile-menu">
-                <div class="pb-4 space-y-2 border-t border-slate-200 dark:border-slate-700 pt-4">
-                    <a href="../index.html" data-nav="home" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">首页</a>
-                    <a href="../topics/index.html" data-nav="topics" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">专题</a>
-                    <a href="../projects/index.html" data-nav="projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">项目</a>
-                    <a href="../blog/index.html" data-nav="blog" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">博客</a>
-                    <a href="../about/index.html" data-nav="about" class="block px-3 py-2 rounded-lg text-primary font-medium bg-blue-50 dark:bg-blue-900/20">关于我</a>
-
-                </div>
-            </div>
-        </div>
-    </nav>
+    <!-- 导航栏：由 renderNavbar 统一生成 -->
+    <nav id="navbar"></nav>
 
     <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 fade-in-up">
         <!-- 个人简介 -->
@@ -149,8 +113,7 @@
     <script src="../js/theme.js"></script>
     <script src="../js/auth.js"></script>
     <script>
-        initApp('about');
-        HeAnAuth.mountLoginButton();
+        initApp('about', { type: 'main' });
 
         async function loadAboutPage() {
             const [cfgData, profileData] = await Promise.all([

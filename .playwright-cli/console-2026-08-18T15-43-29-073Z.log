@@ -1,0 +1,5 @@
+[      39ms] [WARNING] cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation @ https://cdn.tailwindcss.com/:63
+[      77ms] [LOG] [Topics] loadHomeTopics 开始 @ http://localhost:8129/HeAn//////js/topics.js:76
+[     133ms] [LOG] [Topics] loadAllSeries => 10 @ http://localhost:8129/HeAn//////js/api.js:374
+[     133ms] [LOG] [Topics] loadHomeTopics 获取到 10 个专题 @ http://localhost:8129/HeAn//////js/topics.js:82
+[    2487ms] [WARNING] cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation @ https://cdn.tailwindcss.com/:63

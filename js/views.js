@@ -1,14 +1,133 @@
 /**
  * HeAn 共用视图组件
- * 导航栏和页脚为纯静态 HTML，JS 仅负责：高亮当前 tab、汉堡菜单、主题切换
+ * 导航栏抽离为单点定义：renderNavbar 生成骨架，initNavbar 负责高亮与事件绑定
+ * 两种类型：
+ *   - main：完整导航（logo + tabs + 右上角登录/主题 + 汉堡菜单），用于各列表/首页
+ *   - detail：简洁导航（返回 + 返回标签 + 右上角登录/主题），用于二级详情页
+ *   - login：登录页导航（logo + 右上角登录/主题，无 tabs、无汉堡），复用主界面样式
  */
 
-function initNavbar(activePage) {
+// 全站 tabs 配置（单点定义，main 导航复用）
+const NAV_TABS = [
+    { key: 'home',     label: '首页',   href: 'index.html' },
+    { key: 'topics',   label: '专题',   href: 'topics/index.html' },
+    { key: 'projects', label: '项目',   href: 'projects/index.html' },
+    { key: 'blog',     label: '博客',   href: 'blog/index.html' },
+    { key: 'about',    label: '关于我', href: 'about/index.html' },
+];
+
+// 相对路径前缀：根目录页（/hean/index.html）用 './'，子目录页（/hean/blog/index.html 等）用 '../'
+function getRoot() {
+    // 按 pathname 目录层级段数判断，避免"以 index.html 结尾"误判子目录页
+    // ['hean','index.html']=2 段 → './'；['hean','blog','index.html']=3 段 → '../'
+    const segs = location.pathname.split('/').filter(Boolean);
+    return segs.length >= 3 ? '../' : './';
+}
+
+// 根据当前页相对于站点根目录的深度，返回正确的资源/链接前缀
+function navHref(href) {
+    return getRoot() + href;
+}
+
+/** 生成 tab 链接 HTML（当前页高亮用 text-primary 区分） */
+function navTabLinks(activePage, isMobile) {
+    return NAV_TABS.map(t => {
+        const active = t.key === activePage;
+        const cls = isMobile
+            ? `block px-3 py-2 rounded-lg transition-colors ${active ? 'text-primary font-medium bg-blue-50 dark:bg-blue-900/20' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}`
+            : `${active ? 'text-primary font-medium' : 'hover:text-primary'} transition-colors`;
+        return `<a href="${navHref(t.href)}" data-nav="${t.key}" class="${cls}">${t.label}</a>`;
+    }).join('');
+}
+
+/** 主题切换按钮 HTML（三态图标，由 theme.js 控制显隐） */
+function navThemeToggle() {
+    return `<button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="切换主题 (亮色/暗色/跟随系统)">
+        <span class="theme-icon-light"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+        <span class="theme-icon-dark" style="display:none"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        <span class="theme-icon-system" style="display:none"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>
+    </button>`;
+}
+
+/** 右上角区：登录/头像（auth.js 挂载） + 主题切换 + 汉堡（仅 main 桌面外） */
+function navRightArea(type) {
+    const menuToggle = (type === 'main')
+        ? `<button id="menu-toggle" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+               <i class="fas fa-bars" id="menu-icon-open"></i>
+               <i class="fas fa-times hidden" id="menu-icon-close"></i>
+           </button>`
+        : '';
+    return `<div class="flex items-center space-x-3">
+        <div id="auth-area" class="flex items-center"></div>
+        ${navThemeToggle()}
+        ${menuToggle}
+    </div>`;
+}
+
+/** 全站导航抽离：根据 type 生成骨架，写入 #navbar 容器 */
+function renderNavbar(opts = {}) {
+    const { type = 'main', activePage = '' } = opts;
     const nav = document.getElementById('navbar');
     if (!nav) return;
 
-    // 移除可能因浏览器缓存残留的无效 tab
-    nav.querySelectorAll('[data-nav="contact"]').forEach(el => el.remove());
+    const logo = `<a href="${navHref('index.html')}" class="flex-shrink-0 flex items-center">
+        <img src="${getRoot()}logo/logo-mark.svg" alt="禾安" class="h-8 w-8 mr-2">
+        <span class="font-bold text-xl tracking-tight" id="site-name">禾安</span>
+    </a>`;
+
+    if (type === 'login') {
+        // 登录页：复用主界面导航样式，但不显示页面 tabs、无汉堡菜单（仅 logo + 右上角登录/主题）
+        nav.className = 'fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-shadow duration-300';
+        nav.innerHTML = `<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                ${logo}
+                <div class="flex-1"></div>
+                ${navRightArea('login')}
+            </div>
+        </div>`;
+        return;
+    }
+
+    if (type === 'detail') {
+        // 详情页：返回 + 返回标签 + 左上自定义插槽（如侧栏按钮）+ 右上角登录/主题（无 tab、无汉堡）
+        nav.className = 'fixed top-0 left-0 right-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 h-16 flex items-center';
+        nav.innerHTML = `<div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
+            <button onclick="goBack()" class="-ml-2 flex items-center gap-1 p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="返回">
+                <i class="fa-solid fa-angle-left text-lg"></i>
+                <span class="text-base">返回</span>
+            </button>
+            <div id="nav-left-custom" class="hidden ml-2"></div>
+            <div class="flex-1"></div>
+            ${navRightArea('detail')}
+        </div>`;
+        return;
+    }
+
+    // main：完整导航
+    nav.className = 'fixed w-full z-50 glass-effect border-b border-slate-200 dark:border-slate-800 transition-shadow duration-300';
+    nav.innerHTML = `<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            ${logo}
+            <div class="hidden md:flex space-x-8">
+                ${navTabLinks(activePage, false)}
+            </div>
+            ${navRightArea('main')}
+        </div>
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="pb-4 space-y-2 border-t border-slate-200 dark:border-slate-700 pt-4">
+                ${navTabLinks(activePage, true)}
+            </div>
+        </div>
+    </div>`;
+}
+
+function initNavbar(activePage, opts = {}) {
+    const { type = 'main' } = opts;
+    const nav = document.getElementById('navbar');
+    if (!nav) return;
+
+    // 生成导航骨架
+    renderNavbar(opts);
 
     // 高亮当前页 tab（仅用颜色区分，不加粗，避免 flex 导航行重排位移）
     nav.querySelectorAll('[data-nav]').forEach(link => {
@@ -18,7 +137,7 @@ function initNavbar(activePage) {
         }
     });
 
-    // 汉堡菜单切换
+    // 汉堡菜单切换（仅 main）
     const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const iconOpen = document.getElementById('menu-icon-open');
@@ -37,6 +156,8 @@ function initNavbar(activePage) {
             });
         });
     }
+
+    // 详情页：无返回标签（已移除），无需额外处理
 }
 
 function renderFooter(contacts = {}) {
@@ -54,9 +175,9 @@ function renderFooter(contacts = {}) {
         icons.push(`<a href="#" class="footer-contact-icon footer-email text-slate-400 hover:text-primary" title="发送邮件"><i class="fas fa-envelope"></i></a>`);
     }
 
-    // 微信：hover 显示微信号，点击复制
-    if (contacts.weixin) {
-        icons.push(`<a href="#" class="footer-contact-icon footer-wechat text-slate-400 hover:text-primary" data-weixin="${contacts.weixin}" title="点击复制，${contacts.weixin}"><i class="fab fa-weixin"></i></a>`);
+    // 微信：仅当后端配置了公众号二维码时显示，点击弹窗展示公众号（专事专用，不再依赖微信号）
+    if (contacts.mp_qrcode) {
+        icons.push(`<a href="#" class="footer-contact-icon footer-wechat text-slate-400 hover:text-primary" data-mp-qrcode="${contacts.mp_qrcode}" data-mp-name="${contacts.mp_name || ''}" title="微信公众号"><i class="fab fa-weixin"></i></a>`);
     }
 
     // 小红书：链接则跳转，昵称则复制
@@ -90,19 +211,18 @@ function renderFooter(contacts = {}) {
                     <p class="text-xs text-slate-500 mt-0.5">&copy; ${new Date().getFullYear()} All rights reserved.</p>
                 </div>
             </div>
-            <div class="flex space-x-6 text-xl">
+            <div class="flex space-x-4 text-xl">
                 ${icons.reverse().join('')}
             </div>
         </div>
     `;
 
-    // 绑定微信复制事件
+    // 绑定微信点击：弹出公众号弹窗（不在 hover/click 复制微信号）
     footer.querySelectorAll('.footer-wechat').forEach(el => {
         el.addEventListener('click', (e) => {
             e.preventDefault();
-            const wx = el.dataset.weixin;
-            copyToClipboard(wx);
-            showToast('微信号已复制，请打开微信搜索添加');
+            e.stopPropagation();
+            toggleWechatPopup(el);
         });
     });
 
@@ -123,6 +243,64 @@ function renderFooter(contacts = {}) {
             openContactModal();
         });
     });
+}
+
+/**
+ * 微信公众号弹窗：在微信 icon 正上方居中显示缩小版公众号卡片
+ * - 底部贴 icon 顶部（留少量 padding），水平相对 icon 居中对齐
+ * - 点击弹窗外任意处关闭
+ */
+let _wechatPopupEl = null;
+
+function toggleWechatPopup(trigger) {
+    // 已存在则关闭
+    if (_wechatPopupEl) {
+        closeWechatPopup();
+        return;
+    }
+
+    const qr = trigger.dataset.mpQrcode;
+    const name = trigger.dataset.mpName || '';
+    if (!qr) return;
+
+    const rect = trigger.getBoundingClientRect();
+    const popupW = 150;
+
+    const popup = document.createElement('div');
+    popup.className = 'wechat-popup';
+    popup.innerHTML = `
+        <div class="wechat-popup-qr">
+            <img src="${qr}" alt="公众号二维码">
+        </div>
+        ${name ? `<p class="wechat-popup-name">「${escapeHtml(name)}」</p>` : ''}
+        <p class="wechat-popup-tip">扫码关注公众号</p>
+    `;
+    document.body.appendChild(popup);
+    _wechatPopupEl = popup;
+
+    // 定位：相对微信 icon 居中对齐，底部贴 icon 顶部留 padding
+    const left = rect.left + rect.width / 2 - popupW / 2;
+    popup.style.left = Math.max(8, left) + 'px';
+    popup.style.top = (rect.top - popup.offsetHeight - 8) + 'px';
+
+    // 点击弹窗外关闭（延迟绑定，避免触发本次点击立即关闭）
+    setTimeout(() => {
+        document.addEventListener('click', _onDocClickCloseWechat, true);
+    }, 0);
+}
+
+function _onDocClickCloseWechat(e) {
+    if (_wechatPopupEl && !_wechatPopupEl.contains(e.target)) {
+        closeWechatPopup();
+    }
+}
+
+function closeWechatPopup() {
+    if (_wechatPopupEl) {
+        _wechatPopupEl.remove();
+        _wechatPopupEl = null;
+    }
+    document.removeEventListener('click', _onDocClickCloseWechat, true);
 }
 
 /** 复制文本到剪贴板 */

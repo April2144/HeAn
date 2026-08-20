@@ -1,0 +1,162 @@
+- generic [active] [ref=f10e1]:
+  - navigation [ref=f10e2]:
+    - generic [ref=f10e4]:
+      - link "禾安 禾安" [ref=f10e5] [cursor=pointer]:
+        - /url: ./index.html
+        - img "禾安" [ref=f10e6]
+        - generic [ref=f10e7]: 禾安
+      - generic [ref=f10e8]:
+        - link "首页" [ref=f10e9] [cursor=pointer]:
+          - /url: ./index.html
+        - link "专题" [ref=f10e10] [cursor=pointer]:
+          - /url: ./topics/index.html
+        - link "项目" [ref=f10e11] [cursor=pointer]:
+          - /url: ./projects/index.html
+        - link "博客" [ref=f10e12] [cursor=pointer]:
+          - /url: ./blog/index.html
+        - link "关于我" [ref=f10e13] [cursor=pointer]:
+          - /url: ./about/index.html
+      - generic [ref=f10e14]:
+        - button "登录" [ref=f10e16] [cursor=pointer]
+        - button "切换主题 (亮色/暗色/跟随系统)" [ref=f10e17] [cursor=pointer]
+        - text:  
+  - generic [ref=f10e22]:
+    - generic [ref=f10e23]: 👋 你好，我是独立开发者
+    - heading "构建 数字产品 分享 技术洞察" [level=1] [ref=f10e24]
+    - paragraph [ref=f10e25]: 独立开发路上的探索者，专注APP定制开发，在AI时代持续迭代技术边界
+    - generic [ref=f10e26]:
+      - link "查看作品" [ref=f10e27] [cursor=pointer]:
+        - /url: "#projects"
+      - link "联系我" [ref=f10e28] [cursor=pointer]:
+        - /url: ./about/index.html#about-cta-section
+  - generic [ref=f10e31]:
+    - img "开发者工作场景" [ref=f10e34]
+    - generic [ref=f10e36]:
+      - heading "关于我" [level=2] [ref=f10e37]
+      - generic [ref=f10e38]: 做过10年iOS开发，现在是一个独立开发者。用技术搭建产品，也把过程中的思考记录下来。从移动端起步，延伸到后端、Web、以及AI应用。独立完成过App从设计到上架的全流程，也正在构建自己的全栈产品体系。
+  - generic [ref=f10e40]:
+    - generic [ref=f10e41]:
+      - generic [ref=f10e42]:
+        - heading "精选专题" [level=2] [ref=f10e43]
+        - paragraph [ref=f10e44]: 系统化学习路线，构建完整知识体系
+      - link "更多 " [ref=f10e45] [cursor=pointer]:
+        - /url: topics/index.html
+        - text: 更多
+        - generic [ref=f10e46]: 
+    - generic [ref=f10e47]:
+      - link [ref=f10e48] [cursor=pointer]:
+        - /url: topics/detail.html?series=25&from=home
+        - article [ref=f10e49]:
+          - img "iOS 界面开发" [ref=f10e50]
+          - generic [ref=f10e52]:
+            - heading "iOS 界面开发" [level=3] [ref=f10e53]
+            - paragraph [ref=f10e54]: 使用 UIKit 与 SwiftUI 构建 iOS 应用界面。
+            - generic [ref=f10e55]:
+              - generic [ref=f10e56]: SwiftUI
+              - generic [ref=f10e57]: iOS
+              - generic [ref=f10e58]: State
+            - generic [ref=f10e60]:
+              - generic [ref=f10e61]: 
+              - text: 2026-08-17
+      - link [ref=f10e62] [cursor=pointer]:
+        - /url: topics/detail.html?series=26&from=home
+        - article [ref=f10e63]:
+          - img "C++ 性能优化" [ref=f10e64]
+          - generic [ref=f10e66]:
+            - heading "C++ 性能优化" [level=3] [ref=f10e67]
+            - paragraph [ref=f10e68]: 深入 C++ 内存模型与高性能编程技巧。
+            - generic [ref=f10e69]:
+              - generic [ref=f10e70]: C++
+              - generic [ref=f10e71]: Memory
+              - generic [ref=f10e72]: Move
+            - generic [ref=f10e74]:
+              - generic [ref=f10e75]: 
+              - text: 2026-08-16
+      - link [ref=f10e76] [cursor=pointer]:
+        - /url: topics/detail.html?series=27&from=home
+        - article [ref=f10e77]:
+          - img "Rust 系统编程" [ref=f10e78]
+          - generic [ref=f10e80]:
+            - heading "Rust 系统编程" [level=3] [ref=f10e81]
+            - paragraph [ref=f10e82]: 用 Rust 编写安全又高效的系统级程序。
+            - generic [ref=f10e83]:
+              - generic [ref=f10e84]: Rust
+              - generic [ref=f10e85]: Ownership
+            - generic [ref=f10e87]:
+              - generic [ref=f10e88]: 
+              - text: 2026-08-16
+    - text: 
+  - generic [ref=f10e90]:
+    - generic [ref=f10e91]:
+      - generic [ref=f10e92]:
+        - heading "精选项目" [level=2] [ref=f10e93]
+        - paragraph [ref=f10e94]: 近期独立开发或参与的核心产品
+      - link "更多 " [ref=f10e95] [cursor=pointer]:
+        - /url: projects/index.html
+        - text: 更多
+        - generic [ref=f10e96]: 
+    - link [ref=f10e98] [cursor=pointer]:
+      - /url: projects/detail.html?id=1&from=home
+      - article [ref=f10e99]:
+        - img "SaaS 仪表盘模板" [ref=f10e101]
+        - generic [ref=f10e102]:
+          - generic [ref=f10e103]:
+            - generic [ref=f10e104]: React
+            - generic [ref=f10e105]: Tailwind
+            - generic [ref=f10e106]: ECharts
+          - heading "SaaS 仪表盘模板" [level=3] [ref=f10e107]
+          - paragraph [ref=f10e108]: 基于 React + Tailwind 构建的高性能后台管理模板，支持暗黑模式。该模板提供了丰富的组件库，包括图表、表格、表单、导航等常见后台模块，开箱即用，可快速搭建企业级管理后台。
+    - text: 
+  - generic [ref=f10e110]:
+    - generic [ref=f10e111]:
+      - generic [ref=f10e112]:
+        - heading "最新博文" [level=2] [ref=f10e113]
+        - paragraph [ref=f10e114]: 同步自掘金与个人思考
+      - link "更多 " [ref=f10e115] [cursor=pointer]:
+        - /url: blog/index.html
+        - text: 更多
+        - generic [ref=f10e116]: 
+    - generic [ref=f10e117]:
+      - link " 技术博客 2026-08-16 SwiftUI 与 UIKit 混合开发实践指南 在实际项目中如何优雅地混用 SwiftUI 和 UIKit，包括桥接方案、状态管理策略以及性能优化技巧。 阅读全文 " [ref=f10e118] [cursor=pointer]:
+        - /url: blog/detail.html?id=1&from=home
+        - generic [ref=f10e119]:
+          - generic [ref=f10e120]:
+            - generic [ref=f10e121]:
+              - generic [ref=f10e122]: 
+              - text: 技术博客
+            - generic [ref=f10e123]: 2026-08-16
+          - heading "SwiftUI 与 UIKit 混合开发实践指南" [level=3] [ref=f10e124]
+          - paragraph [ref=f10e125]: 在实际项目中如何优雅地混用 SwiftUI 和 UIKit，包括桥接方案、状态管理策略以及性能优化技巧。
+          - generic [ref=f10e126]:
+            - text: 阅读全文
+            - generic [ref=f10e127]: 
+      - link " 技术博客 2026-07-09 2026 年 iOS 开发者技术栈选择 深入分析 Swift 6 新特性、SwiftUI 进展以及跨平台框架对 iOS 开发模式的影响。 阅读全文 " [ref=f10e128] [cursor=pointer]:
+        - /url: blog/detail.html?id=2&from=home
+        - generic [ref=f10e129]:
+          - generic [ref=f10e130]:
+            - generic [ref=f10e131]:
+              - generic [ref=f10e132]: 
+              - text: 技术博客
+            - generic [ref=f10e133]: 2026-07-09
+          - heading "2026 年 iOS 开发者技术栈选择" [level=3] [ref=f10e134]
+          - paragraph [ref=f10e135]: 深入分析 Swift 6 新特性、SwiftUI 进展以及跨平台框架对 iOS 开发模式的影响。
+          - generic [ref=f10e136]:
+            - text: 阅读全文
+            - generic [ref=f10e137]: 
+    - text: 
+  - contentinfo [ref=f10e138]:
+    - generic [ref=f10e139]:
+      - generic [ref=f10e140]:
+        - img "禾安" [ref=f10e141]
+        - generic [ref=f10e142]:
+          - link "禾安" [ref=f10e143] [cursor=pointer]:
+            - /url: .//index.html
+          - paragraph [ref=f10e144]: © 2026 All rights reserved.
+      - generic [ref=f10e145]:
+        - link "小红书" [ref=f10e146] [cursor=pointer]:
+          - /url: https://xhslink.cn/m/IVmtxAb7Pk
+        - link "" [ref=f10e149] [cursor=pointer]:
+          - /url: "#"
+        - link "" [ref=f10e151] [cursor=pointer]:
+          - /url: "#"
+  - button "自动" [ref=f10e154] [cursor=pointer]

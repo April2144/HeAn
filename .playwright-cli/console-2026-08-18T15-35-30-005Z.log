@@ -1,0 +1,10 @@
+[    7332ms] [WARNING] cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation @ https://cdn.tailwindcss.com/:63
+[    7400ms] [LOG] [Topics] loadHomeTopics 开始 @ http://localhost:8126/js/topics.js:76
+[    7452ms] [LOG] [Topics] loadAllSeries => 10 @ http://localhost:8126/js/api.js:363
+[    7452ms] [LOG] [Topics] loadHomeTopics 获取到 10 个专题 @ http://localhost:8126/js/topics.js:82
+[   41193ms] [WARNING] cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation @ https://cdn.tailwindcss.com/:63
+[   41223ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8126/projects/logo/logo-mark.svg:0
+[   41224ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8126/projects//logo/logo-mark.svg:0
+[   41232ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8126/projects//logo/logo-mark.svg:0
+[   61217ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8126/projects/topics/index.html:0
+[   61222ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://localhost:8126/favicon.ico:0

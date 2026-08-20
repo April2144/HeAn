@@ -34,8 +34,10 @@ function initTheme() {
             document.documentElement.classList.toggle('dark', getSystemTheme() === 'dark');
         }
     });
+}
 
-    // 绑定切换按钮
+/** 绑定主题切换按钮：必须在导航栏渲染（initNavbar）之后调用，此时 #theme-toggle 才存在 */
+function bindThemeToggle() {
     const btn = document.getElementById('theme-toggle');
     if (btn) btn.addEventListener('click', toggleTheme);
 }
@@ -171,9 +173,12 @@ function initEnvSwitcher() {
 }
 
 // ========== 应用初始化 ==========
-function initApp(activePage) {
+function initApp(activePage, opts = {}) {
     initTheme();
-    initNavbar(activePage);
+    initNavbar(activePage, opts);
+    // 导航栏渲染后，按当前主题同步一次图标（initTheme 执行时导航栏尚不存在，跨页跳转时图标需在此补刷新）
+    updateThemeIcon(localStorage.getItem('theme-mode') || 'system');
+    bindThemeToggle();
     renderFooter();
     initScrollShadow();
     initEnvSwitcher();
@@ -184,6 +189,15 @@ function initApp(activePage) {
     // 加载 contacts 后重新渲染 footer（使联系入口在所有页面生效）
     (async () => {
         try {
+            // 右上角登录态：挂载登录按钮 / 头像下拉，并同步最新用户资料
+            // 依赖站点配置中的 enable_login_entry 判断全局是否显示入口
+            const cfg = await loadBaseConfig();
+            const skipLoginBtn = opts.type === 'login';
+            const hideAuth = Number((cfg && cfg.config && cfg.config.enable_login_entry) ?? 1) !== 1;
+            if (typeof HeAnAuth !== 'undefined' && HeAnAuth.initAuth) {
+                HeAnAuth.initAuth({ skipLoginBtn, hideAuth });
+            }
+
             const data = await loadProfile();
             if (data && data.about && data.about.contacts) {
                 renderFooter(data.about.contacts);

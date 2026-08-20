@@ -18,6 +18,7 @@
     <!-- Markdown 渲染 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="../js/common.css">
+    <link rel="icon" href="data:,">
     <style>
         /* ===== 专题详情布局 ===== */
         /* 底部上一篇/下一篇标题 hover 变主题蓝，无下划线 */
@@ -128,8 +129,6 @@
         }
 
         .detail-content-inner {
-            max-width: 936px;
-            margin: 0;
             padding: 48px 32px 80px;
         }
 
@@ -206,23 +205,11 @@
 </head>
 <body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
 
-    <!-- 简化顶栏 -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 h-16 flex items-center">
-        <div class="max-w-full w-full mx-auto px-4 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-                    <i class="fa-solid fa-bars text-lg"></i>
-                </button>
-                <button onclick="goBack()" class="flex items-center gap-1 p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="返回">
-                    <i class="fa-solid fa-angle-left text-lg"></i>
-                    <span class="text-base">返回</span>
-                </button>
-                <span id="back-label" class="text-base font-medium hidden"></span>
-            </div>
-        </header>
+    <!-- 顶栏：由 renderNavbar 统一生成（detail 模式，含左侧自定义插槽） -->
+    <header id="navbar"></header>
 
         <!-- 主体：侧边栏 + 内容 -->
-        <div class="topics-detail-layout max-w-7xl pt-16">
+        <div class="topics-detail-layout max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
 
             <!-- 左侧大纲侧边栏 -->
             <aside class="outline-sidebar" id="outline-sidebar">
@@ -281,6 +268,7 @@
         <script src="../js/api.js"></script>
         <script src="../js/utils.js"></script>
         <script src="../js/topics.js"></script>
+        <script src="../js/views.js"></script>
         <script src="../js/theme.js"></script>
         <script src="../js/auth.js"></script>
         <script>
@@ -290,19 +278,14 @@
             const u = new URLSearchParams(location.search).get('theme');
             const m = (u && ['light','dark','system'].includes(u)) ? u : t;
             const d = m === 'system' ? (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light') : m;
-            document.documentElement.classList.toggle('dark', d === 'dark');
-            // 绑定主题按钮
-            const btn = document.getElementById('theme-toggle');
-            if (btn) {
-                btn.addEventListener('click', () => {
-                    const current = d === 'dark' ? 'dark' : 'light';
-                    const next = current === 'dark' ? 'light' : 'dark';
-                    localStorage.setItem('theme-mode', next);
-                    document.documentElement.classList.toggle('dark', next === 'dark');
-                    location.reload();
-                });
+            // 统一初始化导航 / 主题 / 登录（initApp 处理 detail 模式）
+            initApp('topics', { type: 'detail' });
+            HeAnAuth.mountLoginButton();
+            // 移动端左侧大纲侧栏按钮：注入导航左侧自定义插槽
+            const leftSlot = document.getElementById('nav-left-custom');
+            if (leftSlot) {
+                leftSlot.innerHTML = '<button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"><i class="fa-solid fa-bars text-lg"></i></button>';
             }
-            if (window.HeAnAuth) HeAnAuth.mountLoginButton();
         })();
 
         // 返回上级页面：根据来源智能返回
@@ -316,20 +299,6 @@
                 window.location.href = 'index.html';
             }
         }
-        // 返回按钮后显示来源文字
-        function updateBackLabel() {
-            const from = new URLSearchParams(location.search).get('from');
-            const labelEl = document.getElementById('back-label');
-            if (!labelEl) return;
-            const text = from === 'home' ? '首页' : (from === 'topics' ? '专题' : (from === 'projects' ? '项目' : (from === 'blog' ? '博客' : '')));
-            if (text) {
-                labelEl.textContent = text;
-                labelEl.classList.remove('hidden');
-            } else {
-                labelEl.classList.add('hidden');
-            }
-        }
-        updateBackLabel();
         loadTopicDetailPage();
         </script>
 </body>

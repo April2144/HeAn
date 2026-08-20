@@ -229,6 +229,57 @@ body.ready { transition: background-color 0.3s ease, color 0.3s ease !important;
     display: block;
 }
 
+/* ========== 底部微信 icon 点击弹出的公众号卡片 ========== */
+/* 缩小版弹窗：正对微信 icon 上方居中，底部贴 icon 顶部留 padding */
+.wechat-popup {
+    position: fixed;
+    width: 150px;
+    z-index: 9999;
+    background: #fff;
+    color: #1f2937;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+    text-align: center;
+    animation: wechat-popup-in 0.15s ease;
+}
+.dark .wechat-popup {
+    background: #1e293b;
+    color: #e2e8f0;
+    border-color: #334155;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+}
+.wechat-popup-qr {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f1f5f9;
+}
+.dark .wechat-popup-qr { background: #334155; }
+.wechat-popup-qr img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.wechat-popup-name {
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 700;
+}
+.wechat-popup-tip {
+    margin-top: 4px;
+    font-size: 11px;
+    color: #94a3b8;
+}
+@keyframes wechat-popup-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* ========== 自定义 select 下拉箭头 ========== */
 .custom-select {
     appearance: none;
@@ -288,24 +339,32 @@ body.ready { transition: background-color 0.3s ease, color 0.3s ease !important;
 .topic-domain-tabs {
     display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 1rem; margin-bottom: 0.5rem;
 }
-/* 分类 tab：纯文字，无背景无边框，选中仅文字变色（专事专用） */
+/* 分类 tab：纯文字，无背景无边框，选中仅文字变色（专事专用），文字下带圆角指示 line */
 .topic-domain-item {
     background: none; border: none; padding: 0.25rem 0;
+    display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
     color: #1a1a1a; font-size: 0.95rem; font-weight: normal;
     transition: color .2s ease; cursor: pointer;
 }
 .topic-domain-item:hover { color: #334155; }
-/* 分类 tab 选中：专事专用，强制去背景（覆盖全局 .filter-selected 的 !important 蓝底），只保留文字变色 */
+/* 分类 tab 指示 line：未选中隐藏，选中显示并着同色（圆角） */
+.topic-domain-line {
+    width: 1rem; height: 2px; border-radius: 9999px;
+    background: transparent; transition: background .2s ease;
+}
+/* 分类 tab 选中：专事专用，强制去背景（覆盖全局 .filter-selected 的 !important 蓝底），只保留文字变色 + 显示同色 line */
 .topic-domain-item.filter-selected {
     background: none !important; border-color: transparent !important;
     color: #2563eb !important; font-weight: 700;
 }
+.topic-domain-item.filter-selected .topic-domain-line { background: #2563eb !important; }
 .dark .topic-domain-item { color: #e5e7eb; }
 .dark .topic-domain-item:hover { color: #fff; }
 .dark .topic-domain-item.filter-selected {
     background: none !important; border-color: transparent !important;
     color: #60a5fa !important; font-weight: 700;
 }
+.dark .topic-domain-item.filter-selected .topic-domain-line { background: #60a5fa !important; }
 
 /* 技术栈标签区：分类 tab 下方平铺，无标题 */
 .topic-tags {
@@ -342,6 +401,22 @@ body.ready { transition: background-color 0.3s ease, color 0.3s ease !important;
 }
 .topic-tag-clear:hover { background: #eef2ff; color: #2563eb; border-color: #2563eb; }
 .dark .topic-tag-clear { background: #1e293b; border-color: #475569; color: #cbd5e1; }
+
+/* ========== 右上角登录态（登录按钮 / 头像下拉） ========== */
+/* 登录按钮复用 .btn-primary 令牌（蓝底白字，dark/light 自适应），此处不再单独定义样式 */
+/* 头像下拉容器：相对定位锚点 */
+.auth-dropdown-wrap { position: relative; }
+
+/* 头像按钮 */
+.auth-avatar {
+  background: rgba(148,163,184,0.25);
+  cursor: pointer;
+}
+/* 下拉菜单：right-0 锚定到容器右边缘 → 与头像右边缘完全对齐 */
+.auth-dropdown {
+  min-width: 13rem;
+  right: 0;
+}
 .dark .topic-tag-clear:hover { background: #312e81; color: #93c5fd; }
 
 /* ========== 专题列表页：竖向筛选分类（旧版，已废弃保留位） ========== */

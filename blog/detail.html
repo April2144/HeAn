@@ -16,21 +16,14 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../js/common.css">
+    <link rel="icon" href="data:,">
 </head>
 <body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
 
-    <!-- 导航栏：纯静态 HTML，JS 只做高亮和事件绑定 -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass-effect border-b border-slate-200 dark:border-slate-800 h-16 flex items-center">
-        <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-4">
-            <button onclick="goBack()" class="flex items-center gap-1 p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="返回">
-                <i class="fa-solid fa-angle-left text-lg"></i>
-                <span class="text-base">返回</span>
-            </button>
-            <span id="back-label" class="text-base font-medium hidden"></span>
-        </div>
-    </header>
+    <!-- 顶栏：由 renderNavbar 统一生成（detail 模式） -->
+    <header id="navbar"></header>
 
-    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
         <article class="fade-in-up">
             <header class="mb-10">
                 <div class="flex items-center gap-3 mb-4">
@@ -66,8 +59,10 @@
     <script src="../js/utils.js"></script>
     <script src="../js/views.js"></script>
     <script src="../js/theme.js"></script>
+    <script src="../js/auth.js"></script>
     <script>
-        initApp('blog');
+        initApp('blog', { type: 'detail' });
+        HeAnAuth.mountLoginButton();
 
         async function renderBlogDetail() {
             const blogId = parseInt(new URLSearchParams(location.search).get('id')) || 0;
@@ -133,21 +128,6 @@
                 window.location.href = 'index.html';
             }
         }
-        // 返回按钮后显示来源文字
-        function updateBackLabel() {
-            const labelEl = document.getElementById('back-label');
-            if (!labelEl) return;
-            const from = new URLSearchParams(location.search).get('from');
-            const text = from === 'home' ? '首页' : (from === 'blog' ? '博客' : '');
-            if (text) {
-                labelEl.textContent = text;
-                labelEl.classList.remove('hidden');
-            } else {
-                labelEl.classList.add('hidden');
-            }
-        }
-        updateBackLabel();
-
         (async () => {
             await initTagMapFromAPI();
             renderBlogDetail();

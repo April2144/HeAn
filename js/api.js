@@ -154,17 +154,28 @@ function autoTrackPageView(activePage) {
 
 // ---------- 降级：读取本地 JSON ----------
 function getRoot() {
-    // 通过 <script src=".../api.js"> 的相对路径推导根目录
-    // 根页面: src="./js/api.js" → 返回 "."
-    // 子页面: src="../js/api.js" → 返回 ".."
+    // 通过 <script src=".../api.js"> 的路径推导站点根目录前缀，与部署目录深度彻底解耦
+    // 相对引入:
+    //   根页面  src="./js/api.js"     → "."
+    //   子页面  src="../js/api.js"     → ".."
+    // 绝对引入（防御性，当前站点未使用）:
+    //   根域名  src="/js/api.js"        → "."
+    //   子目录  src="/HeAn/js/api.js"   → "/HeAn/"
     const script = document.querySelector('script[src*="api.js"]');
     if (script) {
-        const src = script.getAttribute('src');
-        const match = src.match(/^((?:\.\.\/)+)js\//);
-        if (match) return match[1].replace(/\/$/, '');
+        const src = script.getAttribute('src').replace(/^\.\//, '');
+        // 相对路径：以若干 ../ 开头
+        const rel = src.match(/^((?:\.\.\/)+)js\//);
+        if (rel) return rel[1].replace(/\/$/, '');
+        // 绝对路径：以 / 开头
+        if (src.startsWith('/')) {
+            const abs = src.match(/^(.*?)\/js\//);
+            return abs ? abs[1] + '/' : '.';
+        }
+        // 兜底：./js/api.js 或 js/api.js
         return '.';
     }
-    // fallback: 路径深度计算
+    // fallback: 路径深度计算（极端情况 script 不可见时）
     const path = window.location.pathname;
     const depth = (path.match(/\//g) || []).length - 1;
     return depth <= 0 ? '.' : Array(depth).fill('..').join('/');
@@ -327,13 +338,19 @@ async function loadBlog(blogId) {
 // ---------- 站点配置 ----------
 async function loadBaseConfig() {
     const data = await apiGet('/site/config');
-    if (data) return data; // { config: {...}, services: [...] }
+    if (data) {
+        // 缓存完整配置到全局，供 auth/theme 等模块读取（如登录入口开关）
+        if (data.config) window.SITE_CONFIG = data.config;
+        return data; // { config: {...}, services: [...] }
+    }
 
     // 降级：使用 config.js 中的 SITE 对象
-    return {
+    const fallback = {
         config: { site_name: SITE.name, bio: SITE.bio, avatar_url: '', seo_title: '', seo_description: '' },
         services: []
     };
+    window.SITE_CONFIG = fallback.config;
+    return fallback;
 }
 
 async function loadProfile() {

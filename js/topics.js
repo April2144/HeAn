@@ -251,7 +251,10 @@ function renderDomainTabs() {
 
     el.innerHTML = filters.map(f => {
         const active = _currentFilter === f.key ? 'filter-selected' : '';
-        return `<button class="topic-domain-item ${active}" onclick="selectTopicFilter('${f.key}')">${escapeHtml(f.name)}</button>`;
+        return `<button class="topic-domain-item ${active}" onclick="selectTopicFilter('${f.key}')">
+            <span>${escapeHtml(f.name)}</span>
+            <span class="topic-domain-line"></span>
+        </button>`;
     }).join('');
 }
 
