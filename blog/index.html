@@ -88,6 +88,28 @@
             if (!data) return;
             blogsData = data.blogs;
 
+            // 完全没有博客数据：渲染整页空态，隐藏分类侧边栏与筛选空态（与专题页空态样式布局保持一致）
+            if (blogsData.length === 0) {
+                const sidebarNav = document.getElementById('blog-sidebar');
+                const sidebar = sidebarNav ? sidebarNav.closest('aside') : null;
+                if (sidebar) sidebar.style.display = 'none';
+                const emptyState = document.getElementById('empty-state');
+                if (emptyState) emptyState.style.display = 'none';
+                const blogList = document.getElementById('blog-list');
+                if (blogList) {
+                    renderPageEmptyState(blogList, {
+                        icon: 'fa-pen-nib',
+                        title: '暂无博客内容',
+                        description: '博客内容正在筹备中，敬请期待。',
+                        links: [
+                            { href: navHref('topics/index.html'), label: '专题' },
+                            { href: navHref('projects/index.html'), label: '项目作品' },
+                        ],
+                    });
+                }
+                return;
+            }
+
             // 侧边栏：从博客数据动态生成分组按钮
             const sidebar = document.getElementById('blog-sidebar');
             // "全部"按钮绑定点击事件

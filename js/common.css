@@ -420,3 +420,8 @@ body.ready { transition: background-color 0.3s ease, color 0.3s ease !important;
 .dark .topic-tag-clear:hover { background: #312e81; color: #93c5fd; }
 
 /* ========== 专题列表页：竖向筛选分类（旧版，已废弃保留位） ========== */
+
+/* ========== Sticky Footer：内容不足时 footer 吸在视口底部 ========== */
+html, body { height: 100%; }
+body { min-height: 100vh; display: flex; flex-direction: column; }
+body > footer { margin-top: auto; }

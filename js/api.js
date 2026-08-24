@@ -226,6 +226,7 @@ function mapProjectsGroups(groups) {
  */
 function mapBlogsGroups(groups) {
     const blogs = [];
+    const seenIds = new Set();
     (groups || []).forEach(group => {
         // 跳过未分组的文章
         if (group.folder_id == null) return;
@@ -233,6 +234,9 @@ function mapBlogsGroups(groups) {
         // 跳过空分组（没有已发布文章的不展示）
         if (articles.length === 0) return;
         articles.forEach(article => {
+            // 按 id 去重：数据库存在重复记录时页面不展示重复内容
+            if (seenIds.has(article.id)) return;
+            seenIds.add(article.id);
             blogs.push({
                 ...article,
                 group: group.folder_name,
@@ -346,7 +350,7 @@ async function loadBaseConfig() {
 
     // 降级：使用 config.js 中的 SITE 对象
     const fallback = {
-        config: { site_name: SITE.name, bio: SITE.bio, avatar_url: '', seo_title: '', seo_description: '' },
+        config: { site_name: SITE.name, bio: SITE.bio, logo_url: '', seo_title: '', seo_description: '' },
         services: []
     };
     window.SITE_CONFIG = fallback.config;

@@ -184,6 +184,12 @@ async function loadTopicsPage() {
     _allSeriesCache = all.filter(s => (s.article_count || 0) > 0);
     console.log('[Topics] loadTopicsPage 获取到', all.length, '个专题，含已发布内容', _allSeriesCache.length, '个');
 
+    // 完全没有专题数据：直接渲染整页空态，隐藏搜索/筛选/侧边栏等与数据相关的 UI
+    if (_allSeriesCache.length === 0) {
+        renderEmptyState();
+        return;
+    }
+
     renderFilterSidebar();
     renderSearchBox();
     renderSeriesList();
@@ -192,6 +198,33 @@ async function loadTopicsPage() {
     loadHomeTopics();
     // 右侧侧边栏：产品推荐（复用首页项目逻辑，渲染到 #projects-grid）
     renderSidebarProjects();
+}
+
+// 整页空态：全站没有任何已发布专题时展示（与筛选/搜索后无结果的列表小空态解耦，专事专用）
+function renderEmptyState() {
+    // 隐藏顶部大标题区（避免与实际空数据矛盾）
+    const header = document.getElementById('topic-page-header');
+    if (header) header.style.display = 'none';
+    // 隐藏左侧领域 tab（无数据时无分类可选）
+    const tabs = document.getElementById('topic-domain-tabs');
+    if (tabs) tabs.style.display = 'none';
+    // 隐藏右侧侧边栏（搜索框/技术栈筛选/热门专题/产品推荐均无数据可展示）
+    const aside = document.querySelector('aside');
+    if (aside) aside.style.display = 'none';
+    // 主内容区渲染居中的完整空态（清除网格布局，复用公共空态组件）
+    const grid = document.getElementById('series-list');
+    if (grid) {
+        grid.className = '';
+        renderPageEmptyState(grid, {
+            icon: 'fa-book-open',
+            title: '暂无专题内容',
+            description: '专题内容正在筹备中，敬请期待。',
+            links: [
+                { href: navHref('projects/index.html'), label: '项目作品' },
+                { href: navHref('blog/index.html'), label: '博客文章' },
+            ],
+        });
+    }
 }
 
 // 渲染筛选分类：领域 tab（搜索框上方）→ 其下方平铺对应技术栈标签（搜索框上方），整体左对齐

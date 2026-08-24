@@ -192,6 +192,8 @@ function initApp(activePage, opts = {}) {
             // 右上角登录态：挂载登录按钮 / 头像下拉，并同步最新用户资料
             // 依赖站点配置中的 enable_login_entry 判断全局是否显示入口
             const cfg = await loadBaseConfig();
+            // 站点配置加载完成后，统一刷新品牌 logo（导航/页脚）
+            if (typeof applySiteLogo === 'function') applySiteLogo();
             const skipLoginBtn = opts.type === 'login';
             const hideAuth = Number((cfg && cfg.config && cfg.config.enable_login_entry) ?? 1) !== 1;
             if (typeof HeAnAuth !== 'undefined' && HeAnAuth.initAuth) {

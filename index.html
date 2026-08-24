@@ -205,8 +205,10 @@
                 aboutSection.style.display = 'none';
                 return;
             }
-            if (about.avatar_url) {
-                document.getElementById('home-about-avatar').src = about.avatar_url;
+            // 首页关于我配图优先读取工作照，未配置时回退头像
+            const aboutPhoto = about.work_photo || about.avatar_url;
+            if (aboutPhoto) {
+                document.getElementById('home-about-avatar').src = aboutPhoto;
             }
 
             // 技术栈模块已按需求隐藏，不渲染

@@ -42,6 +42,20 @@
 
             const projects = data.projects || [];
 
+            // 完全没有项目数据：渲染整页空态（与专题页空态样式布局保持一致）
+            if (projects.length === 0) {
+                renderPageEmptyState(page, {
+                    icon: 'fa-rocket',
+                    title: '暂无项目内容',
+                    description: '项目内容正在筹备中，敬请期待。',
+                    links: [
+                        { href: navHref('topics/index.html'), label: '专题' },
+                        { href: navHref('blog/index.html'), label: '博客文章' },
+                    ],
+                });
+                return;
+            }
+
             // 项目分区图标映射（与博客 groupIcons 一致，缺省用文件夹图标）
             const projectIcons = {
                 '个人项目': 'fa-user',

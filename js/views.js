@@ -29,6 +29,21 @@ function navHref(href) {
     return getRoot() + href;
 }
 
+/** 品牌 logo：优先读取后台配置（window.SITE_CONFIG.logo_url），未配置时降级本地默认 logo */
+function getSiteLogo() {
+    const cfgLogo = window.SITE_CONFIG && window.SITE_CONFIG.logo_url;
+    return cfgLogo ? cfgLogo : getRoot() + 'logo/logo-mark.svg';
+}
+
+/** 站点配置加载完成后统一刷新全站 logo（导航/页脚，带 data-site-logo 标记） */
+function applySiteLogo() {
+    const cfgLogo = window.SITE_CONFIG && window.SITE_CONFIG.logo_url;
+    if (!cfgLogo) return;
+    document.querySelectorAll('[data-site-logo]').forEach(img => {
+        img.src = cfgLogo;
+    });
+}
+
 /** 生成 tab 链接 HTML（当前页高亮用 text-primary 区分） */
 function navTabLinks(activePage, isMobile) {
     return NAV_TABS.map(t => {
@@ -71,7 +86,7 @@ function renderNavbar(opts = {}) {
     if (!nav) return;
 
     const logo = `<a href="${navHref('index.html')}" class="flex-shrink-0 flex items-center">
-        <img src="${getRoot()}logo/logo-mark.svg" alt="禾安" class="h-8 w-8 mr-2">
+        <img src="${getSiteLogo()}" alt="禾安" data-site-logo class="h-8 w-8 mr-2">
         <span class="font-bold text-xl tracking-tight" id="site-name">禾安</span>
     </a>`;
 
@@ -204,7 +219,7 @@ function renderFooter(contacts = {}) {
     footer.innerHTML = `
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <div class="mb-4 md:mb-0 flex items-center gap-3">
-                <img src="${root}/logo/logo-mark.svg" alt="${SITE.name}" class="h-8 w-8"
+                <img src="${getSiteLogo()}" alt="${SITE.name}" data-site-logo class="h-8 w-8"
                      style="width:32px;height:32px;">
                 <div>
                     <a href="${root}/index.html" class="font-bold text-lg leading-tight block">${SITE.name}</a>
@@ -301,6 +316,32 @@ function closeWechatPopup() {
         _wechatPopupEl = null;
     }
     document.removeEventListener('click', _onDocClickCloseWechat, true);
+}
+
+/**
+ * 页面级空态：无数据时渲染统一风格的整页空态（专题/项目/博客共用，样式布局保持一致）
+ * 只替换容器 innerHTML，不修改容器自身 class（容器布局由调用方负责，互不干涉）
+ * @param {Element} container 渲染目标容器
+ * @param {Object} opts { icon, title, description, links: [{href,label}] }
+ */
+function renderPageEmptyState(container, opts = {}) {
+    const {
+        icon = 'fa-book-open',
+        title = '暂无内容',
+        description = '内容正在筹备中，敬请期待。',
+        links = [],
+    } = opts;
+    const linksHtml = links.length
+        ? `<br>可以先看看 ${links.map((l, i) => `${i > 0 ? '或 ' : ''}<a href="${l.href}" class="text-primary hover:underline">${l.label}</a>`).join(' ')}。`
+        : '';
+    container.innerHTML = `
+        <div class="w-full py-24 flex flex-col items-center justify-center text-center">
+            <div class="w-20 h-20 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-6">
+                <i class="fa-solid ${icon} text-3xl text-slate-400 dark:text-slate-500"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">${title}</h2>
+            <p class="text-slate-500 dark:text-slate-400 max-w-md leading-relaxed">${description}${linksHtml}</p>
+        </div>`;
 }
 
 /** 复制文本到剪贴板 */

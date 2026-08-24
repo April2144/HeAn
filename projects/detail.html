@@ -102,8 +102,11 @@
             document.getElementById('project-title').textContent = project.title;
             document.getElementById('project-desc').textContent = project.description;
 
-            // 版本号 · 发布日期（只要年月日），版本号默认 V1.0.0
-            const versionStr = project.version ? project.version : 'V1.0.0';
+            // 版本号 · 发布日期（只要年月日），版本号默认 v1.0.0
+            // 版本号统一为 x.y.z 三段格式：2 段（如 1.0 / v1.0）自动补全为 1.0.0，并自动补 v 前缀
+            const rawVersion = project.version ? project.version : '1.0.0';
+            const paddedVersion = /^[vV]?\d+\.\d+$/.test(rawVersion) ? rawVersion + '.0' : rawVersion;
+            const versionStr = /^[vV]/.test(paddedVersion) ? paddedVersion : 'v' + paddedVersion;
             const dateStr = project.published_at ? project.published_at.slice(0, 10) : (project.created_at ? project.created_at.slice(0, 10) : '');
             const metaEl = document.getElementById('project-meta');
             const versionEl = document.getElementById('project-version');
