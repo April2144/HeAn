@@ -32,6 +32,19 @@ const API_BASE = (() => {
 // const READ_TOKEN = '';
 const READ_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoicmVhZCJ9.GvryC3oRA2aGr4AmMSTY3jcf7fL_3Yr1FQ8gOmgoliE';
 
+// ---------- 离线缓存层（localForage） ----------
+// 真离线模式：联网成功时把数据写入本地缓存，断网时优先读缓存，最后才退回静态 data/*.json
+const _heanCache = localforage.createInstance({ name: 'hean_site', storeName: 'offline' });
+async function cachePut(key, data) {
+    try { await _heanCache.setItem('hean_' + key, { ts: Date.now(), data }); } catch (e) { /* ignore */ }
+}
+async function cacheGet(key) {
+    try {
+        const item = await _heanCache.getItem('hean_' + key);
+        return item ? item.data : null;
+    } catch (e) { return null; }
+}
+
 // ---------- 统一请求封装 ----------
 async function apiGet(path) {
     try {
@@ -271,10 +284,16 @@ async function loadProjects() {
     // 优先 API（按 folder 动态分区，只获取已发布内容）
     const apiData = await apiGet('/site/projects?public_only=1');
     if (apiData && apiData.groups) {
-        return mapProjectsGroups(apiData.groups);
+        const result = mapProjectsGroups(apiData.groups);
+        await cachePut('projects', result);   // 联网成功 → 写入本地缓存
+        return result;
     }
 
-    // 降级本地 JSON（旧结构含 category: personal/collab，转换为 projects 结构）
+    // 第一层降级：本地缓存（localForage，断网时最新同步数据）
+    const cached = await cacheGet('projects');
+    if (cached && cached.projects) return cached;
+
+    // 第二层降级：静态本地 JSON（旧结构含 category: personal/collab，转换为 projects 结构）
     const local = await loadLocalJson('projects.json');
     if (!local || !local.projects) return null;
     const projects = local.projects.map(p => ({
@@ -294,7 +313,14 @@ async function loadProject(projectId) {
         if (found) return found;
     }
 
-    // 降级本地 JSON
+    // 降级本地缓存
+    const cached = await cacheGet('projects');
+    if (cached && cached.projects) {
+        const found = cached.projects.find(p => p.id === projectId);
+        if (found) return found;
+    }
+
+    // 降级静态本地 JSON
     const local = await loadLocalJson('projects.json');
     if (!local || !local.projects) return null;
     return local.projects.find(p => p.id === projectId) || local.projects[0];
@@ -306,6 +332,7 @@ async function loadBlogs(tag) {
     const apiData = await apiGet('/site/blogs?public_only=1');
     if (apiData && apiData.groups) {
         const mapped = mapBlogsGroups(apiData.groups);
+        await cachePut('blogs', mapped);   // 联网成功 → 写入本地缓存
         // 前端过滤分组（因为后端不再支持 tag 查询参数）
         if (tag && tag !== 'all') {
             mapped.blogs = mapped.blogs.filter(b =>
@@ -319,7 +346,15 @@ async function loadBlogs(tag) {
         return { blogs: apiData.articles };
     }
 
-    // 降级本地 JSON
+    // 第一层降级：本地缓存
+    const cached = await cacheGet('blogs');
+    if (cached && cached.blogs) {
+        const mapped = { ...cached };
+        if (tag && tag !== 'all') mapped.blogs = mapped.blogs.filter(b => b.group === tag);
+        return mapped;
+    }
+
+    // 第二层降级：静态本地 JSON
     const local = await loadLocalJson('blogs.json');
     if (!local || !local.blogs) return null;
     return local;
@@ -333,7 +368,14 @@ async function loadBlog(blogId) {
         if (found) return found;
     }
 
-    // 降级本地 JSON
+    // 降级本地缓存
+    const cached = await cacheGet('blogs');
+    if (cached && cached.blogs) {
+        const found = cached.blogs.find(b => b.id === blogId);
+        if (found) return found;
+    }
+
+    // 降级静态本地 JSON
     const local = await loadLocalJson('blogs.json');
     if (!local || !local.blogs) return null;
     return local.blogs.find(b => b.id === blogId) || local.blogs[0];
@@ -345,10 +387,18 @@ async function loadBaseConfig() {
     if (data) {
         // 缓存完整配置到全局，供 auth/theme 等模块读取（如登录入口开关）
         if (data.config) window.SITE_CONFIG = data.config;
+        await cachePut('baseConfig', data);
         return data; // { config: {...}, services: [...] }
     }
 
-    // 降级：使用 config.js 中的 SITE 对象
+    // 第一层降级：本地缓存
+    const cached = await cacheGet('baseConfig');
+    if (cached) {
+        if (cached.config) window.SITE_CONFIG = cached.config;
+        return cached;
+    }
+
+    // 第二层降级：使用 config.js 中的 SITE 对象
     const fallback = {
         config: { site_name: SITE.name, bio: SITE.bio, logo_url: '', seo_title: '', seo_description: '' },
         services: []
@@ -359,9 +409,13 @@ async function loadBaseConfig() {
 
 async function loadProfile() {
     const data = await apiGet('/site/profile');
-    if (data) return data; // { about: {...} }
+    if (data) {
+        await cachePut('profile', data);
+        return data; // { about: {...} }
+    }
 
-    return null;
+    // 降级本地缓存
+    return await cacheGet('profile');
 }
 
 // ---------- 专题（学习领域 → 专题 → 层级 → 文章） ----------
@@ -373,7 +427,12 @@ async function loadProfile() {
 async function loadTopicDetail(topicId) {
     const apiData = await apiGet(`/site/learning/series/${topicId}?public_only=1`);
     console.log('[Topics] loadTopicDetail:', topicId, '=>', apiData ? 'OK' : 'NULL');
-    return apiData || null;
+    if (apiData) {
+        await cachePut('topic_' + topicId, apiData);
+        return apiData;
+    }
+    // 降级本地缓存
+    return await cacheGet('topic_' + topicId);
 }
 
 /**
@@ -383,7 +442,13 @@ async function loadTopicDetail(topicId) {
 async function loadAllSeries() {
     const apiData = await apiGet('/site/learning/series?public_only=1');
     console.log('[Topics] loadAllSeries =>', apiData ? apiData.items?.length : 'NULL');
-    if (apiData && Array.isArray(apiData.items)) return apiData.items;
+    if (apiData && Array.isArray(apiData.items)) {
+        await cachePut('allSeries', apiData.items);
+        return apiData.items;
+    }
+    // 降级本地缓存
+    const cached = await cacheGet('allSeries');
+    if (Array.isArray(cached)) return cached;
     return [];
 }
 
