@@ -15,6 +15,8 @@
         tailwind.config = TAILWIND_CONFIG;
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tiptap JSON 文档模型渲染层（产品推荐描述、正文渲染依赖 parseTiptapJson/tiptapJsonToPlainText/renderContent） -->
+    <script src="../js/renderer.js"></script>
     <link rel="stylesheet" href="../js/common.css">
     <link rel="icon" href="data:,">
 </head>
@@ -24,26 +26,11 @@
     <nav id="navbar"></nav>
 
     <!-- 专题列表区域 -->
-    <section id="topic-page-header" class="pt-32 pb-12 fade-in-up text-left">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-4xl font-bold mb-3">独立开发者的实践笔记 · 全栈开发成长之路</h1>
-            <p class="text-lg text-slate-500 dark:text-slate-400">按领域系统化学习，构建完整知识体系。涵盖7大技术方向，从入门到精通。</p>
-        </div>
-    </section>
-
-    <section class="pb-20">
+    <section class="pb-20 pt-28">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left">
             <div class="flex flex-col lg:flex-row gap-10">
-                <!-- 左侧：分类 tab + 专题卡片列表 -->
-                <div class="flex-1 min-w-0">
-                    <!-- 分类 tab -->
-                    <div id="topic-domain-tabs" class="topic-domain-tabs"></div>
-                    <!-- 专题卡片列表（4 列网格） -->
-                    <div id="series-list" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4"></div>
-                </div>
-
-                <!-- 右侧侧边栏：搜索框 + 技术栈（顶部）、热门专题、产品推荐 -->
-                <aside class="lg:w-64 flex-shrink-0">
+                <!-- 左侧侧边栏：搜索框 + 技术栈（顶部）、热门专题、产品推荐 -->
+                <aside class="lg:w-64 flex-shrink-0 order-2 lg:order-1">
                     <div class="sticky top-28 space-y-8">
                         <!-- 搜索框 + 技术栈（置于侧边栏顶部） -->
                         <div id="topic-search" class="max-w-7xl"></div>
@@ -64,6 +51,12 @@
                         </div>
                     </div>
                 </aside>
+
+                <!-- 右侧：专题卡片列表 -->
+                <div class="flex-1 min-w-0 order-1 lg:order-2">
+                    <!-- 专题卡片列表（4 列网格） -->
+                    <div id="series-list" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -71,6 +64,8 @@
     <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12"></footer>
 
     <!-- JS -->
+    <!-- localforage：离线缓存层依赖（与首页统一使用本地 vendor，离线可用；CDN 不可用时 api.js 自动降级） -->
+    <script src="../vendor/localforage.min.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/views.js"></script>

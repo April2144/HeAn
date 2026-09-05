@@ -28,10 +28,13 @@
     <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12"></footer>
 
     <script src="../js/utils.js"></script>
+    <script src="../vendor/localforage.min.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/views.js"></script>
     <script src="../js/theme.js"></script>
     <script src="../js/auth.js"></script>
+    <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
+    <script src="../js/renderer.js"></script>
     <script>
         initApp('projects', { type: 'main' });
 
@@ -95,7 +98,7 @@
                                                 ${getTagListHtml(project.tags)}
                                             </div>
                                             <h3 class="text-xl font-bold mb-2 group-hover:text-primary transition-theme-color">${project.title}</h3>
-                                            <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">${project.description}</p>
+                                            <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">${tiptapJsonToPlainText(parseTiptapJson(project.description)).slice(0, 60) || '暂无描述'}</p>
                                         </div>
                                     </article>
                                 </a>

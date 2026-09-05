@@ -15,11 +15,15 @@
         tailwind.config = TAILWIND_CONFIG;
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Markdown 渲染 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径，无外部依赖） -->
+    <script src="../js/renderer.js"></script>
     <link rel="stylesheet" href="../js/common.css">
     <link rel="icon" href="data:,">
     <style>
+        /* 背景兜底：Tailwind CDN 不可用时保底，避免纯白屏（值取自 config.js 的 light/dark） */
+        body.bg-light { background-color: #F8FAFC; }
+        html.dark body { background-color: #0F172A; }
+
         /* ===== 专题详情布局 ===== */
         /* 底部上一篇/下一篇标题 hover 变主题蓝，无下划线 */
         .nav-title {
@@ -28,36 +32,42 @@
         .nav-title:hover {
             color: #3B82F6 !important;
         }
+        /* --- 左右分栏独立滚动 --- */
         .topics-detail-layout {
             display: flex;
-            min-height: calc(100vh - 4rem);
+            width: 100%;
+            max-width: 1280px;             /* 窗口 ≥1280 时锁定 1280px 居中，左栏 320 + 右栏 960 */
+            height: calc(100vh - 4rem);     /* 固定高度，左右各自滚动 */
+            overflow: hidden;
         }
 
         /* --- 左侧栏 --- */
         .outline-sidebar {
-            width: 280px;
-            min-width: 280px;
-            background: #f8fafc;
-            border-right: 1px solid #e2e8f0;
+            width: 320px;
+            min-width: 320px;
+            flex-shrink: 0;                /* 左栏固定 320px，绝不被压缩 */
+            background: transparent;       /* 继承站点 bg-light / bg-dark */
+            border-right: 1px solid rgba(148,163,184,0.18);
             height: calc(100vh - 4rem);
-            position: sticky;
-            top: 4rem;
-            overflow-y: auto;
             display: flex;
             flex-direction: column;
             transition: transform 0.3s;
+            /* 左侧栏内容不超屏幕时不滚动；超出时内部滚动，但不显示滚动条 */
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
+        .outline-sidebar::-webkit-scrollbar { display: none; }
         .dark .outline-sidebar {
-            background: #0f172a;
-            border-right-color: #1e293b;
+            border-right-color: rgba(71,85,105,0.25);
         }
 
         .outline-sidebar-header {
-            padding: 16px 16px 16px;
+            padding: 12px 16px 12px 0;   /* 左 padding 0：专题名左缘对齐顶部返回按钮箭头，作为最顶级基准 */
             flex-shrink: 0;
         }
 
-        /* 左栏顶部专题名（章节列表上方，作为目录根节点，纯颜色区分） */
+        /* 左栏顶部专题名 */
         .detail-topic-title {
             font-size: 16px;
             font-weight: 700;
@@ -69,73 +79,282 @@
             color: #60A5FA;
         }
 
+        /* === 左侧栏三级树目录（章节 > 文章 > 子标题）=== */
         .outline-tree {
             flex: 1;
             overflow-y: auto;
-            padding: 8px 0;
+            padding: 4px 12px 16px 16px;   /* 左侧留出箭头绝对定位空间 */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
+        .outline-tree::-webkit-scrollbar { display: none; }
 
-        .outline-level-btn {
-            text-align: left;
-            border: none;
-            background: transparent;
-            cursor: pointer;
+        /* 通用树节点按钮：hover / 选中都有背景色；章节/文章箭头统一绝对定位到背景外 */
+        .outline-level-btn,
+        .outline-article-btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
             width: 100%;
+            text-align: left;
+            color: #334155;
+            background: transparent;
+            border: none;
+            font-weight: 400;
+            cursor: pointer;
+            transition: background .15s ease, color .15s ease;
+            border-radius: 0.45rem;
+        }
+        .outline-level-btn:hover,
+        .outline-article-btn:hover {
+            background: rgba(59,130,246,0.08);
+            color: #2563eb;
+        }
+        .dark .outline-level-btn,
+        .dark .outline-article-btn { color: #cbd5e1; }
+        .dark .outline-level-btn:hover,
+        .dark .outline-article-btn:hover {
+            background: rgba(96,165,250,0.10);
+            color: #60a5fa;
         }
 
+        /* 章节：字号稍大、加粗（第 0 级，缩进基准） */
+        .outline-level-btn {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 0.5rem 0.75rem 0.5rem 4px;
+        }
+
+        /* 文章节点容器：无箭头后整块左移，与上级文件名（章节名）文字左缘对齐 */
         .outline-articles {
-            border-left: 2px solid #e2e8f0;
-            margin-left: 16px;
+            display: none;
+            padding: 2px 0 2px 0;
+            border-left: none;      /* 去掉左侧竖线 */
         }
-        .dark .outline-articles {
-            border-left-color: #334155;
+        .outline-level.expanded > .outline-articles { display: block; }
+
+        .outline-article-node { margin: 2px 0; }
+
+        /* 文章按钮：padding 与章节按钮一致(4px)，文章文字左缘 = tree16 + 0 + 4 = +20，与章节名对齐 */
+        .outline-article-btn {
+            font-size: 13px;
+            padding: 0.4rem 0.5rem 0.4rem 4px;
+        }
+        .outline-article-btn .outline-article-label {
+            display: inline-block;
         }
 
-        .outline-article {
-            display: block;
-            border-left: 2px solid transparent;
-            margin-left: -2px;
+        /* 子标题列表：与文章标题 hover/选中背景同色，作为一块 section
+           文章文字在 +20，子标题再缩进一级：h2 = +36，h3 = +52，逐级递进 */
+        .outline-subheads {
+            display: none;
+            padding: 4px 0.5rem 4px 20px;
+            margin: 0;
+            border-radius: 0;
+            background: rgba(59,130,246,0.08);
         }
-        .outline-article.active {
-            color: #3b82f6 !important;
-            border-left-color: #3b82f6;
-            background: #eff6ff;
-        }
-        .dark .outline-article.active {
-            color: #60a5fa !important;
-            background: rgba(59,130,246,0.15);
-        }
+        .dark .outline-subheads { background: rgba(96,165,250,0.10); }
+        .outline-article-node.expanded > .outline-subheads { display: block; }
 
+        /* 子标题：h2 为一级标题（第 2 级），h3 为二级标题（第 3 级），逐级递进缩进 */
         .outline-subhead {
+            display: block;
             text-decoration: none;
+            padding: 0.28rem 0.5rem 0.28rem 0;
+            font-size: 12px;
+            color: #475569;
+            transition: color .15s ease;
         }
-        .outline-subhead:hover {
-            color: #3b82f6;
+        .outline-subhead:hover { color: #2563eb; }
+        .dark .outline-subhead { color: #94a3b8; }
+        .dark .outline-subhead:hover { color: #60a5fa; }
+        /* 在 .outline-subheads(20px) 基础上 h3 再缩进 16px，确保 h3 比 h2 更靠右 */
+        .outline-subhead[data-heading-level="2"] { padding-left: 0; }
+        .outline-subhead[data-heading-level="3"] { padding-left: 16px; }
+
+        /* 当前选中的章节/文章：文字/背景颜色与 hover 完全一致 */
+        .outline-level-btn.filter-selected,
+        .outline-article-btn.filter-selected {
+            background: rgba(59,130,246,0.08) !important;
+            color: #2563eb !important;
+            font-weight: 600;
+        }
+        .dark .outline-level-btn.filter-selected,
+        .dark .outline-article-btn.filter-selected {
+            background: rgba(96,165,250,0.10) !important;
+            color: #60a5fa !important;
         }
 
-        .outline-chevron.rotate-90 {
-            transform: rotate(90deg);
+        /* 选中文章时：标题按钮与下方子标题列表背景合并为一整块（去掉中间分界） */
+        .outline-article-node.expanded > .outline-article-btn.filter-selected {
+            background: rgba(59,130,246,0.08) !important;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+        .dark .outline-article-node.expanded > .outline-article-btn.filter-selected {
+            background: rgba(96,165,250,0.10) !important;
+        }
+        /* 无子标题的文章：选中背景是独立一块，四角均需圆角（无下方子标题块拼接） */
+        .outline-article-node.no-subheads > .outline-article-btn.filter-selected {
+            border-radius: 0.5rem;
+        }
+        .outline-article-node.expanded > .outline-subheads {
+            background: rgba(59,130,246,0.08) !important;
+            border-radius: 0 0 0.5rem 0.5rem;
+            padding-top: 0;
+            padding-bottom: 6px;
+        }
+        .dark .outline-article-node.expanded > .outline-subheads {
+            background: rgba(96,165,250,0.10) !important;
+        }
+
+        .outline-chevron {
+            width: 12px;
+            height: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #94a3b8;
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+        }
+        .dark .outline-chevron { color: #64748b; }
+        .outline-chevron.rotate-90 { transform: rotate(90deg); }
+        /* 章节/文章按钮：箭头统一绝对定位到背景左侧外，选中背景从文案左缘开始、不包裹箭头 */
+        .outline-level-btn .outline-chevron,
+        .outline-article-btn .outline-chevron,
+        .outline-article-btn .outline-chevron-spacer {
+            position: absolute;
+            left: -14px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .outline-level-btn .outline-chevron.rotate-90,
+        .outline-article-btn .outline-chevron.rotate-90 { transform: translateY(-50%) rotate(90deg); }
+        /* 无章节标题时占位，保持标题文字与有箭头的文章对齐（同样在背景左侧外） */
+        .outline-chevron-spacer {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
         }
 
         /* --- 右侧内容区 --- */
+        /* 透明背景，继承 body 的 bg-light / bg-dark（与博客、项目详情页一致） */
+        /* 左右分栏独立滚动：右侧内容区自身滚动，滚条在右侧 */
         .detail-content-area {
             flex: 1;
-            overflow-y: auto;
+            min-width: 0;              /* 允许 flex 子项在需要时收缩，同时配合 flex-shrink 保持稳定 */
             padding: 0;
-            background: #ffffff;
-        }
-        .dark .detail-content-area {
-            background: #1e293b;
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
         }
 
         .detail-content-inner {
-            padding: 48px 32px 80px;
+            width: 100%;               /* 始终占满右栏区域（= 布局宽 − 左栏 320），空态/有内容宽度一致 */
+            padding: 48px 40px 80px;
+            margin: 0 auto;
+            /* 内容区内部也保证最小高度，否则空内容时内部 div 不撑开 */
+            min-height: calc(100vh - 4rem);
+        }
+
+        /* 文章正文为空时的居中占位：宽度与有内容时一致，整体在内容区垂直居中 */
+        #article-body.empty-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            min-height: calc(100vh - 4rem - 48px - 80px - 120px);
+            color: #94a3b8;
+        }
+        .dark #article-body.empty-body {
+            color: #64748b;
+        }
+        #article-body.empty-body .empty-state-icon {
+            font-size: 2.25rem;
+            line-height: 1;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        #article-body.empty-body .empty-state-text {
+            font-size: 0.95rem;
+        }
+
+        /* 右侧正文：与 admin 中后台预览保持一致 */
+        .preview-blog-content {
+            font-size: 15px; line-height: 1.9; color: #1e293b;
+        }
+        .dark .preview-blog-content { color: #e2e8f0; }
+        .preview-blog-content h1 {
+            font-size: 26px; font-weight: 800; margin: 0 0 16px; line-height: 1.3;
+        }
+        .preview-blog-content h2 {
+            font-size: 1.5rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem;
+            padding-left: 0.75rem; border-left: 3px solid #3b82f6;
+        }
+        .dark .preview-blog-content h2 { border-left-color: #60a5fa; }
+        .preview-blog-content h3 {
+            font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;
+        }
+        .preview-blog-content p {
+            margin-bottom: 1.25rem; line-height: 1.8;
+        }
+        .preview-blog-content ul, .preview-blog-content ol {
+            margin-bottom: 1.25rem; padding-left: 1.5rem;
+        }
+        .preview-blog-content li {
+            margin-bottom: 0.5rem; line-height: 1.8;
+        }
+        .preview-blog-content code {
+            background: #eff6ff; color: #2563eb;
+            padding: 2px 6px; border-radius: 4px; font-size: 0.9em;
+            font-family: "SF Mono", "Fira Code", Menlo, monospace;
+        }
+        .dark .preview-blog-content code { background: rgba(59,130,246,0.15); color: #93c5fd; }
+        .preview-blog-content pre {
+            background: #1e293b; color: #e2e8f0; padding: 1.25rem;
+            border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.5rem;
+            font-size: 13px; line-height: 1.6;
+        }
+        .preview-blog-content pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+        .preview-blog-content blockquote {
+            border-left: 3px solid #3b82f6; padding: 1rem 1.5rem;
+            margin: 1.5rem 0; background: rgba(59,130,246,0.05); border-radius: 0 0.5rem 0.5rem 0;
+            color: #475569; font-style: italic;
+        }
+        .dark .preview-blog-content blockquote { color: #94a3b8; background: rgba(96,165,250,0.08); border-left-color: #60a5fa; }
+        .preview-blog-content hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+        .dark .preview-blog-content hr { border-top-color: #334155; }
+        .preview-blog-content a { color: #3b82f6; text-decoration: underline; }
+        .dark .preview-blog-content a { color: #60a5fa; }
+        .preview-blog-content img { max-width: 100%; border-radius: 0.75rem; margin: 1.5rem 0; }
+        .preview-blog-content strong { font-weight: 600; }
+        .preview-blog-content em { font-style: italic; }
+        .preview-blog-content table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 14px; }
+        .preview-blog-content th, .preview-blog-content td { border: 1px solid #e2e8f0; padding: 8px 12px; text-align: left; }
+        .dark .preview-blog-content th, .dark .preview-blog-content td { border-color: #334155; }
+        .preview-blog-content th { background: #f8fafc; font-weight: 600; }
+        .dark .preview-blog-content th { background: rgba(148,163,184,0.1); }
+        .preview-blog-content .table-wrapper { overflow-x: auto; margin: 1.5rem 0; }
+        .preview-blog-content .blog-img { border-radius: 0.75rem; }
+        .preview-blog-content pre { position: relative; }
+        .preview-blog-content .code-copy-btn {
+            position: absolute; top: 8px; right: 8px;
+            background: rgba(255,255,255,0.12); color: #cbd5e1;
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 6px;
+            padding: 2px 10px; font-size: 12px; cursor: pointer; transition: all .15s;
+        }
+        .preview-blog-content .code-copy-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
+        .preview-blog-content .code-lang-tag {
+            position: absolute; top: 8px; left: 12px;
+            color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
         }
 
         /* 文章内容排版 */
         .article-body h1 { font-size: 1.75rem; font-weight: 700; margin: 2rem 0 1rem; }
-        .article-body h2 { font-size: 1.4rem; font-weight: 700; margin: 1.75rem 0 0.75rem; padding-bottom: 0.4rem; border-bottom: 1px solid #e5e7eb; }
-        .dark .article-body h2 { border-bottom-color: #374151; }
+        .article-body h2 { font-size: 1.4rem; font-weight: 700; margin: 1.75rem 0 0.75rem; }
         .article-body h3 { font-size: 1.15rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
         .article-body p { margin: 0.75rem 0; line-height: 1.75; }
         .article-body ul, .article-body ol { margin: 0.75rem 0; padding-left: 1.5rem; }
@@ -208,8 +427,8 @@
     <!-- 顶栏：由 renderNavbar 统一生成（detail 模式，含左侧自定义插槽） -->
     <header id="navbar"></header>
 
-        <!-- 主体：侧边栏 + 内容 -->
-        <div class="topics-detail-layout max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+        <!-- 主体：侧边栏 + 内容（最大宽度 1280px 居中；左栏固定 320，右栏 = 1280−320 固定，窗口 <1280 时整体自适应） -->
+        <div class="topics-detail-layout mx-auto px-4 sm:px-6 lg:px-8 pt-16">
 
             <!-- 左侧大纲侧边栏 -->
             <aside class="outline-sidebar" id="outline-sidebar">
@@ -244,9 +463,6 @@
                         <div class="text-sm" id="article-practice"></div>
                     </div>
 
-                    <!-- 分割线 -->
-                    <hr class="my-6 border-slate-200 dark:border-slate-700">
-
                     <!-- Markdown 正文 -->
                     <div class="article-body" id="article-body">
                         <div class="text-slate-400 text-center py-16">
@@ -264,9 +480,8 @@
             </main>
         </div>
 
-        <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12"></footer>
-
         <!-- JS -->
+        <script src="../vendor/localforage.min.js"></script>
         <script src="../js/api.js"></script>
         <script src="../js/utils.js"></script>
         <script src="../js/topics.js"></script>

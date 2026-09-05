@@ -4,22 +4,19 @@
  * 适配后端新接口：分组结构（groups）替代旧的分类结构
  *
  * API_BASE: 后端服务地址
- * 优先级：URL 参数 ?api=xxx > localStorage['env-mode'] > 自动检测
+ * 公开站点固定自动检测：localhost/127.0.0.1 → 本地；hacore.cn → 同源；调试可用 ?api=xxx 覆盖。
  * - localStorage 切换：通过右下角环境切换按钮设置（offline/cloud/auto）
  * - 自动检测：根据当前页面域名推断后端地址
  */
 
+// 公开前端固定走自动检测（不再读取任何持久化环境开关，避免与私有后台共享 localStorage key）。
+// 调试时可用 URL 参数 ?api=http://xxx:8000 临时覆盖。
 const API_BASE = (() => {
-    // 1. URL 参数覆盖（最高优先级，临时调试用）
+    // 1. URL 参数覆盖（最高优先级，临时调试用，不留持久状态）
     const param = new URLSearchParams(window.location.search).get('api');
     if (param) return param;
 
-    // 2. localStorage 环境切换（通过右下角按钮设置）
-    const envMode = localStorage.getItem('env-mode');
-    if (envMode === 'offline') return 'http://localhost:8000';
-    if (envMode === 'cloud') return 'http://175.178.7.7:8000';
-
-    // 3. 自动检测
+    // 2. 自动检测（基于当前域名，公开站点永远请求同源/本地后端）
     const h = window.location.hostname;
     if (h === '175.178.7.7') return 'http://175.178.7.7:8000';
     if (h === 'dev.hacore.cn') return 'http://dev.hacore.cn:8000';
@@ -34,13 +31,25 @@ const READ_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoicmVhZCJ9.Gv
 
 // ---------- 离线缓存层（localForage） ----------
 // 真离线模式：联网成功时把数据写入本地缓存，断网时优先读缓存，最后才退回静态 data/*.json
-const _heanCache = localforage.createInstance({ name: 'hean_site', storeName: 'offline' });
+// 注：localforage 由 index.html 通过 CDN 引入；若 CDN 不可用（离线/被墙），
+// 本层自动降级为“不缓存”，不影响正常联网请求。
+let _heanCache = null;
+function _getCache() {
+    if (_heanCache === null && typeof localforage !== 'undefined') {
+        _heanCache = localforage.createInstance({ name: 'hean_site', storeName: 'offline' });
+    }
+    return _heanCache;
+}
 async function cachePut(key, data) {
-    try { await _heanCache.setItem('hean_' + key, { ts: Date.now(), data }); } catch (e) { /* ignore */ }
+    const c = _getCache();
+    if (!c) return;
+    try { await c.setItem('hean_' + key, { ts: Date.now(), data }); } catch (e) { /* ignore */ }
 }
 async function cacheGet(key) {
+    const c = _getCache();
+    if (!c) return null;
     try {
-        const item = await _heanCache.getItem('hean_' + key);
+        const item = await c.getItem('hean_' + key);
         return item ? item.data : null;
     } catch (e) { return null; }
 }
@@ -146,7 +155,7 @@ function trackPageViewAuto(pageType, pageId = 0) {
 }
 
 // 由页面 activePage 与 URL 参数自动解析 page_type/page_id 并上报（列表页/详情页统一入口）
-const _PAGE_TYPE_MAP = {
+var _PAGE_TYPE_MAP = {
     home: 'home',
     blog: 'blog',
     blogs: 'blog_list',
@@ -437,7 +446,7 @@ async function loadTopicDetail(topicId) {
 
 /**
  * 获取全部已发布专题（用于首页最新专题卡片 & 专题列表页筛选/搜索）
- * 返回: [{ id, domain_id, series_key, name, cover_image, description, tags, updated_at, ... }]
+ * 返回: [{ id, series_key, name, cover_image, description, tags, updated_at, ... }]
  */
 async function loadAllSeries() {
     const apiData = await apiGet('/site/learning/series?public_only=1');
@@ -449,17 +458,6 @@ async function loadAllSeries() {
     // 降级本地缓存
     const cached = await cacheGet('allSeries');
     if (Array.isArray(cached)) return cached;
-    return [];
-}
-
-// 拉取学习领域配置（数据库 learning_domains，仅已启用的）
-async function loadDomains() {
-    try {
-        const apiData = await apiGet('/site/learning/domains?public_only=1');
-        if (apiData && Array.isArray(apiData.items)) return apiData.items;
-    } catch (err) {
-        console.error('[Topics] loadDomains 失败:', err.message);
-    }
     return [];
 }
 

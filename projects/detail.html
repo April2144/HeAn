@@ -75,18 +75,19 @@
                 <a id="project-demo-link" href="#" target="_blank" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-white font-medium hover:bg-blue-600 transition-all shadow-lg hover:shadow-blue-500/30"><i class="fas fa-external-link-alt"></i> 在线预览</a>
                 <a id="project-source-link" href="#" target="_blank" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"><i class="fab fa-github"></i> 源码仓库</a>
             </div>
-            <!-- 公众号二维码 -->
-            <div id="public-account-section" style="display:none;"></div>
         </div>
     </main>
 
     <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12"></footer>
 
+    <script src="../vendor/localforage.min.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/views.js"></script>
     <script src="../js/theme.js"></script>
     <script src="../js/auth.js"></script>
+    <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
+    <script src="../js/renderer.js"></script>
     <script>
         initApp('projects', { type: 'detail' });
         HeAnAuth.mountLoginButton();
@@ -100,7 +101,7 @@
             document.getElementById('project-image').src = project.cover_image;
             document.getElementById('project-image').alt = project.title;
             document.getElementById('project-title').textContent = project.title;
-            document.getElementById('project-desc').textContent = project.description;
+            document.getElementById('project-desc').innerHTML = renderContent(project.description || '');
 
             // 版本号 · 发布日期（只要年月日），版本号默认 v1.0.0
             // 版本号统一为 x.y.z 三段格式：2 段（如 1.0 / v1.0）自动补全为 1.0.0，并自动补 v 前缀
@@ -157,28 +158,6 @@
             if (hasDemo) demoLink.href = project.demo_url;
             if (hasSource) sourceLink.href = project.source_url;
             linksContainer.style.display = (hasDemo || hasSource) ? '' : 'none';
-
-            // 展示公众号二维码（如果 show_public_account 开启）
-            (async () => {
-                const profileData = await loadProfile();
-                const about = (profileData && profileData.about) ? profileData.about : null;
-                const contacts = (about && about.contacts) ? about.contacts : {};
-                const publicAccountSection = document.getElementById('public-account-section');
-                if (publicAccountSection && project.show_public_account && contacts && contacts.mp_qrcode) {
-                    publicAccountSection.innerHTML = `
-                        <div class="mt-10 pt-8 border-t border-slate-200 dark:border-slate-700 text-center">
-                            <h3 class="font-bold mb-4">关注公众号</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">获取独家技术资料、源码下载权限及最新独立开发咨询</p>
-                            <div class="w-48 h-48 bg-slate-100 dark:bg-slate-700 rounded-lg overflow-hidden mx-auto">
-                                <img src="${contacts.mp_qrcode}" alt="公众号二维码" class="w-full h-full object-cover">
-                            </div>
-                            ${contacts.mp_name ? '<p class="mt-4 text-slate-700 dark:text-slate-300 font-bold">扫码关注「' + contacts.mp_name + '」</p>' : ''}
-                            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">回复"资料"获取独家技术资料</p>
-                        </div>
-                    `;
-                    publicAccountSection.style.display = '';
-                }
-            })();
         }
         // 返回上级页面：根据来源智能返回，保持与专题/博客详情页一致
         function goBack() {

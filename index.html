@@ -142,6 +142,8 @@
     <script src="./js/topics.js"></script>
     <script src="./js/theme.js"></script>
     <script src="./js/auth.js"></script>
+    <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
+    <script src="./js/renderer.js"></script>
     <script>
         initApp('home', { type: 'main' });
 
@@ -265,7 +267,7 @@
                                     ${getTagListHtml(project.tags)}
                                 </div>
                                 <h3 class="text-lg font-bold mb-2 group-hover:text-primary transition-theme-color line-clamp-1">${project.title}</h3>
-                                <p class="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-2">${project.description}</p>
+                                <p class="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-2">${tiptapJsonToPlainText(parseTiptapJson(project.description)).slice(0, 60) || '暂无描述'}</p>
                             </div>
                         </article>
                     `;

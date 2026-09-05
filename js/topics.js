@@ -1,39 +1,6 @@
 // ============================================================
-// topics.js - 专题模块（领域 → 专题 → 层级 → 文章）
+// topics.js - 专题模块（专题 → 层级 → 文章，无领域层）
 // ============================================================
-
-// ---------- 领域配置（由后端 /site/learning/domains 动态获取，不再写死） ----------
-// _domainList：后端返回的已启用领域列表（含 id / domain_key / name / icon 等）
-let _domainList = [];
-
-// 默认视觉样式（后端领域不存储 Tailwind 渐变类，沿用统一配色）
-const DOMAIN_DEFAULT_STYLE = {
-    icon: 'fa-book',
-    bg: 'from-slate-500 to-gray-500',
-    light: 'bg-slate-50',
-    textLight: 'text-slate-700',
-    darkBg: 'dark:bg-slate-900/30',
-    darkText: 'dark:text-slate-400',
-};
-
-// 按 domain_key 从后端领域配置取元数据（图标 / 名称）
-function getDomainMeta(domainKey) {
-    const d = _domainList.find(x => x.domain_key === domainKey);
-    if (d) {
-        return { ...DOMAIN_DEFAULT_STYLE, icon: d.icon || DOMAIN_DEFAULT_STYLE.icon };
-    }
-    return { ...DOMAIN_DEFAULT_STYLE };
-}
-
-// 取领域显示名：优先后端 _domainList 的 name，其次专题自带的 domain_name
-function getDomainDisplayName(domain) {
-    const key = domain.domain_key || domain.key;
-    if (key) {
-        const d = _domainList.find(x => x.domain_key === key);
-        if (d && d.name) return d.name;
-    }
-    return domain.name || domain.domain_name || String(domain.id || '未知领域');
-}
 
 // 专题 tags 可能是字符串或数组，统一为数组
 function normalizeTags(tags) {
@@ -52,15 +19,7 @@ function normalizeTags(tags) {
 }
 
 // 统一标签徽章：优先取统一 TagsModel（TAG_MAP）的 icon/颜色，无则降级纯文字
-// isDomain=true 时按领域名匹配 _domainList，使用「领域 icon + 对应颜色配置」（DOMAIN_DEFAULT_STYLE 的 light/darkBg/darkText）
-function renderTagChip(name, withIcon = true, isDomain = false) {
-    if (isDomain && typeof _domainList !== 'undefined') {
-        const d = _domainList.find(x => x.name === name || x.domain_key === name);
-        const dm = d ? { ...DOMAIN_DEFAULT_STYLE, icon: d.icon || DOMAIN_DEFAULT_STYLE.icon } : DOMAIN_DEFAULT_STYLE;
-        const icon = (withIcon && dm.icon) ? `<i class="fa-solid ${dm.icon} mr-1"></i>` : '';
-        const cls = `${dm.light} ${dm.textLight} ${dm.darkBg} ${dm.darkText}`;
-        return `<span class="text-xs px-2.5 py-1 rounded-md ${cls} whitespace-nowrap">${icon}${escapeHtml(name)}</span>`;
-    }
+function renderTagChip(name, withIcon = true) {
     const meta = (typeof TAG_MAP !== 'undefined' && TAG_MAP[name]) ? TAG_MAP[name] : null;
     const icon = (withIcon && meta && meta.icon) ? `<i class="fa-solid ${meta.icon} mr-1"></i>` : '';
     const cls = meta && meta.class
@@ -77,8 +36,6 @@ async function loadHomeTopics() {
     console.log('[Topics] loadHomeTopics 开始');
     // 拉取统一标签系统（general_tags / tech_stacks），供详情页/卡片/筛选使用
     await initTagMapFromAPI();
-    // 先拉取后端领域配置，确保领域名/图标正确显示
-    _domainList = await loadDomains();
     const series = await loadAllSeries();
     console.log('[Topics] loadHomeTopics 获取到', series.length, '个专题');
 
@@ -101,27 +58,19 @@ async function loadHomeTopics() {
         grid.className = 'flex gap-6 overflow-x-auto pb-4 pt-4 -mt-4 snap-x snap-mandatory scrollbar-hide';
         grid.style.overflowX = 'auto';
         grid.innerHTML = sorted.map(t => {
-            const meta = getDomainMeta(t.domain_key);
-            const tags = normalizeTags(t.tags).slice(0, 4);
             const cover = t.cover_image || '';
             const title = (t.name || '').length > 20 ? (t.name.slice(0, 20) + '…') : (t.name || '');
-            const desc = (t.description || '点击查看专题详情');
-            const shortDesc = desc.length > 60 ? (desc.slice(0, 60) + '…') : desc;
             const updatedAt = (t.updated_at || '').slice(0, 10);
-            const domainName = t.domain_name || getDomainDisplayName({ domain_key: t.domain_key });
             return `
                 <a href="topics/detail.html?series=${t.id}&from=home" class="block group flex-shrink-0 w-56 snap-start">
-                    <article class="card-hover relative w-56 aspect-[3/4] rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
-                        <img src="${cover}" alt="${escapeHtml(t.name || '')}" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
-                            <h3 class="font-bold text-lg mb-1.5 line-clamp-1 drop-shadow" title="${escapeHtml(t.name || '')}">${escapeHtml(title)}</h3>
-                            <p class="text-white/90 text-sm mb-2 line-clamp-2">${escapeHtml(shortDesc)}</p>
-                            <div class="flex flex-wrap gap-1.5 mb-2">
-                                ${tags.map(tag => `<span class="tag-chip" style="background:rgba(255,255,255,0.25);color:#fff;">${escapeHtml(tag)}</span>`).join('')}
-                            </div>
-                            <div class="flex items-center text-white/80 text-xs whitespace-nowrap">
-                                <span><i class="fas fa-clock mr-1"></i>${updatedAt}</span>
+                    <article class="card-hover flex flex-col w-56 aspect-square rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
+                        <div class="h-2/3 overflow-hidden">
+                            <img src="${cover}" alt="${escapeHtml(t.name || '')}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="h-1/3 flex flex-col justify-center px-3 text-left">
+                            <h3 class="font-semibold text-sm leading-tight line-clamp-1 text-slate-800 dark:text-slate-100" title="${escapeHtml(t.name || '')}">${escapeHtml(title)}</h3>
+                            <div class="flex items-center text-slate-400 text-xs mt-1 whitespace-nowrap">
+                                <i class="fas fa-clock mr-1"></i>${updatedAt}
                             </div>
                         </div>
                     </article>
@@ -129,17 +78,14 @@ async function loadHomeTopics() {
             return `
                 <a href="topics/detail.html?series=${t.id}&from=home" class="block group flex-shrink-0 w-56 snap-start"
                    onclick="trackClick('click_zhuanti','open_series','zhuanti_card','home','series',${t.id})">
-                    <article class="card-hover relative w-56 aspect-[3/4] rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
-                        <img src="${cover}" alt="${escapeHtml(t.name || '')}" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                        <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
-                            <h3 class="font-bold text-lg mb-1.5 line-clamp-1 drop-shadow" title="${escapeHtml(t.name || '')}">${escapeHtml(title)}</h3>
-                            <p class="text-white/90 text-sm mb-2 line-clamp-2">${escapeHtml(shortDesc)}</p>
-                            <div class="flex flex-wrap gap-1.5 mb-2">
-                                ${tags.map(tag => `<span class="tag-chip" style="background:rgba(255,255,255,0.25);color:#fff;">${escapeHtml(tag)}</span>`).join('')}
-                            </div>
-                            <div class="flex items-center text-white/80 text-xs whitespace-nowrap">
-                                <span><i class="fas fa-clock mr-1"></i>${updatedAt}</span>
+                    <article class="card-hover flex flex-col w-56 aspect-square rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
+                        <div class="h-2/3 overflow-hidden">
+                            <img src="${cover}" alt="${escapeHtml(t.name || '')}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="h-1/3 flex flex-col justify-center px-3 text-left">
+                            <h3 class="font-semibold text-sm leading-tight line-clamp-1 text-slate-800 dark:text-slate-100" title="${escapeHtml(t.name || '')}">${escapeHtml(title)}</h3>
+                            <div class="flex items-center text-slate-400 text-xs mt-1 whitespace-nowrap">
+                                <i class="fas fa-clock mr-1"></i>${updatedAt}
                             </div>
                         </div>
                     </article>
@@ -176,9 +122,6 @@ async function loadTopicsPage() {
     // 拉取统一标签系统（general_tags / tech_stacks），供卡片/筛选使用
     await initTagMapFromAPI();
 
-    // 先拉取后端领域配置（数据库 learning_domains，仅已启用的）
-    _domainList = await loadDomains();
-
     // 一次拉取全部专题，仅保留有已发布文章的专题（无内容的专题不展示）
     const all = await loadAllSeries();
     _allSeriesCache = all.filter(s => (s.article_count || 0) > 0);
@@ -205,9 +148,6 @@ function renderEmptyState() {
     // 隐藏顶部大标题区（避免与实际空数据矛盾）
     const header = document.getElementById('topic-page-header');
     if (header) header.style.display = 'none';
-    // 隐藏左侧领域 tab（无数据时无分类可选）
-    const tabs = document.getElementById('topic-domain-tabs');
-    if (tabs) tabs.style.display = 'none';
     // 隐藏右侧侧边栏（搜索框/技术栈筛选/热门专题/产品推荐均无数据可展示）
     const aside = document.querySelector('aside');
     if (aside) aside.style.display = 'none';
@@ -227,9 +167,8 @@ function renderEmptyState() {
     }
 }
 
-// 渲染筛选分类：领域 tab（搜索框上方）→ 其下方平铺对应技术栈标签（搜索框上方），整体左对齐
+// 渲染筛选区：技术栈标签筛选（搜索框上方），整体左对齐
 function renderFilterSidebar() {
-    renderDomainTabs();
     renderTagFilter();
 }
 
@@ -253,7 +192,8 @@ async function renderSidebarProjects() {
 
     // 简单列表：仅产品名 + 介绍，无封面，带图标点缀
     list.innerHTML = allProjects.map(project => {
-        const desc = (project.description || '').length > 40 ? (project.description.slice(0, 40) + '…') : (project.description || '');
+        const _descText = tiptapJsonToPlainText(parseTiptapJson(project.description));
+        const desc = _descText.length > 40 ? (_descText.slice(0, 40) + '…') : _descText;
         return `
             <li class="topic-simple-item">
                 <i class="fa-solid fa-cube topic-simple-icon"></i>
@@ -265,44 +205,15 @@ async function renderSidebarProjects() {
     }).join('');
 }
 
-// 领域分类：水平 tab，放搜索框上方，相对搜索框居中（无「分类筛选」标题）
-function renderDomainTabs() {
-    const el = document.getElementById('topic-domain-tabs');
-    if (!el) return;
-
-    // 动态构建分类列表：全部(固定) + 后端领域（按 display_order 排序）
-    // 仅保留「当前有已发布专题」的领域，无内容的领域不展示分组名
-    const usedDomainKeys = new Set(_allSeriesCache.map(s => s.domain_key).filter(Boolean));
-    const filters = [{ key: 'all', name: '全部', icon: DOMAIN_DEFAULT_STYLE.icon }]
-        .concat((_domainList || []).filter(d => usedDomainKeys.has(d.domain_key)).sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
-            .map(d => ({ key: d.domain_key, name: d.name, icon: d.icon || DOMAIN_DEFAULT_STYLE.icon })));
-
-    // 若当前选中的领域因无已发布专题被移除，则回退到「全部」（专事专用，避免选中态悬空）
-    if (_currentFilter !== 'all' && !filters.some(f => f.key === _currentFilter)) {
-        _currentFilter = 'all';
-    }
-
-    el.innerHTML = filters.map(f => {
-        const active = _currentFilter === f.key ? 'filter-selected' : '';
-        return `<button class="topic-domain-item ${active}" onclick="selectTopicFilter('${f.key}')">
-            <span>${escapeHtml(f.name)}</span>
-            <span class="topic-domain-line"></span>
-        </button>`;
-    }).join('');
-}
-
-// 技术栈筛选：放在分类 tab 下方平铺展示（点不同分类 tab 自动切换对应技术栈），无标题
+// 技术栈筛选：放搜索框上方平铺展示，无标题
 function renderTagFilter() {
     const el = document.getElementById('topic-tags');
     if (!el) return;
 
     // 标签筛选区：严格从 TAG_MAP（tags 系统 tech_stacks）读取
-    // 取「当前领域下专题真实使用 ∩ TAG_MAP 存在」的标签，保证既来自 tags 系统、又在该领域有专题使用
+    // 取「全部专题真实使用 ∩ TAG_MAP 存在」的标签，保证既来自 tags 系统、又有专题使用
     const tagSet = new Set();
-    const scopeSeries = _currentFilter === 'all'
-        ? _allSeriesCache
-        : _allSeriesCache.filter(s => s.domain_key === _currentFilter);
-    scopeSeries.forEach(s => {
+    _allSeriesCache.forEach(s => {
         normalizeTags(s.tags).forEach(tag => {
             if (TAG_MAP[tag]) tagSet.add(tag); // 只收 tags 系统中存在的标签
         });
@@ -321,20 +232,6 @@ function renderTagFilter() {
         : '';
 
     el.innerHTML = `<div class="topic-tag-body">${tagChips}${clearBtn}</div>`;
-}
-
-function selectTopicFilter(key) {
-    _currentFilter = key;
-    _currentTagFilter = ''; // 切领域时清空标签筛选（专事专用，互不干涉）
-
-    // 增量更新领域 tab 选中态 class，不整块重写 innerHTML（避免标题重绘闪烁）
-    document.querySelectorAll('#topic-domain-tabs .topic-domain-item').forEach(b => {
-        const k = (b.getAttribute('onclick') || '').match(/'([^']+)'\)/);
-        b.classList.toggle('filter-selected', k && k[1] === key);
-    });
-    // 切领域后技术栈筛选区需按新领域重建（标签集合变了），但领域按钮态只增量切换
-    renderTagFilter();
-    renderSeriesList();
 }
 
 // 按单个技术栈标签筛选（与领域筛选解耦）
@@ -391,11 +288,6 @@ function renderSeriesList() {
 
     let list = _allSeriesCache.slice();
 
-    // 按分类筛选
-    if (_currentFilter !== 'all') {
-        list = list.filter(s => s.domain_key === _currentFilter);
-    }
-
     // 按标签筛选（技术栈，来自 tags 系统）
     if (_currentTagFilter) {
         list = list.filter(s => normalizeTags(s.tags).includes(_currentTagFilter));
@@ -420,23 +312,18 @@ function renderSeriesList() {
     }
 
     grid.innerHTML = list.map(s => {
-        const meta = getDomainMeta(s.domain_key);
-        const tags = normalizeTags(s.tags);
         const cover = s.cover_image || '';
         const updatedAt = (s.updated_at || '').slice(0, 10);
         return `
         <a href="detail.html?series=${s.id}&from=topics" class="block group">
-            <article class="card-hover relative aspect-[3/4] rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
-                <img src="${cover}" alt="${escapeHtml(s.name)}" class="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
-                    <h3 class="font-bold text-lg mb-1.5 line-clamp-1 drop-shadow" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</h3>
-                    <p class="text-white/90 text-sm mb-2 line-clamp-2">${escapeHtml(s.description || '')}</p>
-                    <div class="flex flex-wrap gap-1.5 mb-2">
-                        ${tags.map(tag => `<span class="tag-chip" style="background:rgba(255,255,255,0.25);color:#fff;">${escapeHtml(tag)}</span>`).join('')}
-                    </div>
-                    <div class="flex items-center text-white/80 text-xs whitespace-nowrap">
-                        <span><i class="fas fa-clock mr-1"></i>${updatedAt}</span>
+            <article class="card-hover flex flex-col aspect-square rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
+                <div class="h-2/3 overflow-hidden">
+                    <img src="${cover}" alt="${escapeHtml(s.name)}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="h-1/3 flex flex-col justify-center px-3 text-left">
+                    <h3 class="font-semibold text-sm leading-tight line-clamp-1 text-slate-800 dark:text-slate-100" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</h3>
+                    <div class="flex items-center text-slate-400 text-xs mt-1 whitespace-nowrap">
+                        <i class="fas fa-clock mr-1"></i>${updatedAt}
                     </div>
                 </div>
             </article>
@@ -492,6 +379,36 @@ function findFirstArticle(topic) {
     return null;
 }
 
+// 从文章内容中提取 h2/h3 作为左侧子目录，并保留标题级别
+function extractHeadingsWithLevel(article) {
+    if (!article || !article.content) {
+        return (article?.headings || []).map(text => ({ text, level: 2 }));
+    }
+    const tmp = document.createElement('div');
+    tmp.innerHTML = renderContent(article.content);
+    const out = [];
+    tmp.querySelectorAll('h2, h3').forEach(h => {
+        out.push({ text: h.textContent.trim(), level: h.tagName === 'H2' ? 2 : 3 });
+    });
+    return out.length ? out : (article.headings || []).map(text => ({ text, level: 2 }));
+}
+
+// 点击文章标题整行：有章节标题则切换展开/收起；若当前未选中则同时加载内容。
+// 无章节标题（无子标题块）时：仅加载内容，不展开空白背景块。
+function handleArticleClick(artId) {
+    const node = document.querySelector(`.outline-article-node[data-article-id="${artId}"]`);
+    const btn = node?.querySelector(':scope > .outline-article-btn');
+    const isSelected = btn?.classList.contains('filter-selected');
+    const hasSubheads = !!node?.querySelector(':scope > .outline-subheads');
+
+    if (isSelected) {
+        if (hasSubheads) toggleArticle(artId);   // 已选中且有子标题：折叠/展开
+        // 已选中但无子标题：点击不再做任何切换，保持内容显示
+    } else {
+        selectArticle(artId);   // 未选中：直接加载内容（selectArticle 内部会重新渲染目录）
+    }
+}
+
 function renderOutlineTree() {
     const tree = document.getElementById('outline-tree');
     if (!tree || !currentTopic) return;
@@ -502,45 +419,59 @@ function renderOutlineTree() {
         return;
     }
 
+    const currentArticleId = currentArticle ? String(currentArticle.id || currentArticle.article_key) : null;
+
     tree.innerHTML = levels.map((lv, lvIdx) => {
         const articles = lv.articles || [];
-        const lvId = `lv-${lv.id || lvIdx}`;
+        const lvId = `lv-${lv.id ?? lvIdx}`;
+        const hasCurrentArticle = currentArticleId && articles.some(a => String(a.id || a.article_key) === currentArticleId);
         const isFirst = lvIdx === 0;
+        const isLevelExpanded = isFirst || hasCurrentArticle;
 
-        let articlesHtml = articles.map((art, artIdx) => {
-            const artId = art.id || art.article_key;
-            const subheads = (art.headings || []).map((h, hi) => `
+        const articlesHtml = articles.map((art, artIdx) => {
+            const artId = String(art.id || art.article_key);
+            const isArtSelected = artId === currentArticleId;
+            const isArtExpanded = isArtSelected;
+            const orderLabel = `${lvIdx + 1}.${artIdx + 1}`;
+
+            // 解析 h2/h3 并保留级别，用于左侧目录缩进区分
+            const parsedHeadings = extractHeadingsWithLevel(art);
+            const hasHeadings = parsedHeadings.length > 0;
+
+            // 无章节标题：不显示折叠箭头，也不渲染空背景块（点击仅加载内容）
+            const subheads = hasHeadings ? parsedHeadings.map((h, hi) => `
                 <a href="javascript:void(0)"
-                   class="outline-subhead hidden block pl-12 pr-4 py-1 text-xs text-slate-500 dark:text-slate-500 hover:text-primary dark:hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors truncate"
-                   data-subheads-for="${artId}"
+                   class="outline-subhead truncate"
+                   data-article-id="${artId}"
+                   data-heading-level="${h.level}"
                    onclick="scrollToHeading('${artId}', ${hi})"
-                   title="${escapeHtml(h)}">
-                    <span class="mr-1.5 text-[10px] text-slate-300 dark:text-slate-600">-</span>${escapeHtml(h)}
+                   title="${escapeHtml(h.text)}">
+                    ${escapeHtml(h.text)}
                 </a>
-            `).join('');
+            `).join('') : '';
+
             return `
-            <a href="javascript:void(0)"
-               class="outline-article block px-8 py-1.5 text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-primary dark:hover:text-primary transition-colors truncate"
-               data-article-id="${artId}"
-               data-level-id="${lvId}"
-               onclick="selectArticle('${artId}')"
-               title="${escapeHtml(art.title || '')}">
-                ${escapeHtml(art.title || '无标题')}
-            </a>
-            ${subheads}`;
+            <div class="outline-article-node ${isArtExpanded ? 'expanded' : ''} ${hasHeadings ? '' : 'no-subheads'}" data-article-id="${artId}" data-level-id="${lvId}">
+                <button class="outline-article-btn w-full flex items-center justify-between ${isArtSelected ? 'filter-selected' : ''}"
+                        onclick="handleArticleClick('${artId}', event)">
+                    <span class="flex items-center gap-2">
+                        <span class="outline-article-label">${orderLabel} ${escapeHtml(art.title || '无标题')}</span>
+                    </span>
+                </button>
+                ${hasHeadings ? `<div class="outline-subheads">${subheads}</div>` : ''}
+            </div>`;
         }).join('');
 
         return `
-        <div class="outline-level" data-level-id="${lvId}">
-            <button class="outline-level-btn w-full flex items-center justify-between px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        <div class="outline-level ${isLevelExpanded ? 'expanded' : ''}" data-level-id="${lvId}">
+            <button class="outline-level-btn w-full flex items-center justify-between"
                     onclick="toggleLevel('${lvId}')">
                 <span class="flex items-center gap-2">
-                    <i class="fa-solid fa-chevron-right outline-chevron text-xs text-slate-400 transition-transform duration-200 ${isFirst ? 'rotate-90' : ''}" data-chevron="${lvId}"></i>
+                    <i class="fa-solid fa-caret-right outline-chevron ${isLevelExpanded ? 'rotate-90' : ''}"></i>
                     <span>${escapeHtml(lv.name || `章节 ${lvIdx + 1}`)}</span>
                 </span>
-                <span class="text-xs text-slate-400">${articles.length}</span>
             </button>
-            <div class="outline-articles ${isFirst ? '' : 'hidden'}" data-articles="${lvId}">
+            <div class="outline-articles">
                 ${articlesHtml}
             </div>
         </div>`;
@@ -548,51 +479,39 @@ function renderOutlineTree() {
 }
 
 function toggleLevel(lvId) {
-    const articles = document.querySelector(`[data-articles="${lvId}"]`);
-    const chevron = document.querySelector(`[data-chevron="${lvId}"]`);
-    if (!articles) return;
+    const level = document.querySelector(`.outline-level[data-level-id="${lvId}"]`);
+    if (!level) return;
+    const isExpanded = level.classList.toggle('expanded');
+    const chevron = level.querySelector(':scope > .outline-level-btn .outline-chevron');
+    if (chevron) chevron.classList.toggle('rotate-90', isExpanded);
+}
 
-    const isHidden = articles.classList.contains('hidden');
-    if (isHidden) {
-        articles.classList.remove('hidden');
-        if (chevron) chevron.classList.add('rotate-90');
-    } else {
-        articles.classList.add('hidden');
-        if (chevron) chevron.classList.remove('rotate-90');
-    }
+function toggleArticle(artId) {
+    const node = document.querySelector(`.outline-article-node[data-article-id="${artId}"]`);
+    if (!node) return;
+    const isExpanded = node.classList.toggle('expanded');
+    const chevron = node.querySelector(':scope > .outline-article-btn .outline-chevron');
+    if (chevron) chevron.classList.toggle('rotate-90', isExpanded);
 }
 
 function selectArticle(articleId) {
     if (!currentTopic) return;
 
-    // 更新侧边栏高亮
-    document.querySelectorAll('.outline-article').forEach(el => {
-        el.classList.toggle('active', el.dataset.articleId === String(articleId));
-    });
+    const targetId = String(articleId);
 
-    // 仅显示当前选中文章的章节标题（其它文章收起）
-    document.querySelectorAll('.outline-subhead').forEach(el => {
-        el.classList.toggle('hidden', el.dataset.subheadsFor !== String(articleId));
-    });
-
-    // 在整个 topic 中查找文章，并展开其所属层级
+    // 查找目标文章
     let article = null;
     let articleLevelId = null;
     for (const level of (currentTopic.chapters || [])) {
         const lvId = `lv-${level.id ?? ''}`;
-        const found = (level.articles || []).find(a => String(a.id || a.article_key) === String(articleId));
+        const found = (level.articles || []).find(a => String(a.id || a.article_key) === targetId);
         if (found) { article = found; articleLevelId = lvId; break; }
     }
-
-    if (articleLevelId) {
-        const articlesBox = document.querySelector(`[data-articles="${articleLevelId}"]`);
-        const chevron = document.querySelector(`[data-chevron="${articleLevelId}"]`);
-        if (articlesBox) articlesBox.classList.remove('hidden');
-        if (chevron) chevron.classList.add('rotate-90');
-    }
-
     if (!article) return;
     currentArticle = article;
+
+    // 重新渲染目录，确保当前文章所在章节和文章节点都展开
+    renderOutlineTree();
 
     // 隐形埋点：文章打开（前端不展示，仅上报后端统计）
     const artId = article.id || article.article_key;
@@ -652,6 +571,62 @@ function scrollToHeading(articleId, headingIndex) {
     }
 }
 
+// 与 admin 中后台预览完全一致的渲染。
+// 正文统一为 Tiptap JSON 文档模型，按 JSON 渲染。
+function renderMarkdown(src) {
+    const html = renderContent(src || '');
+    if (!html) {
+        return `<pre class="whitespace-pre-wrap font-sans text-sm leading-relaxed">${escapeHtml(src || '')}</pre>`;
+    }
+
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+
+    // 1. 所有图片懒加载 + 圆角
+    tmp.querySelectorAll('img').forEach(img => {
+        img.setAttribute('loading', 'lazy');
+        img.classList.add('blog-img');
+    });
+
+    // 2. 表格包裹滚动容器，移动端/窄屏可横向滚动
+    tmp.querySelectorAll('table').forEach(table => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-wrapper';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+        table.classList.add('blog-table');
+    });
+
+    // 3. 代码块：添加复制按钮（带语言标签）
+    tmp.querySelectorAll('pre').forEach(pre => {
+        const code = pre.querySelector('code');
+        if (!code) return;
+        const cls = code.className || '';
+        const langMatch = cls.match(/language-([\w-]+)/);
+        const lang = langMatch ? langMatch[1] : '';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'code-copy-btn';
+        btn.textContent = '复制';
+        btn.addEventListener('click', () => {
+            const text = code.textContent || '';
+            navigator.clipboard?.writeText(text).then(() => {
+                btn.textContent = '已复制';
+                setTimeout(() => { btn.textContent = '复制'; }, 1500);
+            }).catch(() => {});
+        });
+        if (lang) {
+            const tag = document.createElement('span');
+            tag.className = 'code-lang-tag';
+            tag.textContent = lang;
+            pre.appendChild(tag);
+        }
+        pre.appendChild(btn);
+    });
+
+    return tmp.innerHTML;
+}
+
 function renderArticleDetail(article) {
     // 标题
     document.getElementById('article-title').textContent = article.title || '无标题';
@@ -702,24 +677,27 @@ function renderArticleDetail(article) {
         practiceSectionEl.style.display = 'none';
     }
 
-    // Markdown 内容
+    // Markdown 内容（与 admin 中后台预览保持一致：renderMarkdown + .preview-blog-content 样式）
     const bodyEl = document.getElementById('article-body');
     const artId = article.id || article.article_key;
     if (article.content) {
-        if (typeof marked !== 'undefined') {
-            const html = marked.parse(article.content);
-            bodyEl.innerHTML = html;
-            // 为 h2/h3 添加锚点 id，便于左侧目录第三级定位
-            let hi = 0;
-            bodyEl.querySelectorAll('h2, h3').forEach(h => {
-                h.id = `heading-${artId}-${hi}`;
-                hi++;
-            });
-        } else {
-            bodyEl.innerHTML = `<pre class="whitespace-pre-wrap font-sans text-sm leading-relaxed">${escapeHtml(article.content)}</pre>`;
-        }
+        bodyEl.classList.remove('empty-body');
+        const inner = renderMarkdown(article.content);
+        bodyEl.innerHTML = `<div class="preview-blog-content">${inner}</div>`;
+        // 为 h2/h3 添加锚点 id，便于左侧目录第三级定位
+        let hi = 0;
+        bodyEl.querySelectorAll('h2, h3').forEach(h => {
+            h.id = `heading-${artId}-${hi}`;
+            hi++;
+        });
     } else {
-        bodyEl.innerHTML = '<div class="text-slate-400 text-center py-12">暂无内容</div>';
+        bodyEl.classList.add('empty-body');
+        bodyEl.innerHTML = `
+            <div class="text-center">
+                <i class="fa-regular fa-file-lines empty-state-icon"></i>
+                <p class="empty-state-text">暂无内容</p>
+            </div>
+        `;
     }
 
     // 上一页 / 下一页
@@ -765,6 +743,13 @@ function updateArticleNavigation(article) {
         nextEl.innerHTML = '';
         nextEl.className = 'text-right';
         nextEl.onclick = null;
+    }
+
+    // 无上一篇且无下一篇（如单篇文章）时，隐藏整个上下篇区块及其分割线
+    const navContainer = document.getElementById('article-nav');
+    if (navContainer) {
+        const hasNav = prevEl.innerHTML.trim() !== '' || nextEl.innerHTML.trim() !== '';
+        navContainer.style.display = hasNav ? '' : 'none';
     }
 }
 
