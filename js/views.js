@@ -32,7 +32,7 @@ function navHref(href) {
 /** 品牌 logo：优先读取后台配置（window.SITE_CONFIG.logo_url），未配置时降级本地默认 logo */
 function getSiteLogo() {
     const cfgLogo = window.SITE_CONFIG && window.SITE_CONFIG.logo_url;
-    return cfgLogo ? cfgLogo : getRoot() + 'logo/logo-mark.svg';
+    return cfgLogo ? cfgLogo : getRoot() + 'assets/logo-mark.svg';
 }
 
 /** 站点配置加载完成后统一刷新全站 logo（导航/页脚，带 data-site-logo 标记） */
