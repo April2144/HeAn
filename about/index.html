@@ -234,7 +234,14 @@
                 }, 300);
             }
         }
-        loadAboutPage();
+        // loadAboutPage 为 async：await 并捕获异常
+        (async () => {
+            try {
+                await loadAboutPage();
+            } catch (e) {
+                console.error('[about] 加载失败:', e);
+            }
+        })();
 
         async function handleContactSubmit() {
             const name = document.getElementById('contact-name').value.trim();

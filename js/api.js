@@ -26,8 +26,13 @@ const API_BASE = (() => {
 
 // 只读 Token（JWT），用于 API 鉴权
 // 生成方式：python3 -c "import jwt; print(jwt.encode({'role':'read'}, '你的ACCESS_TOKEN_SECRET', algorithm='HS256'))"
-// const READ_TOKEN = '';
-const READ_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoicmVhZCJ9.GvryC3oRA2aGr4AmMSTY3jcf7fL_3Yr1FQ8gOmgoliE';
+/**
+ * 公开站点的 READ_TOKEN 已停用（不再随请求发送）：
+ * 后端公开只读/提交接口已支持匿名访问（不携带 Authorization 头），
+ * 匿名访问时后端自动仅返回已发布内容，避免公开站点依赖 read token 造成全站鉴权锁死。
+ * 如需恢复 read token（例如临时用 read 角色读取未发布内容），在此填入有效 token 即可自动生效。
+ */
+const READ_TOKEN = '';
 
 // ---------- 离线缓存层（localForage） ----------
 // 真离线模式：联网成功时把数据写入本地缓存，断网时优先读缓存，最后才退回静态 data/*.json

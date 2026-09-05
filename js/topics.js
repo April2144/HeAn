@@ -55,26 +55,18 @@ async function loadHomeTopics() {
     // 首页容器：横向卡片（#topics-grid）
     const grid = document.getElementById('topics-grid');
     if (grid) {
-        grid.className = 'flex gap-6 overflow-x-auto pb-4 pt-4 -mt-4 snap-x snap-mandatory scrollbar-hide';
-        grid.style.overflowX = 'auto';
+        // 半空状态：仅 1 个推荐专题时去掉横向滚动/吸附，改为左对齐单卡片（避免孤卡 + 大片空白）
+        if (sorted.length >= 2) {
+            grid.className = 'flex gap-6 overflow-x-auto pb-4 pt-4 -mt-4 snap-x snap-mandatory scrollbar-hide';
+            grid.style.overflowX = 'auto';
+        } else {
+            grid.className = 'flex gap-6 pb-4 pt-4 -mt-4';
+            grid.style.overflowX = 'visible';
+        }
         grid.innerHTML = sorted.map(t => {
             const cover = t.cover_image || '';
             const title = (t.name || '').length > 20 ? (t.name.slice(0, 20) + '…') : (t.name || '');
             const updatedAt = (t.updated_at || '').slice(0, 10);
-            return `
-                <a href="topics/detail.html?series=${t.id}&from=home" class="block group flex-shrink-0 w-56 snap-start">
-                    <article class="card-hover flex flex-col w-56 aspect-square rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
-                        <div class="h-2/3 overflow-hidden">
-                            <img src="${cover}" alt="${escapeHtml(t.name || '')}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
-                        </div>
-                        <div class="h-1/3 flex flex-col justify-center px-3 text-left">
-                            <h3 class="font-semibold text-sm leading-tight line-clamp-1 text-slate-800 dark:text-slate-100" title="${escapeHtml(t.name || '')}">${escapeHtml(title)}</h3>
-                            <div class="flex items-center text-slate-400 text-xs mt-1 whitespace-nowrap">
-                                <i class="fas fa-clock mr-1"></i>${updatedAt}
-                            </div>
-                        </div>
-                    </article>
-                </a>`;
             return `
                 <a href="topics/detail.html?series=${t.id}&from=home" class="block group flex-shrink-0 w-56 snap-start"
                    onclick="trackClick('click_zhuanti','open_series','zhuanti_card','home','series',${t.id})">

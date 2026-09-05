@@ -252,6 +252,11 @@
                     const projectsSection = document.getElementById('projects');
                     if (projectsSection) projectsSection.style.display = 'none';
                 }
+                // 半空状态：仅 1 个推荐项目时去掉横向滚动/吸附，改为左对齐单卡片（避免孤卡 + 大片空白）
+                if (allProjects.length === 1) {
+                    projectsGrid.classList.remove('overflow-x-auto', 'snap-x', 'snap-mandatory', 'scrollbar-hide');
+                    projectsGrid.style.overflowX = 'visible';
+                }
                 allProjects.forEach(project => {
                     const card = document.createElement('a');
                     card.href = `projects/detail.html?id=${project.id}&from=home`;
@@ -286,6 +291,11 @@
                     const blogsSection = document.getElementById('blogs');
                     if (blogsSection) blogsSection.style.display = 'none';
                 }
+                // 半空状态：仅 1 篇推荐博文时改为单列左对齐，避免 grid 出现空半格
+                if (featuredBlogs.length === 1) {
+                    blogGrid.classList.remove('md:grid-cols-2');
+                    blogGrid.classList.add('grid-cols-1', 'max-w-3xl');
+                }
                 featuredBlogs.slice(0, 2).forEach(blog => {
                     const card = document.createElement('a');
                     card.href = `blog/detail.html?id=${blog.id}&from=home`;
@@ -307,10 +317,14 @@
             }
         }
         (async () => {
-            await initTagMapFromAPI();
-            applySiteConfig();
-            loadHomeData();
-            loadHomeTopics();
+            try {
+                await initTagMapFromAPI();
+                await applySiteConfig();
+                await loadHomeData();
+                await loadHomeTopics();
+            } catch (e) {
+                console.error('[home] 初始化失败:', e);
+            }
         })();
     </script>
 </body>

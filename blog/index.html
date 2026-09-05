@@ -149,8 +149,13 @@
             renderBlogs();
         }
         (async () => {
-            await initTagMapFromAPI();
-            fetchBlogs();
+            try {
+                await initTagMapFromAPI();
+                // fetchBlogs 内部已 await 数据后再渲染，此处需 await 以捕获异常
+                await fetchBlogs();
+            } catch (e) {
+                console.error('[blog] 初始化失败:', e);
+            }
         })();
     </script>
 </body>

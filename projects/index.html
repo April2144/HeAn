@@ -110,7 +110,14 @@
 
             page.innerHTML = order.map(g => renderSection(g, iconForGroup(g), byGroup[g])).join('');
         }
-        renderProjectsPage();
+        // renderProjectsPage 为 async：await 并捕获异常
+        (async () => {
+            try {
+                await renderProjectsPage();
+            } catch (e) {
+                console.error('[projects] 渲染失败:', e);
+            }
+        })();
     </script>
 </body>
 </html>

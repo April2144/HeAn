@@ -170,7 +170,14 @@
                 window.location.href = 'index.html';
             }
         }
-        renderProjectDetail();
+        // renderProjectDetail 为 async：需等待并捕获异常，避免加载失败时静默无数据
+        (async () => {
+            try {
+                await renderProjectDetail();
+            } catch (e) {
+                console.error('[project detail] 渲染失败:', e);
+            }
+        })();
     </script>
 </body>
 </html>

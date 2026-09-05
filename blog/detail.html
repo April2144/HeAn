@@ -110,8 +110,12 @@
             }
         }
         (async () => {
-            await initTagMapFromAPI();
-            renderBlogDetail();
+            try {
+                await initTagMapFromAPI();
+                await renderBlogDetail();
+            } catch (e) {
+                console.error('[blog detail] 渲染失败:', e);
+            }
         })();
     </script>
 </body>

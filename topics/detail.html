@@ -516,7 +516,14 @@
                 window.location.href = 'index.html';
             }
         }
-        loadTopicDetailPage();
+        // loadTopicDetailPage 为 async：需等待并捕获异常
+        (async () => {
+            try {
+                await loadTopicDetailPage();
+            } catch (e) {
+                console.error('[topic detail] 加载失败:', e);
+            }
+        })();
         </script>
 </body>
 </html>

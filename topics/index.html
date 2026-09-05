@@ -74,7 +74,14 @@
     <script src="../js/auth.js"></script>
     <script>
         initApp('topics', { type: 'main' });
-        loadTopicsPage();
+        // loadTopicsPage 为 async：await 并捕获异常
+        (async () => {
+            try {
+                await loadTopicsPage();
+            } catch (e) {
+                console.error('[topics] 加载失败:', e);
+            }
+        })();
     </script>
 </body>
 </html>
