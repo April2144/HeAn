@@ -23,7 +23,7 @@
     <!-- 导航栏：由 renderNavbar 统一生成 -->
     <nav id="navbar"></nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20">
         <div class="fade-in-up flex flex-col md:flex-row gap-8">
             <!-- 左侧分类导航（动态生成，只展示有数据的分组） -->
             <aside class="flex-shrink-0 w-full md:w-44">
@@ -76,9 +76,7 @@
                                     阅读全文 <i class="fas fa-arrow-right ml-2 text-xs group-hover:translate-x-1 transition-transform"></i>
                                 </span>
                             </div>
-                            <div class="hidden md:block flex-shrink-0 w-28 h-28 rounded-lg overflow-hidden">
-                                <img src="${blog.cover_image}" alt="${blog.title}" class="w-full h-full object-cover">
-                            </div>
+                            ${blog.cover_image ? '<div class="hidden md:block flex-shrink-0 w-28 h-28 rounded-lg overflow-hidden"><img src="' + blog.cover_image + '" alt="' + blog.title + '" class="w-full h-full object-cover"></div>' : ''}
                         </div>
                     </article>
                 </a>`).join('');
@@ -126,7 +124,8 @@
             const seenGroups = new Set();
             const dynamicGroups = [];
             blogsData.forEach(b => {
-                if (b.group && !seenGroups.has(b.group)) {
+                // 未分组文章只在「全部」中展示，不单独生成分类按钮
+                if (b.group && b.group !== '未分组' && !seenGroups.has(b.group)) {
                     seenGroups.add(b.group);
                     dynamicGroups.push(b.group);
                 }

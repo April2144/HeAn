@@ -19,6 +19,8 @@ const HEAN_ALLOWED = {
     doc: true, paragraph: true, heading: true, blockquote: true,
     bulletList: true, orderedList: true, listItem: true, codeBlock: true,
     horizontalRule: true, image: true, text: true,
+    // 表格（与 admin/common/wysiwyg.js 的 JSON→HTML 保持一致）
+    table: true, tableRow: true, tableHeader: true, tableCell: true,
 };
 
 // ---------- 危险属性/协议过滤（轻量 sanitize） ----------
@@ -128,6 +130,18 @@ function jsonNodeToHtml(node) {
         }
         case 'horizontalRule':
             return '<hr>';
+        case 'table': {
+            const trs = node.content || [];
+            const head = trs[0] ? jsonNodeToHtml(trs[0]) : '';
+            const body = trs.slice(1).map(jsonNodeToHtml).join('');
+            return `<table class="hean-table"><thead>${head}</thead><tbody>${body}</tbody></table>`;
+        }
+        case 'tableRow':
+            return `<tr>${inner}</tr>`;
+        case 'tableHeader':
+            return `<th>${inner}</th>`;
+        case 'tableCell':
+            return `<td>${inner}</td>`;
         case 'image': {
             const src = attrs.src || '';
             const alt = attrs.alt || '';
@@ -176,12 +190,64 @@ function tiptapJsonToPlainText(doc) {
     return walk(doc.content).replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+// ---------- 兼容历史数据：段落里的 markdown 管道文本 → table 节点 ----------
+// 把「整段就是 markdown 表格」的文本解析成 Tiptap table 节点；非表格返回 null。
+function parseMarkdownTableBlock(text) {
+    if (!text || text.indexOf('|') < 0 || text.indexOf('\n') < 0) return null;
+    const lines = text.replace(/\r\n/g, '\n').split('\n')
+        .map(function (s) { return s.trim(); })
+        .filter(function (s) { return s; });
+    if (lines.length < 3 || lines[0].indexOf('|') < 0) return null;
+    if (lines[1].indexOf('|') < 0) return null;
+    if (!/^\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?$/.test(lines[1])) return null;
+    const splitRow = function (s) {
+        let t = s.trim();
+        if (t.charAt(0) === '|') t = t.slice(1);
+        if (t.charAt(t.length - 1) === '|') t = t.slice(0, -1);
+        return t.split('|').map(function (c) { return c.trim(); });
+    };
+    const header = splitRow(lines[0]);
+    if (header.length < 2) return null;
+    const mkCell = function (type, txt) {
+        return { type: type, content: [{ type: 'paragraph', content: txt ? [{ type: 'text', text: txt }] : [] }] };
+    };
+    const cols = header.length;
+    const rows = [{ type: 'tableRow', content: header.map(function (c) { return mkCell('tableHeader', c); }) }];
+    lines.slice(2).forEach(function (line) {
+        const cells = splitRow(line);
+        const rowCells = [];
+        for (let i = 0; i < cols; i++) rowCells.push(mkCell('tableCell', cells[i] || ''));
+        rows.push({ type: 'tableRow', content: rowCells });
+    });
+    return { type: 'table', content: rows };
+}
+
+// 遍历文档顶层节点，把「整段是 markdown 表格」的段落替换为真正的 table 节点（就地修改并返回 doc）
+function normalizeMarkdownTables(doc) {
+    if (!doc || doc.type !== 'doc' || !Array.isArray(doc.content)) return doc;
+    const out = [];
+    for (let i = 0; i < doc.content.length; i++) {
+        const node = doc.content[i];
+        if (node && node.type === 'paragraph' && Array.isArray(node.content) && node.content.length) {
+            const allText = node.content.every(function (c) { return c.type === 'text'; });
+            if (allText) {
+                const text = node.content.map(function (c) { return c.text || ''; }).join('');
+                const table = parseMarkdownTableBlock(text);
+                if (table) { out.push(table); continue; }
+            }
+        }
+        out.push(node);
+    }
+    doc.content = out;
+    return doc;
+}
+
 // ---------- 主入口：渲染正文内容 ----------
 // content 为 Tiptap JSON 文档模型字符串（后端唯一存储格式），转 HTML 后返回。
 // 返回可直接 innerHTML 的安全 HTML 字符串。
 function renderContent(content, fallbackEmpty) {
     if (!content) return fallbackEmpty || '';
     const doc = parseTiptapJson(content);
-    if (doc) return tiptapJsonToHtml(doc);
+    if (doc) return tiptapJsonToHtml(normalizeMarkdownTables(doc));
     return fallbackEmpty || '';
 }

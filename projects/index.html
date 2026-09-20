@@ -90,8 +90,8 @@
                             ${items.map(project => `
                                 <a href="detail.html?id=${project.id}&from=projects" class="block group">
                                     <article class="card-hover bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700 h-full">
-                                        <div class="overflow-hidden aspect-[16/9]">
-                                            <img src="${project.cover_image}" alt="${project.title}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                                        <div class="overflow-hidden aspect-[16/9]" style="aspect-ratio:16/9">
+                                            <img src="${project.cover_image}" alt="${project.title}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" style="object-fit:cover;object-position:center">
                                         </div>
                                         <div class="p-6">
                                             <div class="flex flex-wrap gap-2 mb-3">

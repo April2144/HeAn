@@ -207,9 +207,26 @@ body.ready { transition: background-color 0.3s ease, color 0.3s ease !important;
 .dark .article-content blockquote { background: rgba(59,130,246,0.1); }
 .article-content code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.9em; }
 .dark .article-content code { background: #1e293b; }
-.article-content pre { background: #1e293b; color: #e2e8f0; padding: 1.25rem; border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.5rem; }
+.article-content pre { background: #f1f5f9; color: #334155; padding: 1.25rem; border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.5rem; }
+.dark .article-content pre { background: #1e293b; color: #e2e8f0; }
 .article-content pre code { background: none; padding: 0; }
 .article-content img { border-radius: 0.75rem; margin: 1.5rem 0; }
+/* 表格（renderer.js 渲染 Tiptap JSON 输出的 .hean-table） */
+.hean-table, .article-content table {
+    width: 100%; border-collapse: collapse; margin: 0.6rem 0; font-size: 0.95em; line-height: 1.5;
+}
+/* 根因：正文段落默认 margin-bottom:1.25rem，与表格相邻时其外边距会合并/叠加，直接决定表格上方留白；
+   所以必须收紧「表格前一段落」的底边距、「表格后标题」的顶边距，才是治本（而非仅调表格自身 margin）。 */
+.article-content p:has(+ .hean-table), .article-content p:has(+ table) { margin-bottom: 0.4rem; }
+.article-content .hean-table + h2, .article-content .hean-table + h3 { margin-top: 1rem; }
+.hean-table th, .hean-table td, .article-content th, .article-content td {
+    border: 1px solid #e2e8f0; padding: 0.4rem 0.7rem; text-align: left; vertical-align: top;
+}
+.hean-table thead th, .article-content thead th { background: #f8fafc; font-weight: 600; }
+/* 单元格内容默认被包成 <p>（块级）：清零外边距、行高继承表格的 1.5，避免单元格被 1.8 行高撑高 */
+.hean-table th p, .hean-table td p, .article-content th p, .article-content td p { margin: 0; line-height: inherit; }
+.dark .hean-table th, .dark .hean-table td, .dark .article-content th, .dark .article-content td { border-color: #334155; }
+.dark .hean-table thead th, .dark .article-content thead th { background: #1e293b; }
 
 /* ========== Footer 联系方式图标 ========== */
 .footer-contact-icon {

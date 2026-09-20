@@ -16,8 +16,8 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径，无外部依赖） -->
-    <script src="../js/renderer.js"></script>
-    <link rel="stylesheet" href="../js/common.css">
+    <script src="../js/renderer.js?v=2"></script>
+    <link rel="stylesheet" href="../js/common.css?v=5">
     <link rel="icon" href="data:,">
     <style>
         /* 背景兜底：Tailwind CDN 不可用时保底，避免纯白屏（值取自 config.js 的 light/dark） */
@@ -143,6 +143,17 @@
         }
         .outline-article-btn .outline-article-label {
             display: inline-block;
+        }
+
+        /* 章节名 / 文章名：单行不折行，超出以省略号截断 */
+        .outline-level-btn > span,
+        .outline-article-btn > span { min-width: 0; }
+        .outline-level-btn > span > span:last-child,
+        .outline-article-btn .outline-article-label {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         /* 子标题列表：与文章标题 hover/选中背景同色，作为一块 section
@@ -284,9 +295,9 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #1e293b;
+            font-size: 15px; line-height: 1.9; color: #334155;
         }
-        .dark .preview-blog-content { color: #e2e8f0; }
+        .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
             font-size: 26px; font-weight: 800; margin: 0 0 16px; line-height: 1.3;
         }
@@ -301,23 +312,30 @@
         .preview-blog-content p {
             margin-bottom: 1.25rem; line-height: 1.8;
         }
-        .preview-blog-content ul, .preview-blog-content ol {
-            margin-bottom: 1.25rem; padding-left: 1.5rem;
+        /* 恢复列表标记：Tailwind preflight 会重置 ul/ol 为 list-style:none，这里显式还原圆点/数字 */
+        .preview-blog-content ul {
+            list-style: disc; margin-bottom: 1.25rem; padding-left: 1.5rem;
+        }
+        .preview-blog-content ol {
+            list-style: decimal; margin-bottom: 1.25rem; padding-left: 1.5rem;
         }
         .preview-blog-content li {
             margin-bottom: 0.5rem; line-height: 1.8;
         }
         .preview-blog-content code {
-            background: #eff6ff; color: #2563eb;
-            padding: 2px 6px; border-radius: 4px; font-size: 0.9em;
+            background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em;
             font-family: "SF Mono", "Fira Code", Menlo, monospace;
         }
-        .dark .preview-blog-content code { background: rgba(59,130,246,0.15); color: #93c5fd; }
-        .preview-blog-content pre {
-            background: #1e293b; color: #e2e8f0; padding: 1.25rem;
+        .dark .preview-blog-content code { background: #1e293b; }
+        /* 注意：正文容器是 .article-body > .preview-blog-content > pre，pre 会同时命中 .article-body pre，
+           后者源顺序更靠后且特异性相同，会覆盖这里的 padding。故用 .article-body 前缀提升特异性，确保顶部内边距生效，
+           给固定的 BASH/复制按钮行留出间距 */
+        .article-body .preview-blog-content pre {
+            background: #f1f5f9; color: #334155; padding: 3.25rem 1.25rem 1.25rem;
             border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.5rem;
             font-size: 13px; line-height: 1.6;
         }
+        .dark .preview-blog-content pre { background: #1e293b; color: #e2e8f0; }
         .preview-blog-content pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
         .preview-blog-content blockquote {
             border-left: 3px solid #3b82f6; padding: 1rem 1.5rem;
@@ -332,25 +350,37 @@
         .preview-blog-content img { max-width: 100%; border-radius: 0.75rem; margin: 1.5rem 0; }
         .preview-blog-content strong { font-weight: 600; }
         .preview-blog-content em { font-style: italic; }
-        .preview-blog-content table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 14px; }
-        .preview-blog-content th, .preview-blog-content td { border: 1px solid #e2e8f0; padding: 8px 12px; text-align: left; }
+        .preview-blog-content table { width: 100%; border-collapse: collapse; margin: 0.6rem 0; font-size: 14px; line-height: 1.5; }
+        .preview-blog-content th, .preview-blog-content td { border: 1px solid #e2e8f0; padding: 6px 10px; text-align: left; }
+        /* 根因：正文段落 margin-bottom:1.25rem 与表格相邻时决定表格上方留白，须直接收紧相邻段落/标题 */
+        .preview-blog-content p:has(+ table) { margin-bottom: 0.4rem; }
+        .preview-blog-content table + h2, .preview-blog-content table + h3 { margin-top: 1rem; }
+        .preview-blog-content th p, .preview-blog-content td p { margin: 0; line-height: inherit; }
         .dark .preview-blog-content th, .dark .preview-blog-content td { border-color: #334155; }
         .preview-blog-content th { background: #f8fafc; font-weight: 600; }
         .dark .preview-blog-content th { background: rgba(148,163,184,0.1); }
         .preview-blog-content .table-wrapper { overflow-x: auto; margin: 1.5rem 0; }
         .preview-blog-content .blog-img { border-radius: 0.75rem; }
         .preview-blog-content pre { position: relative; }
-        .preview-blog-content .code-copy-btn {
-            position: absolute; top: 8px; right: 8px;
-            background: rgba(255,255,255,0.12); color: #cbd5e1;
-            border: 1px solid rgba(255,255,255,0.2); border-radius: 6px;
-            padding: 2px 10px; font-size: 12px; cursor: pointer; transition: all .15s;
-        }
-        .preview-blog-content .code-copy-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
+        /* 代码块包裹层：不滚动、作为语言标签/复制按钮的定位上下文（按钮不随 pre 横向滚动移动） */
+        .preview-blog-content .code-block { position: relative; }
         .preview-blog-content .code-lang-tag {
             position: absolute; top: 8px; left: 12px;
             color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
         }
+        .preview-blog-content .code-copy-btn {
+            position: absolute; top: 8px; right: 12px;
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 3px 10px;
+            font-size: 12px; font-weight: 500; line-height: 1.4;
+            border: 1px solid rgba(100,116,139,0.25);
+            border-radius: 6px; cursor: pointer;
+            background: rgba(100,116,139,0.12); color: #475569;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .preview-blog-content .code-copy-btn:hover { background: rgba(100,116,139,0.22); color: #1e293b; }
+        .dark .preview-blog-content .code-copy-btn { background: rgba(148,163,184,0.16); color: #cbd5e1; border-color: rgba(148,163,184,0.25); }
+        .dark .preview-blog-content .code-copy-btn:hover { background: rgba(148,163,184,0.28); color: #f1f5f9; }
 
         /* 文章内容排版 */
         .article-body h1 { font-size: 1.75rem; font-weight: 700; margin: 2rem 0 1rem; }
@@ -368,15 +398,22 @@
         }
         .dark .article-body code { background: #334155; }
         .article-body pre {
-            background: #1e293b;
-            color: #e2e8f0;
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid #e2e8f0;
             padding: 16px 20px;
             border-radius: 8px;
             overflow-x: auto;
             margin: 1rem 0;
             font-size: 0.875rem;
             line-height: 1.6;
+            scrollbar-width: thin;          /* Firefox：细滚动条 */
         }
+        .dark .article-body pre { background: #1e293b; color: #e2e8f0; border-color: #334155; }
+        /* 代码块横向滚动条：收窄且不超过页面滚动条粗细（页面竖向滚动条为 8px） */
+        .article-body pre::-webkit-scrollbar { height: 6px; }
+        .article-body pre::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+        .article-body pre::-webkit-scrollbar-thumb:hover { background: #64748b; }
         .article-body pre code {
             background: transparent !important;
             padding: 0;
@@ -484,7 +521,7 @@
         <script src="../vendor/localforage.min.js"></script>
         <script src="../js/api.js"></script>
         <script src="../js/utils.js"></script>
-        <script src="../js/topics.js"></script>
+        <script src="../js/topics.js?v=2"></script>
         <script src="../js/views.js"></script>
         <script src="../js/theme.js"></script>
         <script src="../js/auth.js"></script>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隐私协议 | 禾安</title>
+    <meta name="description" content="禾安个人网站隐私协议：我们收集的信息、信息的使用、Cookie 与本地存储、第三方服务、信息安全与你的权利。">
+    <!-- 暗黑模式防闪烁 -->
+    <script>
+        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
+    </script>
+    <script src="./js/config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = TAILWIND_CONFIG;</script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./js/common.css">
+    <link rel="icon" href="data:,">
+    <style>
+        /* 政策文档排版（与全站正文风格一致，独立成页便于维护） */
+        .legal-content h2 {
+            font-size: 1.25rem; font-weight: 700; margin: 2rem 0 0.75rem;
+            color: rgb(15 23 42);
+        }
+        .dark .legal-content h2 { color: rgb(241 245 249); }
+        .legal-content h2:first-of-type { margin-top: 0; }
+        .legal-content p { margin: 0.75rem 0; line-height: 1.85; color: rgb(71 85 105); }
+        .dark .legal-content p { color: rgb(148 163 184); }
+        .legal-content ul { margin: 0.75rem 0; padding-left: 1.5rem; list-style: disc; }
+        .legal-content ol { margin: 0.75rem 0; padding-left: 1.5rem; list-style: decimal; }
+        .legal-content li { margin: 0.4rem 0; line-height: 1.8; color: rgb(71 85 105); }
+        .dark .legal-content li { color: rgb(148 163 184); }
+        .legal-content a { color: rgb(59 130 246); text-decoration: underline; }
+        .legal-content strong { color: rgb(30 41 59); font-weight: 600; }
+        .dark .legal-content strong { color: rgb(226 232 240); }
+    </style>
+</head>
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
+
+    <!-- 导航栏：由 renderNavbar 统一生成 -->
+    <nav id="navbar"></nav>
+
+    <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20 fade-in-up">
+        <div class="mb-6">
+            <a href="./index.html" class="text-sm text-slate-400 hover:text-primary transition-colors">
+                <i class="fas fa-arrow-left mr-1"></i>返回首页
+            </a>
+        </div>
+
+        <article class="legal-content">
+            <h1 class="text-3xl font-bold mb-2 text-slate-900 dark:text-slate-100">隐私协议</h1>
+            <p class="text-sm text-slate-400 mb-10">最后更新：2026-09-20</p>
+
+            <h2>一、我们收集的信息</h2>
+            <p>禾安是一个轻量个人网站，我们遵循「最小化收集」原则，仅在必要范围内获取信息：</p>
+            <ul>
+                <li><strong>你主动提供的信息</strong>：通过 Newsletter 订阅提交的邮箱、通过联系表单填写的称呼与联系方式、以及你主动发送的咨询内容；</li>
+                <li><strong>技术日志</strong>：服务器可能记录访问时间、IP、User-Agent 等基础访问日志，用于安全排查与运行统计；</li>
+                <li><strong>本地偏好</strong>：你的主题模式（浅色/深色/跟随系统）等偏好保存在你浏览器本地，不会上传。</li>
+            </ul>
+
+            <h2>二、信息的使用</h2>
+            <p>我们收集的信息仅用于以下目的：</p>
+            <ul>
+                <li>向你发送你订阅的 Newsletter 与必要的服务通知；</li>
+                <li>回复你的咨询、反馈与合作意向；</li>
+                <li>改进网站内容、性能与用户体验；</li>
+                <li>维护网站安全、防范滥用。</li>
+            </ul>
+            <p>我们<strong>不会</strong>将你的个人信息出售或用于与上述目的无关的营销。</p>
+
+            <h2>三、Cookie 与本地存储</h2>
+            <p>本站使用浏览器本地存储（localStorage / Cookie）保存主题偏好与必要的会话状态。除你主动提交的内容外，本站不借助第三方 Cookie 对你进行跨站跟踪。你可在浏览器设置中清除或禁用本地存储，但部分功能（如主题记忆）可能因此受影响。</p>
+
+            <h2>四、第三方服务</h2>
+            <p>本站可能引入以下第三方服务，其各自的数据处理受其隐私政策约束：</p>
+            <ul>
+                <li>内容分发与前端依赖（如 CDN、字体与图标库）：用于正常加载页面；</li>
+                <li>邮件订阅与表单服务：用于投递你订阅的内容与回复咨询；</li>
+                <li>内容平台（如你通过页脚链接前往的外部站点）：请以其各自隐私政策为准。</li>
+            </ul>
+
+            <h2>五、信息安全</h2>
+            <p>我们采取合理的技术与组织措施保护你的信息，包括传输加密与访问控制。但请注意，互联网传输无法保证绝对安全；对于你主动在公开渠道（如评论、社交平台）披露的信息，由其自行承担风险。</p>
+
+            <h2>六、你的权利</h2>
+            <p>你对自己的个人信息享有以下权利，可通过页脚「联系我」渠道行使：</p>
+            <ul>
+                <li>查询、更正你的个人信息；</li>
+                <li>撤回 Newsletter 订阅（每封邮件均含退订入口）；</li>
+                <li>在合理范围内删除你之前提供给我们、且法律不要求继续保留的信息。</li>
+            </ul>
+
+            <h2>七、未成年人保护</h2>
+            <p>本站内容主要面向开发者与技术爱好者。若你是未成年人，请在监护人陪同下使用，并请勿向我们提供不必要的个人信息。</p>
+
+            <h2>八、协议变更</h2>
+            <p>我们可能不时更新本协议以反映法律或业务变化。变更后的协议将在本页面发布并注明更新日期，并自发布之日起生效。建议你定期查看。</p>
+
+            <p class="mt-10 text-sm text-slate-400">如对本协议有任何疑问，欢迎通过页脚「联系我」渠道与我们沟通。</p>
+        </article>
+    </main>
+
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12"></footer>
+
+    <script src="./js/utils.js"></script>
+    <script src="./vendor/localforage.min.js"></script>
+    <script src="./js/api.js"></script>
+    <script src="./js/views.js"></script>
+    <script src="./js/theme.js"></script>
+    <script src="./js/auth.js"></script>
+    <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
+    <script src="./js/renderer.js"></script>
+    <script>
+        initApp('privacy-policy', { type: 'main' });
+    </script>
+</body>
+</html>

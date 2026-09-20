@@ -15,7 +15,7 @@
         (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../js/common.css">
+    <link rel="stylesheet" href="../js/common.css?v=5">
     <link rel="icon" href="data:,">
     <style>
         .project-detail img { transition: transform 0.5s ease; }
@@ -87,7 +87,7 @@
     <script src="../js/theme.js"></script>
     <script src="../js/auth.js"></script>
     <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
-    <script src="../js/renderer.js"></script>
+    <script src="../js/renderer.js?v=2"></script>
     <script>
         initApp('projects', { type: 'detail' });
         HeAnAuth.mountLoginButton();

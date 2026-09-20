@@ -12,11 +12,19 @@ function tagInlineStyle(entry) {
     return style.length ? ` style="${style.join(';')}"` : '';
 }
 
-// 生成分组徽章（单色药丸形，显示分组名）
+// 生成分组徽章（显示分组名；未分组显示「全部」，非 TAG_MAP 分组用默认中性样式）
 function getGroupBadgeHtml(group) {
-    if (!group || !TAG_MAP[group]) return '';
-    const { icon, class: cls } = TAG_MAP[group];
-    return `<span class="tag-badge ${cls}"${tagInlineStyle(TAG_MAP[group])}><i class="fas ${icon} mr-1"></i>${group}</span>`;
+    // 未分组 / 空：显示「全部」
+    if (!group || group === '未分组') {
+        return '<span class="label-tag">全部</span>';
+    }
+    // 命中统一标签系统：彩色药丸徽章（含图标）
+    if (TAG_MAP[group]) {
+        const { icon, class: cls } = TAG_MAP[group];
+        return `<span class="tag-badge ${cls}"${tagInlineStyle(TAG_MAP[group])}><i class="fas ${icon} mr-1"></i>${group}</span>`;
+    }
+    // 文件夹分组（非 TAG_MAP 标签）：默认中性样式显示分组名
+    return `<span class="label-tag">${group}</span>`;
 }
 
 // 生成文章标签列表（矩形小圆角，用于详情页底部）

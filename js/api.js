@@ -4,9 +4,8 @@
  * 适配后端新接口：分组结构（groups）替代旧的分类结构
  *
  * API_BASE: 后端服务地址
- * 公开站点固定自动检测：localhost/127.0.0.1 → 本地；hacore.cn → 同源；调试可用 ?api=xxx 覆盖。
- * - localStorage 切换：通过右下角环境切换按钮设置（offline/cloud/auto）
- * - 自动检测：根据当前页面域名推断后端地址
+ * 公开站点固定自动检测：localhost/127.0.0.1 → 本机；dev.hacore.cn → 内网开发；hacore.cn → 同源。
+ * 调试可用 ?api=xxx 临时覆盖。
  */
 
 // 公开前端固定走自动检测（不再读取任何持久化环境开关，避免与私有后台共享 localStorage key）。
@@ -18,7 +17,6 @@ const API_BASE = (() => {
 
     // 2. 自动检测（基于当前域名，公开站点永远请求同源/本地后端）
     const h = window.location.hostname;
-    if (h === '175.178.7.7') return 'http://175.178.7.7:8000';
     if (h === 'dev.hacore.cn') return 'http://dev.hacore.cn:8000';
     if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:8000';
     return ''; // 生产环境（hacore.cn）同源请求
@@ -255,8 +253,6 @@ function mapBlogsGroups(groups) {
     const blogs = [];
     const seenIds = new Set();
     (groups || []).forEach(group => {
-        // 跳过未分组的文章
-        if (group.folder_id == null) return;
         const articles = (group.articles || []);
         // 跳过空分组（没有已发布文章的不展示）
         if (articles.length === 0) return;
@@ -281,8 +277,8 @@ function mapBlogsGroups(groups) {
 function findInGroups(groups, id, itemKey = 'projects') {
     const idNum = parseInt(id);
     for (const group of (groups || [])) {
-        // 跳过未分组的数据
-        if (group.folder_id == null) continue;
+        // 未分组数据：项目端仍跳过（项目列表不展示未分组）；博客端保留，使「全部」中的未分组文章可正常打开详情
+        if (group.folder_id == null && itemKey === 'projects') continue;
         const items = group[itemKey] || [];
         for (const item of items) {
             if (parseInt(item.id) === idNum) {
@@ -414,7 +410,7 @@ async function loadBaseConfig() {
 
     // 第二层降级：使用 config.js 中的 SITE 对象
     const fallback = {
-        config: { site_name: SITE.name, bio: SITE.bio, logo_url: '', seo_title: '', seo_description: '' },
+        config: { site_name: SITE.name, bio: SITE.bio, logo_url: '', seo_title: '', seo_description: '', filing_no: SITE.filing_no || '', filing_url: SITE.filing_url || '' },
         services: []
     };
     window.SITE_CONFIG = fallback.config;
@@ -446,7 +442,16 @@ async function loadTopicDetail(topicId) {
         return apiData;
     }
     // 降级本地缓存
-    return await cacheGet('topic_' + topicId);
+    const cached = await cacheGet('topic_' + topicId);
+    if (cached) return cached;
+    // 第三级降级：本地种子（data/series.json 的 detail，首次访问无后端内容时展示）
+    const local = await loadLocalJson('series.json');
+    const seed = local && local.detail ? local.detail[String(topicId)] : null;
+    if (seed) {
+        await cachePut('topic_' + topicId, seed);
+        return seed;
+    }
+    return null;
 }
 
 /**
@@ -462,7 +467,14 @@ async function loadAllSeries() {
     }
     // 降级本地缓存
     const cached = await cacheGet('allSeries');
-    if (Array.isArray(cached)) return cached;
+    if (Array.isArray(cached) && cached.length) return cached;
+    // 第三级降级：本地种子（data/series.json，首次访问无后端内容时展示）
+    const local = await loadLocalJson('series.json');
+    const seedItems = local && Array.isArray(local.items) ? local.items : [];
+    if (seedItems.length) {
+        await cachePut('allSeries', seedItems);
+        return seedItems;
+    }
     return [];
 }
 

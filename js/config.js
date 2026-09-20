@@ -20,7 +20,11 @@ const TAILWIND_CONFIG = {
 
 const SITE = {
     name: '禾安',
-    bio: '独立开发者 · 专注 iOS 移动端开发'
+    bio: '独立开发者 · 专注 iOS 移动端开发',
+    filing_no: '',                          // 备案号（后台配置，空则不显示页脚备案）
+    filing_url: 'https://beian.mps.gov.cn', // 公安联网备案平台链接
+    icp_filing_no: '',                      // ICP 备案号（后台配置，空则不显示）
+    icp_filing_url: 'https://beian.miit.gov.cn' // ICP 备案平台链接
 };
 
 // 本地兜底 TAG_MAP（扁平结构：groupName → {icon, class}）

@@ -30,6 +30,17 @@ function renderTagChip(name, withIcon = true) {
     return `<span class="text-xs px-2.5 py-1 rounded-md ${cls} whitespace-nowrap"${style}>${icon}${escapeHtml(name)}</span>`;
 }
 
+// 专题封面：有封面图渲染 <img>；无封面则复用 admin web 端专题列表卡片的图片占位符（书本图标 + 渐变底）
+function renderTopicCover(item) {
+    const cover = item.cover_image || '';
+    if (cover) {
+        return `<img src="${escapeHtml(cover)}" alt="${escapeHtml(item.name || '')}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">`;
+    }
+    return `<div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 text-slate-400 dark:text-slate-500 text-3xl">
+        <i class="fa-solid fa-book-open"></i>
+    </div>`;
+}
+
 // ---------- 首页精选专题（按后台 is_featured 配置读取；首页用横向卡片，专题页用简单列表） ----------
 // 隐藏逻辑与渲染容器解耦：无论哪个页面，无推荐数据都先隐藏 #topics 模块，再按页面容器渲染
 async function loadHomeTopics() {
@@ -51,6 +62,7 @@ async function loadHomeTopics() {
         if (section) section.style.display = 'none';
         return;
     }
+    if (section) section.style.display = ''; // 有推荐数据才显示热门专题区块（默认隐藏，避免空态闪现）
 
     // 首页容器：横向卡片（#topics-grid）
     const grid = document.getElementById('topics-grid');
@@ -64,20 +76,20 @@ async function loadHomeTopics() {
             grid.style.overflowX = 'visible';
         }
         grid.innerHTML = sorted.map(t => {
-            const cover = t.cover_image || '';
-            const title = (t.name || '').length > 20 ? (t.name.slice(0, 20) + '…') : (t.name || '');
             const updatedAt = (t.updated_at || '').slice(0, 10);
+            const desc = (t.description || '').trim();
             return `
                 <a href="topics/detail.html?series=${t.id}&from=home" class="block group flex-shrink-0 w-56 snap-start"
                    onclick="trackClick('click_zhuanti','open_series','zhuanti_card','home','series',${t.id})">
                     <article class="card-hover flex flex-col w-56 aspect-square rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
-                        <div class="h-2/3 overflow-hidden">
-                            <img src="${cover}" alt="${escapeHtml(t.name || '')}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                        <div class="h-2/3 overflow-hidden bg-slate-100 dark:bg-slate-800">
+                            ${renderTopicCover(t)}
                         </div>
-                        <div class="h-1/3 flex flex-col justify-center px-3 text-left">
-                            <h3 class="font-semibold text-sm leading-tight line-clamp-1 text-slate-800 dark:text-slate-100" title="${escapeHtml(t.name || '')}">${escapeHtml(title)}</h3>
-                            <div class="flex items-center text-slate-400 text-xs mt-1 whitespace-nowrap">
-                                <i class="fas fa-clock mr-1"></i>${updatedAt}
+                        <div class="h-1/3 flex flex-col justify-center px-3 text-left gap-1">
+                            <p class="text-xs leading-snug text-slate-600 dark:text-slate-300 line-clamp-2" title="${escapeHtml(desc)}">${escapeHtml(desc || '暂无简介')}</p>
+                            <div class="flex items-center justify-between text-slate-400 text-xs whitespace-nowrap mt-0.5">
+                                <span class="inline-flex items-center"><i class="fa-solid fa-eye mr-1"></i>${t.view_count ?? 0}</span>
+                                <span class="inline-flex items-center"><i class="fas fa-clock mr-1"></i>${updatedAt}</span>
                             </div>
                         </div>
                     </article>
@@ -182,6 +194,10 @@ async function renderSidebarProjects() {
         return;
     }
 
+    // 有推荐项目才显示产品推荐区块（默认隐藏，避免空态闪现）
+    const projectsSection = document.getElementById('projects');
+    if (projectsSection) projectsSection.style.display = '';
+
     // 简单列表：仅产品名 + 介绍，无封面，带图标点缀
     list.innerHTML = allProjects.map(project => {
         const _descText = tiptapJsonToPlainText(parseTiptapJson(project.description));
@@ -211,6 +227,10 @@ function renderTagFilter() {
         });
     });
     const tagList = Array.from(tagSet).sort();
+
+    // 无可用标签：整块隐藏技术栈筛选区（空态即默认无数据状态，不显示"暂无标签"占位）
+    if (!tagList.length) { el.style.display = 'none'; return; }
+    el.style.display = '';
 
     const tagChips = tagList.length
         ? tagList.map(tag => {
@@ -304,18 +324,19 @@ function renderSeriesList() {
     }
 
     grid.innerHTML = list.map(s => {
-        const cover = s.cover_image || '';
         const updatedAt = (s.updated_at || '').slice(0, 10);
+        const desc = (s.description || '').trim();
         return `
         <a href="detail.html?series=${s.id}&from=topics" class="block group">
             <article class="card-hover flex flex-col aspect-square rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
-                <div class="h-2/3 overflow-hidden">
-                    <img src="${cover}" alt="${escapeHtml(s.name)}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                <div class="h-2/3 overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    ${renderTopicCover(s)}
                 </div>
-                <div class="h-1/3 flex flex-col justify-center px-3 text-left">
-                    <h3 class="font-semibold text-sm leading-tight line-clamp-1 text-slate-800 dark:text-slate-100" title="${escapeHtml(s.name)}">${escapeHtml(s.name)}</h3>
-                    <div class="flex items-center text-slate-400 text-xs mt-1 whitespace-nowrap">
-                        <i class="fas fa-clock mr-1"></i>${updatedAt}
+                <div class="h-1/3 flex flex-col justify-center px-3 text-left gap-1">
+                    <p class="text-xs leading-snug text-slate-600 dark:text-slate-300 line-clamp-2" title="${escapeHtml(desc)}">${escapeHtml(desc || '暂无简介')}</p>
+                    <div class="flex items-center justify-between text-slate-400 text-xs whitespace-nowrap mt-0.5">
+                        <span class="inline-flex items-center"><i class="fa-solid fa-eye mr-1"></i>${s.view_count ?? 0}</span>
+                        <span class="inline-flex items-center"><i class="fas fa-clock mr-1"></i>${updatedAt}</span>
                     </div>
                 </div>
             </article>
@@ -338,6 +359,9 @@ async function loadTopicDetailPage() {
     // 调用 api.js 中的真实加载函数（该函数名与本文定义过的加载函数冲突，故本页加载入口单独命名）
     currentTopic = await loadTopicDetail(topicId);
     if (!currentTopic) { showDetailError('该专题暂无已发布内容'); return; }
+
+    // 过滤掉没有任何已发布文章的章节（左侧目录不展示空章节文件夹）
+    currentTopic.chapters = (currentTopic.chapters || []).filter(lv => (lv.articles || []).length > 0);
 
     // 更新页面标题
     document.title = `${currentTopic.name} | 禾安`;
@@ -424,8 +448,6 @@ function renderOutlineTree() {
             const artId = String(art.id || art.article_key);
             const isArtSelected = artId === currentArticleId;
             const isArtExpanded = isArtSelected;
-            const orderLabel = `${lvIdx + 1}.${artIdx + 1}`;
-
             // 解析 h2/h3 并保留级别，用于左侧目录缩进区分
             const parsedHeadings = extractHeadingsWithLevel(art);
             const hasHeadings = parsedHeadings.length > 0;
@@ -447,7 +469,7 @@ function renderOutlineTree() {
                 <button class="outline-article-btn w-full flex items-center justify-between ${isArtSelected ? 'filter-selected' : ''}"
                         onclick="handleArticleClick('${artId}', event)">
                     <span class="flex items-center gap-2">
-                        <span class="outline-article-label">${orderLabel} ${escapeHtml(art.title || '无标题')}</span>
+                        <span class="outline-article-label">${escapeHtml(art.title || '无标题')}</span>
                     </span>
                 </button>
                 ${hasHeadings ? `<div class="outline-subheads">${subheads}</div>` : ''}
@@ -559,7 +581,11 @@ function scrollToHeading(articleId, headingIndex) {
     const target = document.getElementById(`heading-${articleId}-${headingIndex}`);
     const area = document.getElementById('detail-content-area');
     if (target && area) {
-        area.scrollTo({ top: target.offsetTop - 20, behavior: 'smooth' });
+        // 根因：offsetTop 的 offsetParent 不是滚动容器（#detail-content-area），直接用它会导致滚过头、标题被藏。
+        // 用 getBoundingClientRect 计算目标相对滚动容器的真实偏移，并预留 24px，确保标题完整露出。
+        const delta = target.getBoundingClientRect().top - area.getBoundingClientRect().top;
+        const top = Math.max(0, area.scrollTop + delta - 24);
+        area.scrollTo({ top, behavior: 'smooth' });
     }
 }
 
@@ -589,34 +615,50 @@ function renderMarkdown(src) {
         table.classList.add('blog-table');
     });
 
-    // 3. 代码块：添加复制按钮（带语言标签）
+    // 3. 代码块：用不滚动的 wrapper 包裹 pre，语言标签（左上）+ 复制按钮（右上）挂到 wrapper 上，
+    //    这样横向滚动 pre 内容时，按钮固定在右上角、不跟随移动
     tmp.querySelectorAll('pre').forEach(pre => {
         const code = pre.querySelector('code');
         if (!code) return;
         const cls = code.className || '';
         const langMatch = cls.match(/language-([\w-]+)/);
         const lang = langMatch ? langMatch[1] : '';
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'code-copy-btn';
-        btn.textContent = '复制';
-        btn.addEventListener('click', () => {
-            const text = code.textContent || '';
-            navigator.clipboard?.writeText(text).then(() => {
-                btn.textContent = '已复制';
-                setTimeout(() => { btn.textContent = '复制'; }, 1500);
-            }).catch(() => {});
-        });
+
+        // 包裹层（不滚动、position: relative，作为按钮/语言标签的定位上下文）
+        const wrapper = document.createElement('div');
+        wrapper.className = 'code-block';
+        pre.parentNode.insertBefore(wrapper, pre);
+        wrapper.appendChild(pre);
+
         if (lang) {
             const tag = document.createElement('span');
             tag.className = 'code-lang-tag';
             tag.textContent = lang;
-            pre.appendChild(tag);
+            wrapper.appendChild(tag);
         }
-        pre.appendChild(btn);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'code-copy-btn';
+        btn.setAttribute('aria-label', '复制代码');
+        btn.innerHTML = '复制';
+        btn.setAttribute('onclick', 'copyCodeFromButton(this)');
+        wrapper.appendChild(btn);
     });
 
     return tmp.innerHTML;
+}
+
+/** 代码块复制按钮：复制 pre 内 code 文本 */
+function copyCodeFromButton(btn) {
+    const block = btn.closest('.code-block');
+    const pre = block && block.querySelector('pre');
+    const code = pre && pre.querySelector('code');
+    if (!code) return;
+    copyToClipboard(code.textContent);
+    showToast('代码已复制');
+    const original = btn.textContent;
+    btn.textContent = '已复制';
+    setTimeout(() => { btn.textContent = original; }, 1500);
 }
 
 function renderArticleDetail(article) {

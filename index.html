@@ -45,30 +45,6 @@
         </div>
     </section>
 
-    <!-- 关于我（动态渲染） -->
-    <section class="py-12" id="home-about-section">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
-                <div class="relative">
-                    <div class="absolute -inset-4 bg-gradient-to-r from-primary to-secondary rounded-2xl opacity-30 blur-lg"></div>
-                    <img src="https://picsum.photos/600/400?tech" alt="开发者工作场景" class="relative rounded-2xl shadow-2xl w-full object-cover" id="home-about-avatar">
-                </div>
-                <div class="mt-8 lg:mt-0 flex flex-col justify-center">
-                    <div>
-                        <h2 class="text-3xl font-bold mb-6">关于我</h2>
-                        <div id="home-about-intro" class="text-base text-slate-600 dark:text-slate-400 mb-6 leading-relaxed"></div>
-                        <div class="space-y-5">
-                            <div id="home-about-services" style="display:none;">
-                                <h3 class="font-semibold text-lg mt-6 mb-3">服务内容</h3>
-                                <div class="flex flex-wrap gap-2" id="home-services"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- 精选专题（横向滚动） -->
     <section id="topics" class="pt-16 pb-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -139,7 +115,7 @@
     <script src="./js/api.js"></script>
     <script src="./js/utils.js"></script>
     <script src="./js/views.js"></script>
-    <script src="./js/topics.js"></script>
+    <script src="./js/topics.js?v=2"></script>
     <script src="./js/theme.js"></script>
     <script src="./js/auth.js"></script>
     <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
@@ -200,36 +176,7 @@
                 heroBio.style.display = '';
             }
 
-            // 首页关于我模块（用 profile 数据）
-            const aboutSection = document.getElementById('home-about-section');
-            if (about.intro) {
-                document.getElementById('home-about-intro').innerHTML = about.intro.replace(/\n/g, '<br>');
-            } else {
-                aboutSection.style.display = 'none';
-                return;
-            }
-            // 首页关于我配图优先读取工作照，未配置时回退头像
-            const aboutPhoto = about.work_photo || about.avatar_url;
-            if (aboutPhoto) {
-                document.getElementById('home-about-avatar').src = aboutPhoto;
-            }
-
-            // 技术栈模块已按需求隐藏，不渲染
-
-            // 服务内容（过滤隐藏内容）
-            const servicesEl = document.getElementById('home-about-services');
-            const svcEl = document.getElementById('home-services');
-            const visibleServices = services.filter(s => !s.hidden);
-            if (visibleServices.length > 0) {
-                svcEl.innerHTML = visibleServices.map(s =>
-                    `<span class="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-md text-sm"><i class="${s.icon} mr-1"></i>${s.title}</span>`
-                ).join('');
-                servicesEl.style.display = '';
-            } else {
-                servicesEl.style.display = 'none';
-            }
-
-            // 页脚链接：用 about.contacts 中的链接更新
+            // 首页关于我模块已移除（HTML 区块已删除）：仅保留页脚联系链接（基于 profile.contacts）渲染
             const contacts = about.contacts || {};
             renderFooter(contacts);
         }
@@ -264,8 +211,8 @@
                     card.onclick = () => trackClick('click_project', 'open_project', 'project_card', 'home', 'project', project.id);
                     card.innerHTML = `
                         <article class="card-hover bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700 h-full">
-                            <div class="overflow-hidden aspect-[16/9]">
-                                <img src="${project.cover_image}" alt="${project.title}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                            <div class="overflow-hidden aspect-[16/9]" style="aspect-ratio:16/9">
+                                <img src="${project.cover_image}" alt="${project.title}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" style="object-fit:cover;object-position:center">
                             </div>
                             <div class="p-5">
                                 <div class="flex flex-wrap gap-2 mb-3">

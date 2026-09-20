@@ -25,9 +25,9 @@
         <!-- 个人简介 -->
         <div class="py-8">
             <div class="flex flex-wrap gap-8 lg:gap-16 items-center">
-                <div class="relative flex-shrink-0 w-full sm:w-64 lg:w-72 mb-8 sm:mb-0">
-                    <div class="absolute -inset-4 bg-gradient-to-r from-primary to-secondary rounded-2xl opacity-30 blur-lg"></div>
-                    <img id="about-avatar" src="https://picsum.photos/400/500?portrait" alt="头像" class="relative w-full sm:w-64 lg:w-72 h-80 lg:h-96 rounded-2xl shadow-2xl object-cover">
+                <div class="relative flex-shrink-0 w-full sm:w-64 lg:w-72 mb-8 sm:mb-0" id="about-photos">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-primary to-secondary rounded-2xl opacity-30 blur-lg" id="about-photos-glow"></div>
+                    <img id="about-work-photo" alt="工作照" class="relative w-full sm:w-64 lg:w-72 aspect-[4/5] rounded-2xl shadow-2xl object-cover" style="display:none;">
                 </div>
                 <div class="flex-1 min-w-[300px]">
                     <h1 class="text-4xl font-extrabold mb-2" id="about-name">禾安</h1>
@@ -136,7 +136,11 @@
             document.getElementById('about-name').textContent = about.name || '';
             document.getElementById('about-title').textContent = about.title || '';
             document.getElementById('about-intro').innerHTML = (about.intro || '').replace(/\n/g, '<br>');
-            if (about.avatar_url) document.getElementById('about-avatar').src = about.avatar_url;
+            // 工作照：仅读取后端配置 work_photo（无则隐藏图片，不再使用占位假图）
+            const photosWrap = document.getElementById('about-photos');
+            const wpEl = document.getElementById('about-work-photo');
+            if (about.work_photo) { wpEl.src = about.work_photo; wpEl.style.display = ''; } else { wpEl.style.display = 'none'; }
+            if (photosWrap) photosWrap.style.display = about.work_photo ? '' : 'none';
 
             // 社交链接
             const linksEl = document.getElementById('about-links');

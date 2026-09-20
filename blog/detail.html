@@ -15,7 +15,7 @@
         (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../js/common.css">
+    <link rel="stylesheet" href="../js/common.css?v=5">
     <link rel="icon" href="data:,">
 </head>
 <body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
@@ -23,7 +23,7 @@
     <!-- 顶栏：由 renderNavbar 统一生成（detail 模式） -->
     <header id="navbar"></header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
         <article class="fade-in-up">
             <header class="mb-10">
                 <div class="flex items-center gap-3 mb-4">
@@ -40,8 +40,8 @@
                     </div>
                 </div>
             </header>
-            <div class="rounded-2xl overflow-hidden shadow-lg mb-10">
-                <img id="article-cover" src="https://picsum.photos/1000/400?article" alt="文章封面" class="w-full object-cover">
+            <div id="article-cover-wrap" class="rounded-2xl overflow-hidden shadow-lg mb-10">
+                <img id="article-cover" src="" alt="文章封面" class="w-full object-cover">
             </div>
             <div class="article-content text-slate-700 dark:text-slate-300" id="article-body"></div>
             <!-- 文章标签 -->
@@ -60,7 +60,7 @@
     <script src="../js/theme.js"></script>
     <script src="../js/auth.js"></script>
     <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
-    <script src="../js/renderer.js"></script>
+    <script src="../js/renderer.js?v=2"></script>
     <script>
         initApp('blog', { type: 'detail' });
         HeAnAuth.mountLoginButton();
@@ -73,12 +73,30 @@
             document.title = `${blog.title} | ${SITE.name}`;
             document.getElementById('article-title').textContent = blog.title;
             document.getElementById('article-date').textContent = blog.date;
-            document.getElementById('article-cover').src = blog.cover_image;
-            document.getElementById('article-cover').alt = blog.title;
+            // 封面图：无封面时不显示占位图，仅在有封面时渲染
+            const coverWrap = document.getElementById('article-cover-wrap');
+            const coverEl = document.getElementById('article-cover');
+            if (blog.cover_image) {
+                coverEl.src = blog.cover_image;
+                coverEl.alt = blog.title;
+                coverWrap.style.display = '';
+            } else {
+                coverWrap.style.display = 'none';
+            }
             document.getElementById('article-body').innerHTML = renderContent(blog.content || '');
 
-            // 顶部：分组徽章
-            applyGroupColor(document.getElementById('article-tag'), blog.group || '');
+            // 顶部：分组徽章（显示对应分组名；未分组显示「全部」）
+            const articleTagEl = document.getElementById('article-tag');
+            const groupLabel = (blog.group && blog.group !== '未分组') ? blog.group : '全部';
+            if (TAG_MAP[blog.group]) {
+                // 命中统一标签系统：沿用彩色徽章（含分组名 + 图标）
+                applyGroupColor(articleTagEl, blog.group);
+            } else {
+                // 文件夹分组 / 未分组：中性标签，未分组显示「全部」
+                articleTagEl.className = 'label-tag';
+                articleTagEl.removeAttribute('style');
+                articleTagEl.textContent = groupLabel;
+            }
 
             // 系列信息（如果有系列分组标签和进度）
             const seriesEl = document.getElementById('article-series');
