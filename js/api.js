@@ -185,7 +185,8 @@ function getRoot() {
     //   子页面  src="../js/api.js"     → ".."
     // 绝对引入（防御性，当前站点未使用）:
     //   根域名  src="/js/api.js"        → "."
-    //   子目录  src="/HeAn/js/api.js"   → "/HeAn/"
+    //   子目录  src="/HeAn/js/api.js"   → "/HeAn"
+    // 注：统一为“末尾不带斜杠”，与 views.js 的同名函数完全一致（两者会互相覆盖，行为必须相同）
     const script = document.querySelector('script[src*="api.js"]');
     if (script) {
         const src = script.getAttribute('src').replace(/^\.\//, '');
@@ -195,7 +196,7 @@ function getRoot() {
         // 绝对路径：以 / 开头
         if (src.startsWith('/')) {
             const abs = src.match(/^(.*?)\/js\//);
-            return abs ? abs[1] + '/' : '.';
+            return abs ? abs[1] : '.';
         }
         // 兜底：./js/api.js 或 js/api.js
         return '.';
@@ -392,11 +393,45 @@ async function loadBlog(blogId) {
 }
 
 // ---------- 站点配置 ----------
+
+/**
+ * 把「登录入口开关」同步缓存到 localStorage。
+ * 用途：theme.js 的 initApp 必须【同步】决定右上角登录区是否显示（显示=占宽度），
+ * 不能等 /site/config 请求返回 —— 否则登录按钮晚出现约 100ms，导航 tab 行会整体平移。
+ * 缺省（未缓存 / 隐私模式）按「显示」处理，与后端默认值 1 一致。
+ */
+function cacheLoginEntryFlag(cfg) {
+    try {
+        if (cfg && cfg.enable_login_entry !== undefined) {
+            localStorage.setItem('hean_login_entry', Number(cfg.enable_login_entry) === 1 ? '1' : '0');
+        }
+    } catch (e) { /* 隐私模式等场景忽略 */ }
+}
+
+/** 同步读取登录入口开关：有缓存用缓存，无缓存（首次访问）按显示处理 */
+function isLoginEntryEnabled() {
+    try {
+        const v = localStorage.getItem('hean_login_entry');
+        if (v === '0') return false;
+        if (v === '1') return true;
+    } catch (e) { /* 隐私模式等场景忽略 */ }
+    return true;
+}
+
 async function loadBaseConfig() {
     const data = await apiGet('/site/config');
     if (data) {
         // 缓存完整配置到全局，供 auth/theme 等模块读取（如登录入口开关）
         if (data.config) window.SITE_CONFIG = data.config;
+        // 站点名单独缓存到 localStorage：让二次访问"首屏就渲染正确品牌名"，
+        // 避免先兜底名后替换 → 品牌区宽度变化 → 导航 tab 行左右平移。
+        try {
+            if (data.config && data.config.site_name) {
+                localStorage.setItem('hean_site_name', data.config.site_name);
+            }
+        } catch (e) { /* 隐私模式等场景忽略 */ }
+        // 登录入口开关也落本地缓存（供 initAuthSync 同步读取，避免导航位移）
+        cacheLoginEntryFlag(data.config);
         await cachePut('baseConfig', data);
         return data; // { config: {...}, services: [...] }
     }
@@ -405,6 +440,7 @@ async function loadBaseConfig() {
     const cached = await cacheGet('baseConfig');
     if (cached) {
         if (cached.config) window.SITE_CONFIG = cached.config;
+        cacheLoginEntryFlag(cached.config);
         return cached;
     }
 

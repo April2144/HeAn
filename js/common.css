@@ -420,7 +420,8 @@ body.ready { transition: background-color 0.3s ease, color 0.3s ease !important;
 .dark .topic-tag-clear { background: #1e293b; border-color: #475569; color: #cbd5e1; }
 
 /* ========== 右上角登录态（登录按钮 / 头像下拉） ========== */
-/* 登录按钮复用 .btn-primary 令牌（蓝底白字，dark/light 自适应），此处不再单独定义样式 */
+/* 登录按钮为「纯文字」样式（无背景卡片），配色沿用 body 的 text-slate-800 / dark:text-slate-200，
+   由 auth.js 的 renderAuthArea 直接挂 Tailwind 类，此处不再定义样式 */
 /* 头像下拉容器：相对定位锚点 */
 .auth-dropdown-wrap { position: relative; }
 
@@ -442,3 +443,6 @@ body.ready { transition: background-color 0.3s ease, color 0.3s ease !important;
 html, body { height: 100%; }
 body { min-height: 100vh; display: flex; flex-direction: column; }
 body > footer { margin-top: auto; }
+/* ===== 品牌区最小宽度：站点名长度变化时不再牵动 tab 行左右平移 ===== */
+.site-brand { min-width: 138px; }        /* 138px = 当前最长站点名"禾安的笔记"的品牌区实测宽度 */
+@media (max-width: 767px) { .site-brand { min-width: 0; } }

@@ -145,14 +145,9 @@ const HeAnAuth = (function () {
   }
 
   // 渲染右上角登录区（挂载到 #auth-area，不存在则创建）
+  // 幂等：状态与目标一致时直接返回；开关变化（显示↔隐藏）时会自动重挂载
   function mountAuthArea(opts) {
     opts = opts || {};
-    // 后端开关关闭时，全局隐藏登录/个人中心入口（既不渲染登录按钮，也不渲染头像菜单）
-    if (opts.hideAuth) {
-      const existing = document.getElementById('auth-area');
-      if (existing) existing.innerHTML = '';
-      return;
-    }
     let host = document.getElementById('auth-area');
     if (!host) {
       host = document.createElement('div');
@@ -162,9 +157,41 @@ const HeAnAuth = (function () {
       const bar = toggle ? toggle.parentElement : null;
       if (bar) bar.insertBefore(host, toggle);
     }
-    if (host.dataset.mounted) return;
+
+    // 是否应显示登录区：后端开关关闭、或登录页自身（已在登录流程中）都不显示
+    const shouldShow = !opts.hideAuth && !opts.skipLoginBtn;
+    const hasContent = host.hasChildNodes();
+    if (host.dataset.mounted && shouldShow === hasContent) return; // 状态一致 → 幂等返回
+
+    if (!shouldShow) {
+      host.innerHTML = '';
+      host.style.flex = '';
+      host.style.minWidth = '';
+      host.style.justifyContent = '';
+      delete host.dataset.mounted; // 允许开关重新打开时再次挂载
+      return;
+    }
+
+    // 固定槽位：用固定 flex-basis 而不是 min-width，避免字体/样式就绪前后宽度变化带动 tab 行位移，
+    // 同时让「登录文字 / 头像(36px) / 空」三种状态占用同一宽度，切换登录态时导航不平移。
+    // 宽度取 44px：既容得下头像(36px)，又贴合"纯文字登录"的自然宽度（≈32px），不留突兀空隙。
+    host.style.flex = '0 0 44px';
+    host.style.justifyContent = 'center';
     host.dataset.mounted = '1';
     renderAuthArea(host, opts);
+  }
+
+  /**
+   * 【同步】挂载登录区（不发起任何网络请求）——由 theme.js 的 initApp 在 initNavbar() 之后立刻调用。
+   * 登录态取自 localStorage（同步）；入口开关取自 loadBaseConfig() 写入的本地缓存（同步，缺省为显示）。
+   * 目的：首屏即渲染出最终宽度的右侧区，杜绝"导航已画好、~100ms 后才插入登录按钮"造成的位移闪动。
+   */
+  function initAuthSync(opts) {
+    opts = opts || {};
+    if (opts.hideAuth === undefined && typeof isLoginEntryEnabled === 'function') {
+      opts.hideAuth = !isLoginEntryEnabled();
+    }
+    mountAuthArea(opts);
   }
 
   function renderAuthArea(host, opts) {
@@ -173,10 +200,12 @@ const HeAnAuth = (function () {
     if (!isLoggedIn()) {
       // 登录页自身不渲染"登录"按钮（已在登录流程中）
       if (opts.skipLoginBtn) return;
-      // 登录按钮：复用主界面按钮令牌（蓝底白字，dark/light 自适应）
+      // 登录按钮：纯文字（无背景卡片、无内边距），与导航 tab 链接观感一致。
+      // 配色沿用 body 的 text-slate-800 / dark:text-slate-200（与 tab 文字同源），hover 变主色，
+      // 因此 light / dark 两种主题都自然适配；transition-colors 保证切主题只换色不重排。
       const btn = document.createElement('button');
       btn.id = 'login-btn';
-      btn.className = 'btn-primary text-sm font-medium px-4 py-2 rounded-lg';
+      btn.className = 'text-sm font-medium transition-colors text-slate-800 hover:text-primary dark:text-slate-200 dark:hover:text-primary';
       btn.textContent = '登录';
       btn.addEventListener('click', () => {
         rememberBack();
@@ -261,12 +290,16 @@ const HeAnAuth = (function () {
   async function initAuth(opts) {
     mountAuthArea(opts);
     if (isLoggedIn()) {
+      const before = JSON.stringify(currentUser() || null);
       try {
         await fetchMe();
       } catch (e) {
         // token 失效则清理登录态
         logout();
       }
+      // 仅在资料/登录态真的发生变化时才重画：无变化时跳过，避免多一次重绘造成闪动
+      const after = JSON.stringify(currentUser() || null);
+      if (after === before) return;
       const host = document.getElementById('auth-area');
       if (host) renderAuthArea(host, opts);
     }
@@ -276,7 +309,8 @@ const HeAnAuth = (function () {
   return {
     getToken, isLoggedIn, currentUser,
     loginByCode, loginByPassword, sendCode, fetchMe, logout,
-    mountAuthArea, mountLoginButton: mountAuthArea, renderAuthArea, initAuth,
+    mountAuthArea, mountLoginButton: mountAuthArea, renderAuthArea,
+    initAuth, initAuthSync,
     goBackAfterLogin,
   };
 })();

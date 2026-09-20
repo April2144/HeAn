@@ -84,14 +84,33 @@ function initScrollShadow() {
     window.addEventListener('scroll', cb, { passive: true });
 }
 
+// ========== 页脚联系方式缓存 ==========
+// 为什么要缓存：页脚联系方式来自 /site/profile（网络请求），原先"先 renderFooter() 精简版 →
+// 数据到后再 renderFooter(contacts)"会把页脚整体换掉（实测 FOOTER 位移，CLS 高达 0.137）。
+// 缓存后二次访问首屏即渲染完整页脚，且仅当数据真的变化时才重渲染。
+const CONTACTS_KEY = 'hean_contacts';
+function readCachedContacts() {
+    try { return JSON.parse(localStorage.getItem(CONTACTS_KEY) || 'null'); } catch (e) { return null; }
+}
+function writeCachedContacts(c) {
+    try { localStorage.setItem(CONTACTS_KEY, JSON.stringify(c)); } catch (e) { /* 隐私模式等场景忽略 */ }
+}
+
 // ========== 应用初始化 ==========
 function initApp(activePage, opts = {}) {
     initTheme();
     initNavbar(activePage, opts);
+    // 【关键】导航骨架渲染后，立刻【同步】挂载右上角登录区（登录按钮/头像）。
+    // 登录态读 localStorage、入口开关读本地缓存，都无需等待网络 → 首屏即渲染出最终宽度，
+    // 避免"导航画好后约 100ms 才插入登录按钮"导致 tab 行整体平移（实测位移 30px 的闪动）。
+    if (typeof HeAnAuth !== 'undefined' && HeAnAuth.initAuthSync) {
+        HeAnAuth.initAuthSync({ skipLoginBtn: opts.type === 'login' });
+    }
     // 导航栏渲染后，按当前主题同步一次图标（initTheme 执行时导航栏尚不存在，跨页跳转时图标需在此补刷新）
     updateThemeIcon(localStorage.getItem('theme-mode') || 'system');
     bindThemeToggle();
-    renderFooter();
+    // 首屏用缓存的联系方式渲染页脚（二次访问即完整），避免数据到达后再整体替换 → 页脚跳变
+    renderFooter(readCachedContacts() || undefined);
     initScrollShadow();
     requestAnimationFrame(() => {
         document.body.classList.add('ready');
@@ -105,6 +124,8 @@ function initApp(activePage, opts = {}) {
             const cfg = await loadBaseConfig();
             // 站点配置加载完成后，统一刷新品牌 logo（导航/页脚）
             if (typeof applySiteLogo === 'function') applySiteLogo();
+            // 同时统一刷新品牌名：此前只有首页/关于我页做了替换，导致各页面显示不一致
+            if (typeof applySiteName === 'function') applySiteName();
             const skipLoginBtn = opts.type === 'login';
             const hideAuth = Number((cfg && cfg.config && cfg.config.enable_login_entry) ?? 1) !== 1;
             if (typeof HeAnAuth !== 'undefined' && HeAnAuth.initAuth) {
@@ -112,8 +133,11 @@ function initApp(activePage, opts = {}) {
             }
 
             const data = await loadProfile();
-            if (data && data.about && data.about.contacts) {
-                renderFooter(data.about.contacts);
+            const contacts = data && data.about && data.about.contacts;
+            // 仅当联系方式与"已渲染/已缓存"的确实不同时才重渲染，避免页脚无谓跳变（CLS）
+            if (contacts && JSON.stringify(contacts) !== JSON.stringify(readCachedContacts())) {
+                renderFooter(contacts);
+                writeCachedContacts(contacts);
             }
         } catch(e) {}
     })();

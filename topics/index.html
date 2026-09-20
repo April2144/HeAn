@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tiptap JSON 文档模型渲染层（产品推荐描述、正文渲染依赖 parseTiptapJson/tiptapJsonToPlainText/renderContent） -->
     <script src="../js/renderer.js"></script>
-    <link rel="stylesheet" href="../js/common.css">
+    <link rel="stylesheet" href="../js/common.css?v=20260921d">
     <link rel="icon" href="data:,">
 </head>
 <body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
@@ -66,12 +66,12 @@
     <!-- JS -->
     <!-- localforage：离线缓存层依赖（与首页统一使用本地 vendor，离线可用；CDN 不可用时 api.js 自动降级） -->
     <script src="../vendor/localforage.min.js"></script>
-    <script src="../js/api.js"></script>
+    <script src="../js/api.js?v=20260921c"></script>
     <script src="../js/utils.js"></script>
-    <script src="../js/views.js"></script>
+    <script src="../js/views.js?v=20260921c"></script>
     <script src="../js/topics.js?v=2"></script>
-    <script src="../js/theme.js"></script>
-    <script src="../js/auth.js"></script>
+    <script src="../js/theme.js?v=20260921d"></script>
+    <script src="../js/auth.js?v=20260921e"></script>
     <script>
         initApp('topics', { type: 'main' });
         // loadTopicsPage 为 async：await 并捕获异常

@@ -16,23 +16,43 @@ const NAV_TABS = [
     { key: 'about',    label: '关于我', href: 'about/index.html' },
 ];
 
-// 相对路径前缀：根目录页（/hean/index.html）用 './'，子目录页（/hean/blog/index.html 等）用 '../'
+// 站点根前缀（'.' / '..' / '/HeAn'，末尾不带斜杠，与 api.js 的 getRoot 实现保持一致）
+// 通过本文件自身的 <script src> 推导，兼容“域名根目录部署”与“/hean/ 子目录部署”两种情形：
+//   ./js/views.js    → '.'      （根目录页：/index.html）
+//   ../js/views.js   → '..'     （子目录页：/topics/index.html、/blog/detail.html）
+//   /HeAn/js/views.js → '/HeAn' （绝对路径引入）
+// 注：旧实现按 pathname 段数判断（>=3 段才算子目录），仅在“站点挂在 /hean/ 前缀”时成立；
+//     线上为根目录部署，子页面只有 2 段 → 得 './' → 链接变成 /topics/projects/index.html（被兜底成首页）。
 function getRoot() {
-    // 按 pathname 目录层级段数判断，避免"以 index.html 结尾"误判子目录页
-    // ['hean','index.html']=2 段 → './'；['hean','blog','index.html']=3 段 → '../'
-    const segs = location.pathname.split('/').filter(Boolean);
-    return segs.length >= 3 ? '../' : './';
+    const script = document.querySelector('script[src*="views.js"]');
+    if (script) {
+        const src = script.getAttribute('src').replace(/^\.\//, '');
+        // 相对路径：以若干 ../ 开头
+        const rel = src.match(/^((?:\.\.\/)+)js\//);
+        if (rel) return rel[1].replace(/\/$/, '');
+        // 绝对路径：以 / 开头
+        if (src.startsWith('/')) {
+            const abs = src.match(/^(.*?)\/js\//);
+            return abs ? abs[1] : '.';
+        }
+        // 兜底：./js/views.js 或 js/views.js
+        return '.';
+    }
+    // fallback: script 不可见时按路径深度估算
+    const path = window.location.pathname;
+    const depth = (path.match(/\//g) || []).length - 1;
+    return depth <= 0 ? '.' : Array(depth).fill('..').join('/');
 }
 
 // 根据当前页相对于站点根目录的深度，返回正确的资源/链接前缀
 function navHref(href) {
-    return getRoot() + href;
+    return getRoot() + '/' + href;
 }
 
 /** 品牌 logo：优先读取后台配置（window.SITE_CONFIG.logo_url），未配置时降级本地默认 logo */
 function getSiteLogo() {
     const cfgLogo = window.SITE_CONFIG && window.SITE_CONFIG.logo_url;
-    return cfgLogo ? cfgLogo : getRoot() + 'assets/logo-mark.svg';
+    return cfgLogo ? cfgLogo : getRoot() + '/assets/logo-mark.svg';
 }
 
 /** 站点配置加载完成后统一刷新全站 logo（导航/页脚，带 data-site-logo 标记） */
@@ -42,6 +62,37 @@ function applySiteLogo() {
     document.querySelectorAll('[data-site-logo]').forEach(img => {
         img.src = cfgLogo;
     });
+}
+
+/**
+ * 站点显示名的【唯一来源】—— 导航、页脚、品牌区全部用它，不再各写一份
+ * 取值优先级：后台配置（window.SITE_CONFIG.site_name）→ localStorage 缓存 → config.js 静态兜底
+ *
+ * 为什么要缓存：名字长度直接影响品牌区宽度，而导航是 justify-between（tab 行居中），
+ * 品牌区一变宽，整行 tab 就会左右平移。缓存由 api.js 的 loadBaseConfig() 写入，
+ * 使二次访问时首屏即渲染正确名字，避免"先兜底名、后被替换"导致的位移。
+ */
+function siteDisplayName() {
+    const cfgName = window.SITE_CONFIG && window.SITE_CONFIG.site_name;
+    let cached = '';
+    try { cached = localStorage.getItem('hean_site_name') || ''; } catch (e) { /* 隐私模式忽略 */ }
+    return (cfgName || cached || SITE.name || '禾安').trim();
+}
+
+/** 站点配置加载完成后统一刷新全站品牌名（导航/页脚所有 #site-name、[data-site-name]） */
+function applySiteName() {
+    const name = siteDisplayName();
+    document.querySelectorAll('#site-name').forEach(el => { el.textContent = name; });
+    document.querySelectorAll('[data-site-name]').forEach(el => { el.textContent = name; });
+}
+
+/**
+ * 页脚品牌名：使用「品牌短名」（config.js 的 SITE.name，如「禾安」）
+ * 与导航的完整站点名（后台 site_name，如「禾安的笔记」）**有意区分** —— 导航展示完整站名，
+ * 页脚展示品牌短名。若以后想让页脚也跟随后台配置，把这里改成 siteDisplayName() 即可。
+ */
+function footerBrandName() {
+    return (SITE.name || '禾安').trim();
 }
 
 /** 生成 tab 链接 HTML（当前页高亮用 text-primary 区分） */
@@ -85,9 +136,10 @@ function renderNavbar(opts = {}) {
     const nav = document.getElementById('navbar');
     if (!nav) return;
 
-    const logo = `<a href="${navHref('index.html')}" class="flex-shrink-0 flex items-center">
-        <img src="${getSiteLogo()}" alt="禾安" data-site-logo class="h-8 w-8 mr-2">
-        <span class="font-bold text-xl tracking-tight" id="site-name">禾安</span>
+    // 品牌名统一走 siteDisplayName()（后台配置优先），不再硬编码"禾安"
+    const logo = `<a href="${navHref('index.html')}" class="site-brand flex-shrink-0 flex items-center">
+        <img src="${getSiteLogo()}" alt="${escapeHtml(siteDisplayName())}" data-site-logo class="h-8 w-8 mr-2">
+        <span class="font-bold text-xl tracking-tight" id="site-name">${escapeHtml(siteDisplayName())}</span>
     </a>`;
 
     if (type === 'login') {
@@ -233,7 +285,7 @@ function renderFooter(contacts = {}) {
                title="ICP备案">ICP备案：${escapeHtml(icpFilingNo)}</a>` : ''}
             ${filingNo ? `<a href="${escapeHtml(filingUrl)}" target="_blank" rel="noreferrer"
                class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-primary transition-colors"
-               title="公安联网备案"><img src="${root}assets/beian-gongan.png" alt="公安联网备案" style="width:16px;height:16px;display:inline-block;vertical-align:middle">${escapeHtml(filingNo)}</a>` : ''}
+               title="公安联网备案"><img src="${root}/assets/beian-gongan.png" alt="公安联网备案" style="width:16px;height:16px;display:inline-block;vertical-align:middle">${escapeHtml(filingNo)}</a>` : ''}
         </div>` : '';
 
     footer.innerHTML = `
@@ -241,7 +293,7 @@ function renderFooter(contacts = {}) {
             <div class="w-full flex flex-col md:flex-row justify-between items-center gap-6">
                 <!-- 页脚只保留站点名+版权，品牌 logo 由导航栏统一展示，避免重复 -->
                 <div>
-                    <a href="${root}/index.html" class="font-bold text-lg leading-tight block">${SITE.name}</a>
+                    <a href="${root}/index.html" class="font-bold text-lg leading-tight block">${escapeHtml(footerBrandName())}</a>
                     <p class="text-xs text-slate-500 mt-0.5">&copy; ${new Date().getFullYear()} All rights reserved.</p>
                     </div>
                 ${beianHtml}
@@ -251,8 +303,8 @@ function renderFooter(contacts = {}) {
             </div>
             <!-- 政策链接：展示于备案号下方，全站页脚统一呈现 -->
             <div class="flex items-center gap-6 text-xs text-slate-400">
-                <a href="${root}user-policy.html" class="hover:text-primary transition-colors">用户政策</a>
-                <a href="${root}privacy-policy.html" class="hover:text-primary transition-colors">隐私协议</a>
+                <a href="${root}/user-policy.html" class="hover:text-primary transition-colors">用户政策</a>
+                <a href="${root}/privacy-policy.html" class="hover:text-primary transition-colors">隐私协议</a>
             </div>
         </div>
     `;

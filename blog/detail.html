@@ -15,7 +15,7 @@
         (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../js/common.css?v=5">
+    <link rel="stylesheet" href="../js/common.css?v=20260921d">
     <link rel="icon" href="data:,">
 </head>
 <body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
@@ -51,14 +51,14 @@
         </article>
     </main>
 
-    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12"></footer>
+    <!-- 详情页统一不显示页脚（有意为之） -->
 
     <script src="../vendor/localforage.min.js"></script>
-    <script src="../js/api.js"></script>
+    <script src="../js/api.js?v=20260921c"></script>
     <script src="../js/utils.js"></script>
-    <script src="../js/views.js"></script>
-    <script src="../js/theme.js"></script>
-    <script src="../js/auth.js"></script>
+    <script src="../js/views.js?v=20260921c"></script>
+    <script src="../js/theme.js?v=20260921d"></script>
+    <script src="../js/auth.js?v=20260921e"></script>
     <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
     <script src="../js/renderer.js?v=2"></script>
     <script>
