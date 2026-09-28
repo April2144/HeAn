@@ -1,0 +1,21 @@
+# robots.txt - 禾安 hacore.cn
+# 由 my_server/scripts/gen_sitemap.py 生成，请勿手改
+# ⚠️ 必须留在本地 HeAn/ 仓库（否则会被 deploy.sh 的 rsync --delete 清掉）
+
+User-agent: *
+Allow: /
+
+# 后台、接口与内部路径：不收录
+Disallow: /admin/
+Disallow: /login.html
+Disallow: /my_server/
+Disallow: /site/
+Disallow: /api/
+Disallow: /app/
+Disallow: /docs
+Disallow: /redoc
+Disallow: /openapi.json
+Disallow: /uploads/
+Disallow: /vendor/
+
+Sitemap: https://hacore.cn/sitemap.xml
