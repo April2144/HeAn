@@ -24,12 +24,17 @@ const SITE = {
     filing_no: '',                          // 备案号（后台配置，空则不显示页脚备案）
     filing_url: 'https://beian.mps.gov.cn', // 公安联网备案平台链接
     icp_filing_no: '',                      // ICP 备案号（后台配置，空则不显示）
-    icp_filing_url: 'https://beian.miit.gov.cn' // ICP 备案平台链接
+    icp_filing_url: 'https://beian.miit.gov.cn', // ICP 备案平台链接
+    // 协议配置（页脚展示）：链接 + 开关，默认关闭 —— 未配置（未勾选）即不显示
+    user_policy_url: '',                    // 用户政策页链接
+    enable_user_policy: 0,                  // 1=显示 0=不显示
+    privacy_policy_url: '',                 // 隐私协议页链接
+    enable_privacy_policy: 0                // 1=显示 0=不显示
 };
 
 // 本地兜底 TAG_MAP（扁平结构：groupName → {icon, class}）
 const TAG_MAP_FALLBACK = {
-    '技术博客': { icon: 'fa-code',       class: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' },
+    '技术分析': { icon: 'fa-code',       class: 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' },
     '商业洞察': { icon: 'fa-chart-line', class: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' },
     '个人思考': { icon: 'fa-lightbulb',  class: 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400' },
 };

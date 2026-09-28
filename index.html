@@ -27,7 +27,7 @@
     <section class="pt-32 pb-20 lg:pt-48 lg:pb-32 px-4">
         <div class="max-w-7xl mx-auto text-center fade-in-up">
             <div class="inline-block p-2 px-4 rounded-full bg-blue-100 text-primary text-sm font-semibold mb-6 dark:bg-blue-900/30">
-                👋 你好，我是独立开发者
+                👋 AI 时代的独立开发者
             </div>
             <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
                 构建 <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">数字产品</span><br>
@@ -36,7 +36,7 @@
             <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-600 dark:text-slate-400" id="hero-bio" style="display:none"></p>
             <div class="mt-10 flex justify-center gap-4">
                 <a href="#projects" class="btn-primary px-8 py-3 rounded-lg">
-                    查看作品
+                    看看产品
                 </a>
                 <a href="./about/index.html#about-cta-section" class="btn-ghost px-8 py-3 rounded-lg">
                     联系我
@@ -66,13 +66,13 @@
         </div>
     </section>
 
-    <!-- 项目作品 -->
+    <!-- 产品（只放用户能用 / 能下载的东西；没有则不显示该模块） -->
     <section id="projects" class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-end mb-12">
                 <div>
-                    <h2 class="text-3xl font-bold mb-4">精选项目</h2>
-                    <p class="text-slate-600 dark:text-slate-400">近期独立开发或参与的核心产品</p>
+                    <h2 class="text-3xl font-bold mb-4">精选产品</h2>
+                    <p class="text-slate-600 dark:text-slate-400">我做的、你能用的东西</p>
                 </div>
                 <a href="projects/index.html" class="text-primary hover:underline hidden md:block">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
             </div>
@@ -87,23 +87,16 @@
         </div>
     </section>
 
-    <!-- 博客预览 -->
-    <section class="pt-12 pb-16" id="blogs">
+    <!-- 最新博客（只含博客）—— 放在精选专题 / 精选项目之后 -->
+    <section id="updates" class="pt-12 pb-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-end mb-12">
-                <div>
-                    <h2 class="text-3xl font-bold mb-4">最新博文</h2>
-                    <p class="text-slate-600 dark:text-slate-400">同步自掘金与个人思考</p>
-                </div>
-                <a href="blog/index.html" class="text-primary hover:underline hidden md:block">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold mb-4">最新博客</h2>
+                <p class="text-slate-600 dark:text-slate-400">最近发布的博客文章</p>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-8" id="blog-grid">
-                <!-- 博客卡片将通过 JS 动态生成 -->
-            </div>
-
-            <div class="mt-8 text-center md:hidden">
-                <a href="blog/index.html" class="text-primary hover:underline">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
+            <div class="grid md:grid-cols-2 gap-4" id="updates-grid">
+                <!-- 由 JS 动态生成 -->
             </div>
         </div>
     </section>
@@ -182,9 +175,9 @@
 
         // ---------- 项目 & 博客数据 ----------
         async function loadHomeData() {
-            const [projectData, blogData] = await Promise.all([
+            const [projectData, updateData] = await Promise.all([
                 loadProjects(),
-                loadBlogs()
+                loadUpdates(8)
             ]);
 
             if (projectData) {
@@ -194,9 +187,15 @@
                     .filter(p => (p.is_featured ?? 0) === 1)
                     .sort((a, b) => (a.featured_order ?? 0) - (b.featured_order ?? 0));
                 if (!allProjects.length) {
-                    // 没有任何首页推荐项目时不显示该模块（不影响下方博客模块渲染）
+                    // 没有任何首页推荐产品时不显示该模块（不影响其它模块渲染）
                     const projectsSection = document.getElementById('projects');
                     if (projectsSection) projectsSection.style.display = 'none';
+                }
+                // Hero 的「看看产品」按钮：有产品时滚到产品区，没有时直接去产品页
+                // （否则产品区被隐藏后，按钮点了会没反应）
+                const heroProductBtn = document.querySelector('a[href="#projects"]');
+                if (heroProductBtn) {
+                    heroProductBtn.href = allProjects.length ? '#projects' : 'projects/index.html';
                 }
                 // 半空状态：仅 1 个推荐项目时去掉横向滚动/吸附，改为左对齐单卡片（避免孤卡 + 大片空白）
                 if (allProjects.length === 1) {
@@ -204,8 +203,11 @@
                     projectsGrid.style.overflowX = 'visible';
                 }
                 allProjects.forEach(project => {
+                    // 按平台类型决定跳转：app→商店链接，web→网站链接，都没有则进详情页（老项目兜底）
+                    const link = resolveProjectLink(project, `projects/detail.html?id=${project.id}&from=home`);
                     const card = document.createElement('a');
-                    card.href = `projects/detail.html?id=${project.id}&from=home`;
+                    card.href = link.href;
+                    if (link.external) { card.target = '_blank'; card.rel = 'noopener'; }
                     card.className = "block group flex-shrink-0 w-80 snap-start";
                     card.onclick = () => trackClick('click_project', 'open_project', 'project_card', 'home', 'project', project.id);
                     card.innerHTML = `
@@ -218,7 +220,7 @@
                                     ${getTagListHtml(project.tags)}
                                 </div>
                                 <h3 class="text-lg font-bold mb-2 group-hover:text-primary transition-theme-color line-clamp-1">${project.title}</h3>
-                                <p class="text-slate-600 dark:text-slate-400 text-sm mb-3 line-clamp-2">${tiptapJsonToPlainText(parseTiptapJson(project.description)).slice(0, 60) || '暂无描述'}</p>
+                                <p class="text-slate-600 dark:text-slate-400 text-sm line-clamp-2">${tiptapJsonToPlainText(parseTiptapJson(project.description)).slice(0, 60) || '暂无描述'}</p>
                             </div>
                         </article>
                     `;
@@ -226,39 +228,29 @@
                 });
             }
 
-            if (blogData) {
-                const blogGrid = document.getElementById('blog-grid');
-                // 只展示后台开启"首页推荐"的博文，并按推荐序号(featured_order)升序排列
-                const featuredBlogs = blogData.blogs
-                    .filter(b => (b.is_featured || 0) === 1)
-                    .sort((a, b) => (a.featured_order || 0) - (b.featured_order || 0));
-                if (!featuredBlogs.length) {
-                    // 没有任何首页推荐博文时不显示该模块（与精选项目逻辑一致）
-                    const blogsSection = document.getElementById('blogs');
-                    if (blogsSection) blogsSection.style.display = 'none';
+            if (updateData) {
+                // 最新博客：只含博客（后端已按时间倒序、只含已发布）
+                const grid = document.getElementById('updates-grid');
+                const items = (updateData.items || []).slice(0, 8);
+                if (!items.length) {
+                    const sec = document.getElementById('updates');
+                    if (sec) sec.style.display = 'none';
                 }
-                // 半空状态：仅 1 篇推荐博文时改为单列左对齐，避免 grid 出现空半格
-                if (featuredBlogs.length === 1) {
-                    blogGrid.classList.remove('md:grid-cols-2');
-                    blogGrid.classList.add('grid-cols-1', 'max-w-3xl');
-                }
-                featuredBlogs.slice(0, 2).forEach(blog => {
+                items.forEach(it => {
+                    // 只含博客（专题文章不进首页，避免与「精选专题」重复）
                     const card = document.createElement('a');
-                    card.href = `blog/detail.html?id=${blog.id}&from=home`;
-                    card.className = "card-hover flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-md border border-slate-100 dark:border-slate-700 group";
-                    card.onclick = () => trackClick('click_blog', 'open_blog', 'blog_card', 'home', 'blog', blog.id);
+                    card.href = `blog/detail.html?id=${it.id}&from=home`;
+                    card.className = "card-hover flex flex-col gap-2 bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-100 dark:border-slate-700 group";
+                    card.onclick = () => trackClick('click_blog', 'open_blog', 'blog_card', 'home', 'blog', it.id);
                     card.innerHTML = `
-                        <div class="flex-1">
-                            <div class="flex items-center gap-3 mb-3">
-                                ${getGroupBadgeHtml(blog.group)}
-                                <span class="text-sm text-slate-400">${blog.date}</span>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-theme-color">${blog.title}</h3>
-                            <p class="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4">${blog.summary}</p>
-                            <span class="text-primary text-sm font-medium hover:underline inline-flex items-center">阅读全文 <i class="fas fa-arrow-right ml-2 text-xs"></i></span>
+                        <div class="flex items-center gap-3">
+                            ${getCardTagHtml(it.group, it.tags)}
+                            <span class="text-sm text-slate-400">${it.date || ''}</span>
                         </div>
+                        <h3 class="text-base font-bold group-hover:text-primary transition-theme-color line-clamp-1">${it.title || ''}</h3>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm line-clamp-1">${it.summary || ''}</p>
                     `;
-                    blogGrid.appendChild(card);
+                    grid.appendChild(card);
                 });
             }
         }
@@ -272,6 +264,19 @@
                 console.error('[home] 初始化失败:', e);
             }
         })();
+    </script>
+    <!-- 百度「自动推送」：页面被访问时自动把 URL 推送给百度，加速收录 -->
+    <script>
+    (function () {
+        var bp = document.createElement('script');
+        var protocol = window.location.protocol.split(':')[0];
+        // https 与 http 使用不同的推送地址（官方要求）
+        bp.src = protocol === 'https'
+            ? 'https://zz.bdstatic.com/linksubmit/push.js'
+            : 'http://push.zhanzhang.baidu.com/push.js';
+        var first = document.getElementsByTagName('script')[0];
+        first.parentNode.insertBefore(bp, first);
+    })();
     </script>
 </body>
 </html>

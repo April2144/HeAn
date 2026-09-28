@@ -559,10 +559,28 @@
         (async () => {
             try {
                 await loadTopicDetailPage();
+                // 支持从首页「最新更新」直达某篇文章：topics/detail.html?series=1&article=5
+                const articleId = new URLSearchParams(location.search).get('article');
+                if (articleId && typeof selectArticle === 'function') {
+                    selectArticle(articleId);
+                }
             } catch (e) {
                 console.error('[topic detail] 加载失败:', e);
             }
         })();
         </script>
+    <!-- 百度「自动推送」：页面被访问时自动把 URL 推送给百度，加速收录 -->
+    <script>
+    (function () {
+        var bp = document.createElement('script');
+        var protocol = window.location.protocol.split(':')[0];
+        // https 与 http 使用不同的推送地址（官方要求）
+        bp.src = protocol === 'https'
+            ? 'https://zz.bdstatic.com/linksubmit/push.js'
+            : 'http://push.zhanzhang.baidu.com/push.js';
+        var first = document.getElementsByTagName('script')[0];
+        first.parentNode.insertBefore(bp, first);
+    })();
+    </script>
 </body>
 </html>

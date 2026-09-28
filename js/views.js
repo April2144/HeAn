@@ -11,7 +11,7 @@
 const NAV_TABS = [
     { key: 'home',     label: '首页',   href: 'index.html' },
     { key: 'topics',   label: '专题',   href: 'topics/index.html' },
-    { key: 'projects', label: '项目',   href: 'projects/index.html' },
+    { key: 'projects', label: '产品',   href: 'projects/index.html' },
     { key: 'blog',     label: '博客',   href: 'blog/index.html' },
     { key: 'about',    label: '关于我', href: 'about/index.html' },
 ];
@@ -245,6 +245,22 @@ function renderFooter(contacts = {}) {
     const icpFilingNo = ((window.SITE_CONFIG && window.SITE_CONFIG.icp_filing_no) || SITE.icp_filing_no || '').trim();
     const icpFilingUrl = (window.SITE_CONFIG && window.SITE_CONFIG.icp_filing_url) || SITE.icp_filing_url || 'https://beian.miit.gov.cn/';
 
+    // 协议链接（页脚展示）：由后台「协议配置」控制 —— 开关开启【且】链接非空才显示，
+    // 后台默认开关为 0（未配置），故新站/未配置时页脚不出现这两项。
+    const userPolicyUrl = ((window.SITE_CONFIG && window.SITE_CONFIG.user_policy_url) || SITE.user_policy_url || '').trim();
+    const privacyPolicyUrl = ((window.SITE_CONFIG && window.SITE_CONFIG.privacy_policy_url) || SITE.privacy_policy_url || '').trim();
+    const enableUserPolicy = Number((window.SITE_CONFIG && window.SITE_CONFIG.enable_user_policy) ?? (SITE.enable_user_policy ?? 0)) === 1;
+    const enablePrivacyPolicy = Number((window.SITE_CONFIG && window.SITE_CONFIG.enable_privacy_policy) ?? (SITE.enable_privacy_policy ?? 0)) === 1;
+    const showUserPolicy = enableUserPolicy && !!userPolicyUrl;
+    const showPrivacyPolicy = enablePrivacyPolicy && !!privacyPolicyUrl;
+    // 两个都未启用时整块不渲染（与备案号的 beianHtml 同款写法）
+    const policiesHtml = (showUserPolicy || showPrivacyPolicy) ? `
+            <!-- 政策链接：展示于备案号下方，由后台协议配置控制 -->
+            <div class="flex items-center gap-6 text-xs text-slate-400">
+                ${showUserPolicy ? `<a href="${escapeHtml(userPolicyUrl)}" class="hover:text-primary transition-colors">用户政策</a>` : ''}
+                ${showPrivacyPolicy ? `<a href="${escapeHtml(privacyPolicyUrl)}" class="hover:text-primary transition-colors">隐私协议</a>` : ''}
+            </div>` : '';
+
     const icons = [];
 
     // 邮箱：点击弹出联系意向弹窗
@@ -301,11 +317,7 @@ function renderFooter(contacts = {}) {
                     ${icons.reverse().join('')}
                 </div>
             </div>
-            <!-- 政策链接：展示于备案号下方，全站页脚统一呈现 -->
-            <div class="flex items-center gap-6 text-xs text-slate-400">
-                <a href="${root}/user-policy.html" class="hover:text-primary transition-colors">用户政策</a>
-                <a href="${root}/privacy-policy.html" class="hover:text-primary transition-colors">隐私协议</a>
-            </div>
+            ${policiesHtml}
         </div>
     `;
 

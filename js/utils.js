@@ -35,6 +35,12 @@ function getLabelsHtml(labels) {
     ).join('');
 }
 
+// 卡片用：有分组则显示分组徽章（分类标签），未分组则回退显示文章标签；两者都没有则不显示
+function getCardTagHtml(group, tags) {
+    if (group && group !== '未分组') return getGroupBadgeHtml(group);
+    return getLabelsHtml(tags);
+}
+
 // 应用分组颜色到元素（用于详情页顶部徽章）
 function applyGroupColor(el, group) {
     if (!el || !TAG_MAP[group]) return;
@@ -77,4 +83,24 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+}
+
+/**
+ * 解析项目卡片点击后的跳转目标（首页 / 项目列表页共用）。
+ *
+ * 规则（统一走「演示链接」，不再区分 App / Web）：
+ *   有 demo_url → 新窗口打开产品（网站或应用商店都可以填在这里）
+ *   没有 demo_url → 进项目详情页（兜底，避免点了没反应）
+ *
+ * @param {object} project    项目对象（含 demo_url）
+ * @param {string} detailHref 兜底详情页链接
+ * @returns {{href: string, external: boolean, label: string}}
+ */
+function resolveProjectLink(project, detailHref) {
+    // 产品卡片（产品列表 / 首页精选项目）统一进入「二级详情页」，不再直接跳 demo_url；
+    // 产品页的真实入口放在详情页的「在线预览」按钮上（见 projects/detail.html，用 project.demo_url）。
+    // 如需恢复「有 demo_url 时卡片直跳外链」，放开下面两行即可。
+    // const demo = String((project && project.demo_url) || '').trim();
+    // if (demo) return { href: demo, external: true, label: '查看产品' };
+    return { href: detailHref, external: false, label: '查看详情' };
 }

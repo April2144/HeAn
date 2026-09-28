@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>项目作品 | 禾安</title>
-    <meta name="description" content="禾安的项目作品展示">
+    <title>产品 | 禾安</title>
+    <meta name="description" content="禾安的产品展示：能用、能下载的东西">
     <!-- 暗黑模式防闪烁 -->
     <script>
         (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
@@ -49,8 +49,8 @@
             if (projects.length === 0) {
                 renderPageEmptyState(page, {
                     icon: 'fa-rocket',
-                    title: '暂无项目内容',
-                    description: '项目内容正在筹备中，敬请期待。',
+                    title: '产品开发中，敬请期待',
+                    description: '第一个产品正在路上。',
                     links: [
                         { href: navHref('topics/index.html'), label: '专题' },
                         { href: navHref('blog/index.html'), label: '博客文章' },
@@ -84,11 +84,14 @@
                         <div class="flex items-center gap-3 mb-8">
                             <i class="fas ${icon} text-primary text-xl"></i>
                             <h2 class="text-2xl font-bold">${title}</h2>
-                            <span class="text-sm text-slate-400">${items.length} 个项目</span>
+                            <span class="text-sm text-slate-400">${items.length} 个产品</span>
                         </div>
                         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            ${items.map(project => `
-                                <a href="detail.html?id=${project.id}&from=projects" class="block group">
+                            ${items.map(project => {
+                                // 按平台类型决定跳转：app→商店链接，web→网站链接，都没有则进详情页
+                                const link = resolveProjectLink(project, `detail.html?id=${project.id}&from=projects`);
+                                return `
+                                <a href="${link.href}"${link.external ? ' target="_blank" rel="noopener"' : ''} class="block group">
                                     <article class="card-hover bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700 h-full">
                                         <div class="overflow-hidden aspect-[16/9]" style="aspect-ratio:16/9">
                                             <img src="${project.cover_image}" alt="${project.title}" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" style="object-fit:cover;object-position:center">
@@ -102,7 +105,8 @@
                                         </div>
                                     </article>
                                 </a>
-                            `).join('')}
+                            `;
+                            }).join('')}
                         </div>
                     </div>
                 `;
@@ -118,6 +122,19 @@
                 console.error('[projects] 渲染失败:', e);
             }
         })();
+    </script>
+    <!-- 百度「自动推送」：页面被访问时自动把 URL 推送给百度，加速收录 -->
+    <script>
+    (function () {
+        var bp = document.createElement('script');
+        var protocol = window.location.protocol.split(':')[0];
+        // https 与 http 使用不同的推送地址（官方要求）
+        bp.src = protocol === 'https'
+            ? 'https://zz.bdstatic.com/linksubmit/push.js'
+            : 'http://push.zhanzhang.baidu.com/push.js';
+        var first = document.getElementsByTagName('script')[0];
+        first.parentNode.insertBefore(bp, first);
+    })();
     </script>
 </body>
 </html>

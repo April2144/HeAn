@@ -22,6 +22,19 @@ const API_BASE = (() => {
     return ''; // 生产环境（hacore.cn）同源请求
 })();
 
+/**
+ * 是否存在「可上报的后端」。
+ *
+ * ⚠️ 不能用 `if (!API_BASE)` 判断：生产环境是同域部署，API_BASE **就是空串（合法）**，
+ * 那样会把「同域部署」误判成「本地无后端静态环境」→ 全站埋点（pageview / click）静默失效 ✗
+ * （这也是后台统计里 PV/UV/点击一直为空的真正原因）。
+ * 判定标准改为「页面是否运行在 http(s) 下」：是则有后端（同域或自动检测出的地址）。
+ */
+const HAS_BACKEND = (() => {
+    const proto = window.location.protocol;
+    return proto === 'http:' || proto === 'https:';
+})();
+
 // 只读 Token（JWT），用于 API 鉴权
 // 生成方式：python3 -c "import jwt; print(jwt.encode({'role':'read'}, '你的ACCESS_TOKEN_SECRET', algorithm='HS256'))"
 /**
@@ -94,7 +107,7 @@ function _buildHeaders() {
 //   trackPageView('blog', 12) / trackPageView('home', 0)
 function trackPageView(pageType, pageId = 0, stayDuration = 0) {
     try {
-        if (!API_BASE) return; // 本地静态环境（无后端）不上报
+        if (!HAS_BACKEND) return; // 仅本地静态环境（file:// 打开，无后端）不上报
         const payload = {
             path: window.location.pathname,
             page_type: pageType,
@@ -117,7 +130,7 @@ function trackPageView(pageType, pageId = 0, stayDuration = 0) {
 //   trackClick('click_follow_btn', 'follow', 'zhuanti_card', 'home')
 function trackClick(action, event, section = '', page = '', targetType = '', targetId = 0, extra = {}) {
     try {
-        if (!API_BASE) return;
+        if (!HAS_BACKEND) return;
         const payload = {
             action_type: 'click',
             target_type: targetType || section || '',
@@ -169,9 +182,16 @@ var _PAGE_TYPE_MAP = {
     about: 'about',
 };
 function autoTrackPageView(activePage) {
-    const pageType = _PAGE_TYPE_MAP[activePage] || activePage || 'page';
-    let pageId = 0;
     const params = new URLSearchParams(window.location.search);
+    // 专题详情页的 page_type 应按「series」归类。
+    // 不能用 activePage 判定：它的值是 'topics'（同时用于导航 tab 高亮，不能改），
+    // 会误标成 topics_list，导致后台统计里专题 PV/UV 被算进「专题列表」。
+    // 故统一按 URL 特征判定：带 ?series= 的页面即为专题详情。
+    const isSeriesDetail = !!params.get('series');
+    const pageType = isSeriesDetail
+        ? 'series'
+        : (_PAGE_TYPE_MAP[activePage] || activePage || 'page');
+    let pageId = 0;
     const id = params.get('id') || params.get('series') || params.get('article') || params.get('topic');
     if (id) pageId = parseInt(id) || 0;
     trackPageViewAuto(pageType, pageId);
@@ -337,6 +357,22 @@ async function loadProject(projectId) {
     return local.projects.find(p => p.id === projectId) || local.projects[0];
 }
 
+// ---------- 首页「最新更新」（混排博客 + 专题文章） ----------
+async function loadUpdates(limit = 8) {
+    // 后端已按时间倒序混排，且只返回已发布内容
+    const apiData = await apiGet(`/site/updates?limit=${limit}`);
+    if (apiData && apiData.items) {
+        await cachePut('updates', apiData);   // 联网成功 → 写入本地缓存
+        return apiData;
+    }
+
+    // 降级：本地缓存（断网时仍能显示最近一次同步到的更新）
+    const cached = await cacheGet('updates');
+    if (cached && cached.items) return cached;
+
+    return { items: [], total: 0 };
+}
+
 // ---------- 博客 ----------
 async function loadBlogs(tag) {
     // 优先 API（新分组结构，只获取已发布内容，后端不再支持 tag 参数）
@@ -446,7 +482,15 @@ async function loadBaseConfig() {
 
     // 第二层降级：使用 config.js 中的 SITE 对象
     const fallback = {
-        config: { site_name: SITE.name, bio: SITE.bio, logo_url: '', seo_title: '', seo_description: '', filing_no: SITE.filing_no || '', filing_url: SITE.filing_url || '' },
+        config: {
+            site_name: SITE.name, bio: SITE.bio, logo_url: '', seo_title: '', seo_description: '',
+            filing_no: SITE.filing_no || '', filing_url: SITE.filing_url || '',
+            // 协议配置：接口不可用时的兜底（默认关闭 → 页脚不显示）
+            user_policy_url: SITE.user_policy_url || '',
+            enable_user_policy: Number(SITE.enable_user_policy ?? 0),
+            privacy_policy_url: SITE.privacy_policy_url || '',
+            enable_privacy_policy: Number(SITE.enable_privacy_policy ?? 0),
+        },
         services: []
     };
     window.SITE_CONFIG = fallback.config;

@@ -58,7 +58,12 @@
         function renderBlogs(filter = 'all') {
             const blogList = document.getElementById('blog-list');
             const emptyState = document.getElementById('empty-state');
-            const filtered = filter === 'all' ? blogsData : blogsData.filter(b => b.group === filter);
+            // 按发布时间倒序（组内、跨组一致）：最新发布的排最上面。
+            // date 形如 YYYY-MM-DD，字典序即时间序；缺失时回退 published_at / created_at。
+            const dateKey = (b) => (b.date || b.published_at || b.created_at || '').slice(0, 10);
+            const filtered = (filter === 'all' ? blogsData : blogsData.filter(b => b.group === filter))
+                .slice()
+                .sort((a, b) => dateKey(b).localeCompare(dateKey(a)));
             if (filtered.length === 0) { blogList.innerHTML = ''; emptyState.classList.remove('hidden'); return; }
             emptyState.classList.add('hidden');
             blogList.innerHTML = filtered.map(blog => `
@@ -67,7 +72,7 @@
                         <div class="flex flex-col md:flex-row md:items-start gap-4">
                             <div class="flex-1">
                                 <div class="flex items-center gap-3 mb-3">
-                                    ${getGroupBadgeHtml(blog.group)}
+                                    ${getCardTagHtml(blog.group, blog.tags)}
                                     <span class="text-sm text-slate-400">${blog.date}</span>
                                 </div>
                                 <h2 class="text-xl md:text-2xl font-bold mb-3 group-hover:text-primary transition-theme-color">${blog.title}</h2>
@@ -102,7 +107,7 @@
                         description: '博客内容正在筹备中，敬请期待。',
                         links: [
                             { href: navHref('topics/index.html'), label: '专题' },
-                            { href: navHref('projects/index.html'), label: '项目作品' },
+                            { href: navHref('projects/index.html'), label: '产品' },
                         ],
                     });
                 }
@@ -130,7 +135,7 @@
                     dynamicGroups.push(b.group);
                 }
             });
-            const groupIcons = { '技术博客': 'fa-code', '商业洞察': 'fa-chart-line', '个人思考': 'fa-lightbulb' };
+            const groupIcons = { '技术分析': 'fa-code', '商业洞察': 'fa-chart-line', '个人思考': 'fa-lightbulb' };
             dynamicGroups.forEach(group => {
                 const icon = groupIcons[group] || 'fa-tag';
                 const btn = document.createElement('button');
@@ -156,6 +161,19 @@
                 console.error('[blog] 初始化失败:', e);
             }
         })();
+    </script>
+    <!-- 百度「自动推送」：页面被访问时自动把 URL 推送给百度，加速收录 -->
+    <script>
+    (function () {
+        var bp = document.createElement('script');
+        var protocol = window.location.protocol.split(':')[0];
+        // https 与 http 使用不同的推送地址（官方要求）
+        bp.src = protocol === 'https'
+            ? 'https://zz.bdstatic.com/linksubmit/push.js'
+            : 'http://push.zhanzhang.baidu.com/push.js';
+        var first = document.getElementsByTagName('script')[0];
+        first.parentNode.insertBefore(bp, first);
+    })();
     </script>
 </body>
 </html>
