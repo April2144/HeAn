@@ -363,8 +363,23 @@ async function loadTopicDetailPage() {
     // 过滤掉没有任何已发布文章的章节（左侧目录不展示空章节文件夹）
     currentTopic.chapters = (currentTopic.chapters || []).filter(lv => (lv.articles || []).length > 0);
 
-    // 更新页面标题
-    document.title = `${currentTopic.name} | 禾安`;
+    // 更新页面标题 + SEO（真实摘要 / 分享卡片 / 结构化数据，统一走 seo.js 单点）✓
+    if (window.HeAnSeo) {
+        const _topicDesc = HeAnSeo.plainText(currentTopic.description);
+        HeAnSeo.apply({
+            title: `${currentTopic.name} | 禾安`,
+            description: _topicDesc,
+            image: currentTopic.cover_image || '',
+            type: 'article',
+            jsonLd: HeAnSeo.jsonLd.course({
+                title: currentTopic.name,
+                description: _topicDesc,
+                image: currentTopic.cover_image || '',
+            }),
+        });
+    } else {
+        document.title = `${currentTopic.name} | 禾安`;
+    }
 
     // 隐形埋点：专题详情曝光 + 开始学习（前端不展示，仅上报后端统计）
     const seriesId = parseInt(topicId) || 0;

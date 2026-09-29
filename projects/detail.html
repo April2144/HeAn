@@ -84,6 +84,7 @@
     <script src="../js/api.js?v=20260921c"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/views.js?v=20260921c"></script>
+    <script src="../js/seo.js?v=1"></script>
     <script src="../js/theme.js?v=20260921d"></script>
     <script src="../js/auth.js?v=20260921e"></script>
     <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
@@ -97,7 +98,25 @@
             const project = await loadProject(projectId);
             if (!project) return;
 
-            document.title = `${project.title} | ${SITE.name}`;
+            // SEO：标题 + 摘要（description 是 Tiptap JSON，必须转纯文本）+ 分享卡片 + 结构化数据 ✓
+            const _projDesc = window.HeAnSeo ? HeAnSeo.plainText(project.description) : '';
+            if (window.HeAnSeo) {
+                HeAnSeo.apply({
+                    title: `${project.title} | ${SITE.name}`,
+                    description: _projDesc,
+                    image: project.cover_image || '',
+                    type: 'website',
+                    jsonLd: HeAnSeo.jsonLd.product({
+                        title: project.title,
+                        description: _projDesc,
+                        image: project.cover_image || '',
+                        version: project.version || '',
+                        date: project.published_at || project.created_at || '',
+                    }),
+                });
+            } else {
+                document.title = `${project.title} | ${SITE.name}`;
+            }
             document.getElementById('project-image').src = project.cover_image;
             document.getElementById('project-image').alt = project.title;
             document.getElementById('project-title').textContent = project.title;

@@ -57,6 +57,7 @@
     <script src="../js/api.js?v=20260921c"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/views.js?v=20260921c"></script>
+    <script src="../js/seo.js?v=1"></script>
     <script src="../js/theme.js?v=20260921d"></script>
     <script src="../js/auth.js?v=20260921e"></script>
     <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
@@ -70,7 +71,25 @@
             const blog = await loadBlog(blogId);
             if (!blog) return;
 
-            document.title = `${blog.title} | ${SITE.name}`;
+            // SEO：标题 + 真实摘要 + 分享卡片 + 结构化数据（统一走 seo.js 单点）✓
+            // ⚠️ 原先只改了 document.title，description 还是写死的「禾安的博客文章」✗
+            if (window.HeAnSeo) {
+                HeAnSeo.apply({
+                    title: `${blog.title} | ${SITE.name}`,
+                    description: blog.summary || '',
+                    image: blog.cover_image || '',
+                    type: 'article',
+                    jsonLd: HeAnSeo.jsonLd.article({
+                        title: blog.title,
+                        description: blog.summary || '',
+                        image: blog.cover_image || '',
+                        date: blog.date || '',
+                        tags: blog.tags || [],
+                    }),
+                });
+            } else {
+                document.title = `${blog.title} | ${SITE.name}`;
+            }
             document.getElementById('article-title').textContent = blog.title;
             document.getElementById('article-date').textContent = blog.date;
             // 封面图：无封面时不显示占位图，仅在有封面时渲染

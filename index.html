@@ -4,7 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>禾安 | 独立开发者 & 技术博主</title>
-    <meta name="description" content="" id="meta-desc">
+    <meta name="description" content="禾安（禾安的笔记）—— 独立开发者，专注 iOS 移动端开发，分享技术、产品与独立开发思考。" id="meta-desc">
+    <!-- SEO：规范链接 + 分享卡片（静态写死 → 爬虫不执行 JS 也能读到 ✓；JS 之后会用后台配置再覆盖一次） -->
+    <link rel="canonical" href="https://hacore.cn/">
+    <meta property="og:site_name" content="禾安">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="禾安 | 独立开发者 &amp; 技术博主">
+    <meta property="og:description" content="独立开发者，专注 iOS 移动端开发，分享技术、产品与独立开发思考。">
+    <meta property="og:url" content="https://hacore.cn/">
+    <meta property="og:image" content="https://hacore.cn/assets/logo-mark.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="禾安 | 独立开发者 &amp; 技术博主">
+    <meta name="twitter:description" content="独立开发者，专注 iOS 移动端开发，分享技术、产品与独立开发思考。">
+    <meta name="twitter:image" content="https://hacore.cn/assets/logo-mark.svg">
     <!-- 暗黑模式防闪烁 -->
     <script>
         (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
@@ -108,6 +120,7 @@
     <script src="./js/api.js?v=20260921c"></script>
     <script src="./js/utils.js"></script>
     <script src="./js/views.js?v=20260921c"></script>
+    <script src="./js/seo.js?v=1"></script>
     <script src="./js/topics.js?v=2"></script>
     <script src="./js/theme.js?v=20260921d"></script>
     <script src="./js/auth.js?v=20260921e"></script>
@@ -157,8 +170,21 @@
 
             // 网站名称：品牌名改由 views.js 的 applySiteName() 单点统一（原先这里各写一份，导致各页面显示不一致）
             if (cfg.site_name) {
-                document.title = cfg.seo_title || `${cfg.site_name} | 独立开发者 & 技术博主`;
-                document.getElementById('meta-desc').content = cfg.seo_description || '';
+                const seoTitle = cfg.seo_title || `${cfg.site_name} | 独立开发者 & 技术博主`;
+                const seoDesc = cfg.seo_description || '独立开发者，专注 iOS 移动端开发，分享技术、产品与独立开发思考。';
+                document.title = seoTitle;
+                document.getElementById('meta-desc').content = seoDesc;
+                // 分享卡片 / 规范链接 / 结构化数据统一走 seo.js 单点 ✓
+                if (window.HeAnSeo) {
+                    HeAnSeo.apply({
+                        title: seoTitle,
+                        description: seoDesc,
+                        jsonLd: [
+                            HeAnSeo.jsonLd.website(seoDesc),
+                            HeAnSeo.jsonLd.person({ bio: cfg.bio, tech_stacks: about.tech_stacks || [] }),
+                        ],
+                    });
+                }
             }
 
             // Hero 描述
