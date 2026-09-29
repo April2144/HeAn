@@ -76,7 +76,7 @@
             // ⚠️ 原先只改了 document.title，description 还是写死的「禾安的博客文章」✗
             if (window.HeAnSeo) {
                 HeAnSeo.apply({
-                    title: `${blog.title} | ${SITE.name}`,
+                    title: `${blog.title} | ${siteDisplayName()}`,
                     description: blog.summary || '',
                     image: blog.cover_image || '',
                     type: 'article',
@@ -91,7 +91,7 @@
                     }),
                 });
             } else {
-                document.title = `${blog.title} | ${SITE.name}`;
+                document.title = `${blog.title} | ${siteDisplayName()}`;
             }
             document.getElementById('article-title').textContent = blog.title;
             document.getElementById('article-date').textContent = blog.date;

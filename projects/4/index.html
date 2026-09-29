@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>批量重命名工具 | 禾安</title>
+    <title>批量重命名工具 | 禾安的笔记</title>
     <meta name="description" content="在浏览器里直接选一个文件夹，按规则批量改名，全程不上传任何文件。支持正则替换、序号补零、前缀后缀、大小写转换等规则；改名前一键预览，确认后可就地重命名。若浏览器不支持直接改名，也能导出一份重命名脚本在本地执行。">
     <link rel="canonical" href="https://hacore.cn/projects/4/">
-    <meta property="og:site_name" content="禾安">
+    <meta property="og:site_name" content="禾安的笔记">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="批量重命名工具 | 禾安">
+    <meta property="og:title" content="批量重命名工具 | 禾安的笔记">
     <meta property="og:description" content="在浏览器里直接选一个文件夹，按规则批量改名，全程不上传任何文件。支持正则替换、序号补零、前缀后缀、大小写转换等规则；改名前一键预览，确认后可就地重命名。若浏览器不支持直接改名，也能导出一份重命名脚本在本地执行。">
     <meta property="og:url" content="https://hacore.cn/projects/4/">
     <meta property="og:image" content="https://hacore.cn/uploads/images/2026/09/27/ff6583c5664da63e32ca232d7d780186.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="批量重命名工具 | 禾安">
+    <meta name="twitter:title" content="批量重命名工具 | 禾安的笔记">
     <meta name="twitter:description" content="在浏览器里直接选一个文件夹，按规则批量改名，全程不上传任何文件。支持正则替换、序号补零、前缀后缀、大小写转换等规则；改名前一键预览，确认后可就地重命名。若浏览器不支持直接改名，也能导出一份重命名脚本在本地执行。">
     <meta name="twitter:image" content="https://hacore.cn/uploads/images/2026/09/27/ff6583c5664da63e32ca232d7d780186.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"批量重命名工具","description":"在浏览器里直接选一个文件夹，按规则批量改名，全程不上传任何文件。支持正则替换、序号补零、前缀后缀、大小写转换等规则；改名前一键预览，确认后可就地重命名。若浏览器不支持直接改名，也能导出一份重命名脚本在本地执行。","image":"https://hacore.cn/uploads/images/2026/09/27/ff6583c5664da63e32ca232d7d780186.png","url":"https://hacore.cn/projects/4/","applicationCategory":"WebApplication","operatingSystem":"Any","softwareVersion":"1.0.0","datePublished":"2026-09-27","author":{"@type":"Person","name":"禾安","url":"https://hacore.cn/about/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"批量重命名工具","description":"在浏览器里直接选一个文件夹，按规则批量改名，全程不上传任何文件。支持正则替换、序号补零、前缀后缀、大小写转换等规则；改名前一键预览，确认后可就地重命名。若浏览器不支持直接改名，也能导出一份重命名脚本在本地执行。","image":"https://hacore.cn/uploads/images/2026/09/27/ff6583c5664da63e32ca232d7d780186.png","url":"https://hacore.cn/projects/4/","applicationCategory":"WebApplication","operatingSystem":"Any","softwareVersion":"1.0.0","datePublished":"2026-09-27","author":{"@type":"Person","name":"禾安的笔记","url":"https://hacore.cn/about/"}}</script>
     <script src="../../js/config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -120,7 +120,7 @@
             const _projDesc = window.HeAnSeo ? HeAnSeo.plainText(project.description) : '';
             if (window.HeAnSeo) {
                 HeAnSeo.apply({
-                    title: `${project.title} | ${SITE.name}`,
+                    title: `${project.title} | ${siteDisplayName()}`,
                     description: _projDesc,
                     image: project.cover_image || '',
                     type: 'website',
@@ -135,7 +135,7 @@
                     }),
                 });
             } else {
-                document.title = `${project.title} | ${SITE.name}`;
+                document.title = `${project.title} | ${siteDisplayName()}`;
             }
             document.getElementById('project-image').src = project.cover_image;
             document.getElementById('project-image').alt = project.title;

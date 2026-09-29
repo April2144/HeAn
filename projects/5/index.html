@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>图片压缩工具 | 禾安</title>
+    <title>图片压缩工具 | 禾安的笔记</title>
     <meta name="description" content="不用装 Python，打开网页就能批量压缩图片。支持有损 / 无损两种模式，PNG 走 pngquant 优化（实测可压掉 70% 以上）。图片会上传到服务器处理，结果 2 小时后自动删除。">
     <link rel="canonical" href="https://hacore.cn/projects/5/">
-    <meta property="og:site_name" content="禾安">
+    <meta property="og:site_name" content="禾安的笔记">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="图片压缩工具 | 禾安">
+    <meta property="og:title" content="图片压缩工具 | 禾安的笔记">
     <meta property="og:description" content="不用装 Python，打开网页就能批量压缩图片。支持有损 / 无损两种模式，PNG 走 pngquant 优化（实测可压掉 70% 以上）。图片会上传到服务器处理，结果 2 小时后自动删除。">
     <meta property="og:url" content="https://hacore.cn/projects/5/">
     <meta property="og:image" content="https://hacore.cn/uploads/images/2026/09/28/695c61c79f22ea6b7b9fe199db8465c6.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="图片压缩工具 | 禾安">
+    <meta name="twitter:title" content="图片压缩工具 | 禾安的笔记">
     <meta name="twitter:description" content="不用装 Python，打开网页就能批量压缩图片。支持有损 / 无损两种模式，PNG 走 pngquant 优化（实测可压掉 70% 以上）。图片会上传到服务器处理，结果 2 小时后自动删除。">
     <meta name="twitter:image" content="https://hacore.cn/uploads/images/2026/09/28/695c61c79f22ea6b7b9fe199db8465c6.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"图片压缩工具","description":"不用装 Python，打开网页就能批量压缩图片。支持有损 / 无损两种模式，PNG 走 pngquant 优化（实测可压掉 70% 以上）。图片会上传到服务器处理，结果 2 小时后自动删除。","image":"https://hacore.cn/uploads/images/2026/09/28/695c61c79f22ea6b7b9fe199db8465c6.png","url":"https://hacore.cn/projects/5/","applicationCategory":"WebApplication","operatingSystem":"Any","softwareVersion":"1.0.0","datePublished":"2026-09-28","author":{"@type":"Person","name":"禾安","url":"https://hacore.cn/about/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"图片压缩工具","description":"不用装 Python，打开网页就能批量压缩图片。支持有损 / 无损两种模式，PNG 走 pngquant 优化（实测可压掉 70% 以上）。图片会上传到服务器处理，结果 2 小时后自动删除。","image":"https://hacore.cn/uploads/images/2026/09/28/695c61c79f22ea6b7b9fe199db8465c6.png","url":"https://hacore.cn/projects/5/","applicationCategory":"WebApplication","operatingSystem":"Any","softwareVersion":"1.0.0","datePublished":"2026-09-28","author":{"@type":"Person","name":"禾安的笔记","url":"https://hacore.cn/about/"}}</script>
     <script src="../../js/config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -120,7 +120,7 @@
             const _projDesc = window.HeAnSeo ? HeAnSeo.plainText(project.description) : '';
             if (window.HeAnSeo) {
                 HeAnSeo.apply({
-                    title: `${project.title} | ${SITE.name}`,
+                    title: `${project.title} | ${siteDisplayName()}`,
                     description: _projDesc,
                     image: project.cover_image || '',
                     type: 'website',
@@ -135,7 +135,7 @@
                     }),
                 });
             } else {
-                document.title = `${project.title} | ${SITE.name}`;
+                document.title = `${project.title} | ${siteDisplayName()}`;
             }
             document.getElementById('project-image').src = project.cover_image;
             document.getElementById('project-image').alt = project.title;

@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>欢迎来到禾安的个人站 | 禾安</title>
+    <title>欢迎来到禾安的个人站 | 禾安的笔记</title>
     <meta name="description" content="禾安个人站的开篇导览：这里有哪些板块，以及你能从中拿走什么。">
     <link rel="canonical" href="https://hacore.cn/blog/2/">
-    <meta property="og:site_name" content="禾安">
+    <meta property="og:site_name" content="禾安的笔记">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="欢迎来到禾安的个人站 | 禾安">
+    <meta property="og:title" content="欢迎来到禾安的个人站 | 禾安的笔记">
     <meta property="og:description" content="禾安个人站的开篇导览：这里有哪些板块，以及你能从中拿走什么。">
     <meta property="og:url" content="https://hacore.cn/blog/2/">
     <meta property="og:image" content="https://hacore.cn/assets/img/og-cover.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="欢迎来到禾安的个人站 | 禾安">
+    <meta name="twitter:title" content="欢迎来到禾安的个人站 | 禾安的笔记">
     <meta name="twitter:description" content="禾安个人站的开篇导览：这里有哪些板块，以及你能从中拿走什么。">
     <meta name="twitter:image" content="https://hacore.cn/assets/img/og-cover.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"欢迎来到禾安的个人站","description":"禾安个人站的开篇导览：这里有哪些板块，以及你能从中拿走什么。","image":"https://hacore.cn/assets/img/og-cover.png","datePublished":"2026-09-20","dateModified":"2026-09-20","author":{"@type":"Person","name":"禾安","url":"https://hacore.cn/about/"},"publisher":{"@type":"Organization","name":"禾安","url":"https://hacore.cn/"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://hacore.cn/blog/2/"},"keywords":["公告","站点导览"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"欢迎来到禾安的个人站","description":"禾安个人站的开篇导览：这里有哪些板块，以及你能从中拿走什么。","image":"https://hacore.cn/assets/img/og-cover.png","datePublished":"2026-09-20","dateModified":"2026-09-20","author":{"@type":"Person","name":"禾安的笔记","url":"https://hacore.cn/about/"},"publisher":{"@type":"Organization","name":"禾安的笔记","url":"https://hacore.cn/"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://hacore.cn/blog/2/"},"keywords":["公告","站点导览"]}</script>
     <script src="../../js/config.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -88,7 +88,7 @@
             // ⚠️ 原先只改了 document.title，description 还是写死的「禾安的博客文章」✗
             if (window.HeAnSeo) {
                 HeAnSeo.apply({
-                    title: `${blog.title} | ${SITE.name}`,
+                    title: `${blog.title} | ${siteDisplayName()}`,
                     description: blog.summary || '',
                     image: blog.cover_image || '',
                     type: 'article',
@@ -103,7 +103,7 @@
                     }),
                 });
             } else {
-                document.title = `${blog.title} | ${SITE.name}`;
+                document.title = `${blog.title} | ${siteDisplayName()}`;
             }
             document.getElementById('article-title').textContent = blog.title;
             document.getElementById('article-date').textContent = blog.date;

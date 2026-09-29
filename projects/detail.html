@@ -103,7 +103,7 @@
             const _projDesc = window.HeAnSeo ? HeAnSeo.plainText(project.description) : '';
             if (window.HeAnSeo) {
                 HeAnSeo.apply({
-                    title: `${project.title} | ${SITE.name}`,
+                    title: `${project.title} | ${siteDisplayName()}`,
                     description: _projDesc,
                     image: project.cover_image || '',
                     type: 'website',
@@ -118,7 +118,7 @@
                     }),
                 });
             } else {
-                document.title = `${project.title} | ${SITE.name}`;
+                document.title = `${project.title} | ${siteDisplayName()}`;
             }
             document.getElementById('project-image').src = project.cover_image;
             document.getElementById('project-image').alt = project.title;

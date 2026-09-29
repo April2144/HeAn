@@ -13,7 +13,14 @@
 (function () {
     'use strict';
 
-    var SITE_NAME = '禾安';
+    /**
+     * 站点显示名（⚠️ 不硬编码）：唯一来源是 views.js 的 siteDisplayName()
+     * （后台「网站配置」的 site_name → localStorage 缓存 → config.js 静态兜底 ✓）
+     */
+    function siteName() {
+        if (typeof siteDisplayName === 'function') return siteDisplayName();
+        return (typeof SITE !== 'undefined' && SITE.name) || '禾安';
+    }
     // 兜底分享图：1200×630 品牌封面（微信等对 svg 卡片图支持差，故用 PNG ✓）
     var DEFAULT_IMAGE = '/assets/img/og-cover.png';
     // 允许保留在规范 URL 里的业务参数；其余（from / theme / utm_* 等）一律剔除，避免同一内容被算成多个页面 ✗
@@ -93,7 +100,7 @@
         upsertMeta('name', 'description', desc);
         upsertLink('canonical', url);
 
-        upsertMeta('property', 'og:site_name', SITE_NAME);
+        upsertMeta('property', 'og:site_name', siteName());
         upsertMeta('property', 'og:type', type);
         upsertMeta('property', 'og:title', title);
         upsertMeta('property', 'og:description', desc);
@@ -115,7 +122,7 @@
         return {
             '@context': 'https://schema.org',
             '@type': 'WebSite',
-            name: SITE_NAME,
+            name: siteName(),
             alternateName: 'hacore.cn',
             url: siteOrigin() + '/',
             description: description || ''
@@ -128,7 +135,7 @@
         return {
             '@context': 'https://schema.org',
             '@type': 'Person',
-            name: SITE_NAME,
+            name: siteName(),
             url: siteOrigin() + '/about/',
             jobTitle: about.job_title || '独立开发者',
             description: about.bio || '',
@@ -147,8 +154,8 @@
             image: absolutize(o.image),
             datePublished: o.date || '',
             dateModified: o.date || '',
-            author: { '@type': 'Person', name: SITE_NAME, url: siteOrigin() + '/about/' },
-            publisher: { '@type': 'Organization', name: SITE_NAME, url: siteOrigin() + '/' },
+            author: { '@type': 'Person', name: siteName(), url: siteOrigin() + '/about/' },
+            publisher: { '@type': 'Organization', name: siteName(), url: siteOrigin() + '/' },
             mainEntityOfPage: { '@type': 'WebPage', '@id': o.url || canonicalUrl() },
             keywords: o.tags || []
         };
@@ -166,7 +173,7 @@
             url: o.url || canonicalUrl(),
             applicationCategory: 'WebApplication',
             operatingSystem: 'Any',
-            author: { '@type': 'Person', name: SITE_NAME, url: siteOrigin() + '/about/' }
+            author: { '@type': 'Person', name: siteName(), url: siteOrigin() + '/about/' }
         };
         if (o.version) app.softwareVersion = o.version;
         if (o.date) app.datePublished = o.date;
@@ -183,7 +190,7 @@
             description: o.description || '',
             image: absolutize(o.image),
             url: o.url || canonicalUrl(),
-            provider: { '@type': 'Person', name: SITE_NAME, url: siteOrigin() + '/about/' }
+            provider: { '@type': 'Person', name: siteName(), url: siteOrigin() + '/about/' }
         };
     }
 
@@ -202,7 +209,7 @@
     }
 
     window.HeAnSeo = {
-        SITE_NAME: SITE_NAME,
+        siteName: siteName,
         apply: apply,
         canonicalUrl: canonicalUrl,
         absolutize: absolutize,

@@ -367,7 +367,7 @@ async function loadTopicDetailPage() {
     if (window.HeAnSeo) {
         const _topicDesc = HeAnSeo.plainText(currentTopic.description);
         HeAnSeo.apply({
-            title: `${currentTopic.name} | 禾安`,
+            title: `${currentTopic.name} | ${siteDisplayName()}`,
             description: _topicDesc,
             image: currentTopic.cover_image || '',
             type: 'article',
@@ -378,7 +378,7 @@ async function loadTopicDetailPage() {
             }),
         });
     } else {
-        document.title = `${currentTopic.name} | 禾安`;
+        document.title = `${currentTopic.name} | ${siteDisplayName()}`;
     }
 
     // 隐形埋点：专题详情曝光 + 开始学习（前端不展示，仅上报后端统计）
