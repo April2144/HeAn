@@ -126,6 +126,12 @@ function initApp(activePage, opts = {}) {
             if (typeof applySiteLogo === 'function') applySiteLogo();
             // 同时统一刷新品牌名：此前只有首页/关于我页做了替换，导致各页面显示不一致
             if (typeof applySiteName === 'function') applySiteName();
+            // ⚠️ 配置到齐后补渲染页脚：首屏那次 renderFooter 可能因 SITE_CONFIG 未到而渲染出"没有备案号"的页脚 ✗
+            //    （列表页实测 bug：备案号只在首页/关于我页出现）。
+            //    仅在【页脚确实缺备案号】时补一次 → 正常路径不重渲染，避免页脚跳变（CLS）✓
+            if (typeof footerMissingBeian === 'function' && footerMissingBeian()) {
+                renderFooter(readCachedContacts() || undefined);
+            }
             const skipLoginBtn = opts.type === 'login';
             const hideAuth = Number((cfg && cfg.config && cfg.config.enable_login_entry) ?? 1) !== 1;
             if (typeof HeAnAuth !== 'undefined' && HeAnAuth.initAuth) {

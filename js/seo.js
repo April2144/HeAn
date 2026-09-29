@@ -77,6 +77,14 @@
         if (!obj) return;
         var el = document.getElementById('seo-jsonld');
         if (!el) {
+            // ⚠️ 预渲染页里已经烤进了一条 <script type="application/ld+json">，但它【没有 id】——
+            //    若这里直接新建，页面就会同时存在两条重复的 JSON-LD ✗（实测 /blog/6/ 出现 2 条）。
+            //    这里复用页面里已存在的第一条并认领它 → 全页恒为 1 条 ✓
+            el = document.head.querySelector('script[type="application/ld+json"]')
+              || document.querySelector('script[type="application/ld+json"]');
+            if (el) el.id = 'seo-jsonld';
+        }
+        if (!el) {
             el = document.createElement('script');
             el.type = 'application/ld+json';
             el.id = 'seo-jsonld';
