@@ -179,6 +179,18 @@
             sourceLink.style.display = hasSource ? 'flex' : 'none';
             if (hasDemo) demoLink.href = project.demo_url;
             if (hasSource) sourceLink.href = project.source_url;
+            // 产品详情页的按钮点击埋点 —— 产品页最重要的两个转化点，之前完全没接 ✗
+            //   与首页卡片/专题页用同一套 trackClick(action, event, section, page, 目标类型, 目标 id) ✓
+            if (hasDemo) {
+                demoLink.addEventListener('click', function () {
+                    trackClick('click_project_demo', 'open_demo', 'project_detail', 'detail', 'project', project.id || 0);
+                });
+            }
+            if (hasSource) {
+                sourceLink.addEventListener('click', function () {
+                    trackClick('click_project_source', 'open_source', 'project_detail', 'detail', 'project', project.id || 0);
+                });
+            }
             linksContainer.style.display = (hasDemo || hasSource) ? '' : 'none';
         }
         // 返回上级页面：根据来源智能返回，保持与专题/博客详情页一致
