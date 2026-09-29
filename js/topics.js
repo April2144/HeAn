@@ -349,8 +349,8 @@ let currentTopic = null;
 let currentArticle = null;
 
 async function loadTopicDetailPage() {
-    const params = new URLSearchParams(location.search);
-    const topicId = params.get('series');
+    // 兼容三种 URL：/topics/6/（预渲染）、/topics/6/5/（预渲染·指定文章）、?series=6（旧链接）
+    const topicId = resolveSeriesId();
     if (!topicId) { showDetailError('缺少专题 ID'); return; }
 
     // 拉取统一标签系统（general_tags / tech_stacks），供详情页文章标签使用
@@ -394,11 +394,22 @@ async function loadTopicDetailPage() {
     // 渲染侧边栏目录树
     renderOutlineTree();
 
-    // 默认选中第一篇文章
-    const firstArticle = findFirstArticle(currentTopic);
+    // 深链优先：/topics/6/5/ 或 ?article=5 → 直接打开该篇；否则默认第一篇
+    const firstArticle = findArticleById(currentTopic, resolveArticleId()) || findFirstArticle(currentTopic);
     if (firstArticle) {
         selectArticle(firstArticle.id || firstArticle.article_key);
     }
+}
+
+function findArticleById(topic, id) {
+    const want = parseInt(id, 10) || 0;
+    if (!want) return null;
+    for (const level of (topic.chapters || [])) {
+        for (const art of (level.articles || [])) {
+            if (parseInt(art.id, 10) === want) return art;
+        }
+    }
+    return null;
 }
 
 function findFirstArticle(topic) {
@@ -481,12 +492,15 @@ function renderOutlineTree() {
 
             return `
             <div class="outline-article-node ${isArtExpanded ? 'expanded' : ''} ${hasHeadings ? '' : 'no-subheads'}" data-article-id="${artId}" data-level-id="${lvId}">
-                <button class="outline-article-btn w-full flex items-center justify-between ${isArtSelected ? 'filter-selected' : ''}"
-                        onclick="handleArticleClick('${artId}', event)">
+                <!-- ⚠️ 用 <a href> 而非 <button>：爬虫可跟随到文章真实路径（/topics/{专题}/{文章}/）✓
+                     JS 用户仍走 handleArticleClick 原地切换（return false 阻止跳转）✓ -->
+                <a class="outline-article-btn w-full flex items-center justify-between ${isArtSelected ? 'filter-selected' : ''}"
+                   href="/topics/${currentTopic.id}/${artId}/"
+                   onclick="handleArticleClick('${artId}', event); return false;">
                     <span class="flex items-center gap-2">
                         <span class="outline-article-label">${escapeHtml(art.title || '无标题')}</span>
                     </span>
-                </button>
+                </a>
                 ${hasHeadings ? `<div class="outline-subheads">${subheads}</div>` : ''}
             </div>`;
         }).join('');

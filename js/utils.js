@@ -116,6 +116,30 @@ function resolveContentId(kind) {
     return (q && parseInt(q, 10)) || 0;
 }
 
+/**
+ * 解析专题 ID —— 优先「真实路径」，回退「旧查询参数」
+ *   新（预渲染）：/topics/6/ 、/topics/6/5/   ← 静态 HTML，爬虫能直接读到正文 ✓
+ *   旧（兼容）  ：/topics/detail.html?series=6
+ * @returns {number} 专题 ID（解析不到返回 0）
+ */
+function resolveSeriesId() {
+    const m = location.pathname.match(/\/topics\/(\d+)(?:\/(\d+))?(?:\/|\/index\.html)?$/);
+    if (m) return parseInt(m[1], 10) || 0;
+    const q = new URLSearchParams(location.search).get('series');
+    return (q && parseInt(q, 10)) || 0;
+}
+
+/**
+ * 解析专题内文章 ID —— 优先 /topics/{series}/{article}/，回退 ?article=
+ * @returns {number} 文章 ID（解析不到返回 0）
+ */
+function resolveArticleId() {
+    const m = location.pathname.match(/\/topics\/(\d+)\/(\d+)(?:\/|\/index\.html)?$/);
+    if (m) return parseInt(m[2], 10) || 0;
+    const q = new URLSearchParams(location.search).get('article');
+    return (q && parseInt(q, 10)) || 0;
+}
+
 function resolveProjectLink(project, detailHref) {
     // 产品卡片（产品列表 / 首页精选项目）统一进入「二级详情页」，不再直接跳 demo_url；
     // 产品页的真实入口放在详情页的「在线预览」按钮上（见 projects/detail.html，用 project.demo_url）。

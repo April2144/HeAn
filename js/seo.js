@@ -14,8 +14,8 @@
     'use strict';
 
     var SITE_NAME = '禾安';
-    // 兜底分享图（⚠️ 建议后续换一张 1200×630 的 PNG：微信对 svg 的卡片图支持较差）
-    var DEFAULT_IMAGE = '/assets/logo-mark.svg';
+    // 兜底分享图：1200×630 品牌封面（微信等对 svg 卡片图支持差，故用 PNG ✓）
+    var DEFAULT_IMAGE = '/assets/img/og-cover.png';
     // 允许保留在规范 URL 里的业务参数；其余（from / theme / utm_* 等）一律剔除，避免同一内容被算成多个页面 ✗
     var KEEP_PARAMS = ['id', 'series', 'article'];
 

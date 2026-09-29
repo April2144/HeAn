@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.5 枚举与协议 | iOS 开发：从 0 到上架 | 禾安</title>
+    <meta name="description" content="本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。
+
+适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。
+学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。">
+    <link rel="canonical" href="https://hacore.cn/topics/1/46/">
+    <meta property="og:site_name" content="禾安">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="2.5 枚举与协议 | iOS 开发：从 0 到上架 | 禾安">
+    <meta property="og:description" content="本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。
+
+适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。
+学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。">
+    <meta property="og:url" content="https://hacore.cn/topics/1/46/">
+    <meta property="og:image" content="https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="2.5 枚举与协议 | iOS 开发：从 0 到上架 | 禾安">
+    <meta name="twitter:description" content="本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。
+
+适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。
+学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。">
+    <meta name="twitter:image" content="https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Course","name":"2.5 枚举与协议","description":"本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。\n\n适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。\n学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。","image":"https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png","url":"https://hacore.cn/topics/1/46/","provider":{"@type":"Person","name":"禾安","url":"https://hacore.cn/about/"}}</script>
+    <!-- 暗黑模式防闪烁 -->
+    <script>
+        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
+    </script>
+    <script src="../../../js/config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = TAILWIND_CONFIG;
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径，无外部依赖） -->
+    <script src="../../../js/renderer.js?v=2"></script>
+    <link rel="stylesheet" href="../../../js/common.css?v=20260921d">
+    <link rel="icon" href="data:,">
+    <style>
+        /* 背景兜底：Tailwind CDN 不可用时保底，避免纯白屏（值取自 config.js 的 light/dark） */
+        body.bg-light { background-color: #F8FAFC; }
+        html.dark body { background-color: #0F172A; }
+
+        /* ===== 专题详情布局 ===== */
+        /* 底部上一篇/下一篇标题 hover 变主题蓝，无下划线 */
+        .nav-title {
+            transition: color 0.15s ease;
+        }
+        .nav-title:hover {
+            color: #3B82F6 !important;
+        }
+        /* --- 左右分栏独立滚动 --- */
+        .topics-detail-layout {
+            display: flex;
+            width: 100%;
+            max-width: 1280px;             /* 窗口 ≥1280 时锁定 1280px 居中，左栏 320 + 右栏 960 */
+            height: calc(100vh - 4rem);     /* 固定高度，左右各自滚动 */
+            overflow: hidden;
+        }
+
+        /* --- 左侧栏 --- */
+        .outline-sidebar {
+            width: 320px;
+            min-width: 320px;
+            flex-shrink: 0;                /* 左栏固定 320px，绝不被压缩 */
+            background: transparent;       /* 继承站点 bg-light / bg-dark */
+            border-right: 1px solid rgba(148,163,184,0.18);
+            height: calc(100vh - 4rem);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+            /* 左侧栏内容不超屏幕时不滚动；超出时内部滚动，但不显示滚动条 */
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .outline-sidebar::-webkit-scrollbar { display: none; }
+        .dark .outline-sidebar {
+            border-right-color: rgba(71,85,105,0.25);
+        }
+
+        .outline-sidebar-header {
+            padding: 12px 16px 12px 0;   /* 左 padding 0：专题名左缘对齐顶部返回按钮箭头，作为最顶级基准 */
+            flex-shrink: 0;
+        }
+
+        /* 左栏顶部专题名 */
+        .detail-topic-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #3B82F6;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+        .dark .detail-topic-title {
+            color: #60A5FA;
+        }
+
+        /* === 左侧栏三级树目录（章节 > 文章 > 子标题）=== */
+        .outline-tree {
+            flex: 1;
+            overflow-y: auto;
+            padding: 4px 12px 16px 16px;   /* 左侧留出箭头绝对定位空间 */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .outline-tree::-webkit-scrollbar { display: none; }
+
+        /* 通用树节点按钮：hover / 选中都有背景色；章节/文章箭头统一绝对定位到背景外 */
+        .outline-level-btn,
+        .outline-article-btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            width: 100%;
+            text-align: left;
+            color: #334155;
+            background: transparent;
+            border: none;
+            font-weight: 400;
+            cursor: pointer;
+            transition: background .15s ease, color .15s ease;
+            border-radius: 0.45rem;
+        }
+        .outline-level-btn:hover,
+        .outline-article-btn:hover {
+            background: rgba(59,130,246,0.08);
+            color: #2563eb;
+        }
+        .dark .outline-level-btn,
+        .dark .outline-article-btn { color: #cbd5e1; }
+        .dark .outline-level-btn:hover,
+        .dark .outline-article-btn:hover {
+            background: rgba(96,165,250,0.10);
+            color: #60a5fa;
+        }
+
+        /* 章节：字号稍大、加粗（第 0 级，缩进基准） */
+        .outline-level-btn {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 0.5rem 0.75rem 0.5rem 4px;
+        }
+
+        /* 文章节点容器：无箭头后整块左移，与上级文件名（章节名）文字左缘对齐 */
+        .outline-articles {
+            display: none;
+            padding: 2px 0 2px 0;
+            border-left: none;      /* 去掉左侧竖线 */
+        }
+        .outline-level.expanded > .outline-articles { display: block; }
+
+        .outline-article-node { margin: 2px 0; }
+
+        /* 文章按钮：padding 与章节按钮一致(4px)，文章文字左缘 = tree16 + 0 + 4 = +20，与章节名对齐 */
+        .outline-article-btn {
+            font-size: 13px;
+            padding: 0.4rem 0.5rem 0.4rem 4px;
+        }
+        .outline-article-btn .outline-article-label {
+            display: inline-block;
+        }
+
+        /* 章节名 / 文章名：单行不折行，超出以省略号截断 */
+        .outline-level-btn > span,
+        .outline-article-btn > span { min-width: 0; }
+        .outline-level-btn > span > span:last-child,
+        .outline-article-btn .outline-article-label {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* 子标题列表：与文章标题 hover/选中背景同色，作为一块 section
+           文章文字在 +20，子标题再缩进一级：h2 = +36，h3 = +52，逐级递进 */
+        .outline-subheads {
+            display: none;
+            padding: 4px 0.5rem 4px 20px;
+            margin: 0;
+            border-radius: 0;
+            background: rgba(59,130,246,0.08);
+        }
+        .dark .outline-subheads { background: rgba(96,165,250,0.10); }
+        .outline-article-node.expanded > .outline-subheads { display: block; }
+
+        /* 子标题：h2 为一级标题（第 2 级），h3 为二级标题（第 3 级），逐级递进缩进 */
+        .outline-subhead {
+            display: block;
+            text-decoration: none;
+            padding: 0.28rem 0.5rem 0.28rem 0;
+            font-size: 12px;
+            color: #475569;
+            transition: color .15s ease;
+        }
+        .outline-subhead:hover { color: #2563eb; }
+        .dark .outline-subhead { color: #94a3b8; }
+        .dark .outline-subhead:hover { color: #60a5fa; }
+        /* 在 .outline-subheads(20px) 基础上 h3 再缩进 16px，确保 h3 比 h2 更靠右 */
+        .outline-subhead[data-heading-level="2"] { padding-left: 0; }
+        .outline-subhead[data-heading-level="3"] { padding-left: 16px; }
+
+        /* 当前选中的章节/文章：文字/背景颜色与 hover 完全一致 */
+        .outline-level-btn.filter-selected,
+        .outline-article-btn.filter-selected {
+            background: rgba(59,130,246,0.08) !important;
+            color: #2563eb !important;
+            font-weight: 600;
+        }
+        .dark .outline-level-btn.filter-selected,
+        .dark .outline-article-btn.filter-selected {
+            background: rgba(96,165,250,0.10) !important;
+            color: #60a5fa !important;
+        }
+
+        /* 选中文章时：标题按钮与下方子标题列表背景合并为一整块（去掉中间分界） */
+        .outline-article-node.expanded > .outline-article-btn.filter-selected {
+            background: rgba(59,130,246,0.08) !important;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+        .dark .outline-article-node.expanded > .outline-article-btn.filter-selected {
+            background: rgba(96,165,250,0.10) !important;
+        }
+        /* 无子标题的文章：选中背景是独立一块，四角均需圆角（无下方子标题块拼接） */
+        .outline-article-node.no-subheads > .outline-article-btn.filter-selected {
+            border-radius: 0.5rem;
+        }
+        .outline-article-node.expanded > .outline-subheads {
+            background: rgba(59,130,246,0.08) !important;
+            border-radius: 0 0 0.5rem 0.5rem;
+            padding-top: 0;
+            padding-bottom: 6px;
+        }
+        .dark .outline-article-node.expanded > .outline-subheads {
+            background: rgba(96,165,250,0.10) !important;
+        }
+
+        .outline-chevron {
+            width: 12px;
+            height: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #94a3b8;
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+        }
+        .dark .outline-chevron { color: #64748b; }
+        .outline-chevron.rotate-90 { transform: rotate(90deg); }
+        /* 章节/文章按钮：箭头统一绝对定位到背景左侧外，选中背景从文案左缘开始、不包裹箭头 */
+        .outline-level-btn .outline-chevron,
+        .outline-article-btn .outline-chevron,
+        .outline-article-btn .outline-chevron-spacer {
+            position: absolute;
+            left: -14px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .outline-level-btn .outline-chevron.rotate-90,
+        .outline-article-btn .outline-chevron.rotate-90 { transform: translateY(-50%) rotate(90deg); }
+        /* 无章节标题时占位，保持标题文字与有箭头的文章对齐（同样在背景左侧外） */
+        .outline-chevron-spacer {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+        }
+
+        /* --- 右侧内容区 --- */
+        /* 透明背景，继承 body 的 bg-light / bg-dark（与博客、项目详情页一致） */
+        /* 左右分栏独立滚动：右侧内容区自身滚动，滚条在右侧 */
+        .detail-content-area {
+            flex: 1;
+            min-width: 0;              /* 允许 flex 子项在需要时收缩，同时配合 flex-shrink 保持稳定 */
+            padding: 0;
+            height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+
+        .detail-content-inner {
+            width: 100%;               /* 始终占满右栏区域（= 布局宽 − 左栏 320），空态/有内容宽度一致 */
+            padding: 48px 40px 80px;
+            margin: 0 auto;
+            /* 内容区内部也保证最小高度，否则空内容时内部 div 不撑开 */
+            min-height: calc(100vh - 4rem);
+        }
+
+        /* 文章正文为空时的居中占位：宽度与有内容时一致，整体在内容区垂直居中 */
+        #article-body.empty-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            min-height: calc(100vh - 4rem - 48px - 80px - 120px);
+            color: #94a3b8;
+        }
+        .dark #article-body.empty-body {
+            color: #64748b;
+        }
+        #article-body.empty-body .empty-state-icon {
+            font-size: 2.25rem;
+            line-height: 1;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        #article-body.empty-body .empty-state-text {
+            font-size: 0.95rem;
+        }
+
+        /* 右侧正文：与 admin 中后台预览保持一致 */
+        .preview-blog-content {
+            font-size: 15px; line-height: 1.9; color: #334155;
+        }
+        .dark .preview-blog-content { color: #cbd5e1; }
+        .preview-blog-content h1 {
+            font-size: 26px; font-weight: 800; margin: 0 0 16px; line-height: 1.3;
+        }
+        .preview-blog-content h2 {
+            font-size: 1.5rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem;
+            padding-left: 0.75rem; border-left: 3px solid #3b82f6;
+        }
+        .dark .preview-blog-content h2 { border-left-color: #60a5fa; }
+        .preview-blog-content h3 {
+            font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem;
+        }
+        .preview-blog-content p {
+            margin-bottom: 1.25rem; line-height: 1.8;
+        }
+        /* 恢复列表标记：Tailwind preflight 会重置 ul/ol 为 list-style:none，这里显式还原圆点/数字 */
+        .preview-blog-content ul {
+            list-style: disc; margin-bottom: 1.25rem; padding-left: 1.5rem;
+        }
+        .preview-blog-content ol {
+            list-style: decimal; margin-bottom: 1.25rem; padding-left: 1.5rem;
+        }
+        .preview-blog-content li {
+            margin-bottom: 0.5rem; line-height: 1.8;
+        }
+        .preview-blog-content code {
+            background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-size: 0.9em;
+            font-family: "SF Mono", "Fira Code", Menlo, monospace;
+        }
+        .dark .preview-blog-content code { background: #1e293b; }
+        /* 注意：正文容器是 .article-body > .preview-blog-content > pre，pre 会同时命中 .article-body pre，
+           后者源顺序更靠后且特异性相同，会覆盖这里的 padding。故用 .article-body 前缀提升特异性，确保顶部内边距生效，
+           给固定的 BASH/复制按钮行留出间距 */
+        .article-body .preview-blog-content pre {
+            background: #f1f5f9; color: #334155; padding: 3.25rem 1.25rem 1.25rem;
+            border-radius: 0.75rem; overflow-x: auto; margin-bottom: 1.5rem;
+            font-size: 13px; line-height: 1.6;
+        }
+        .dark .preview-blog-content pre { background: #1e293b; color: #e2e8f0; }
+        .preview-blog-content pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+        .preview-blog-content blockquote {
+            border-left: 3px solid #3b82f6; padding: 1rem 1.5rem;
+            margin: 1.5rem 0; background: rgba(59,130,246,0.05); border-radius: 0 0.5rem 0.5rem 0;
+            color: #475569; font-style: italic;
+        }
+        .dark .preview-blog-content blockquote { color: #94a3b8; background: rgba(96,165,250,0.08); border-left-color: #60a5fa; }
+        .preview-blog-content hr { border: none; border-top: 1px solid #e2e8f0; margin: 20px 0; }
+        .dark .preview-blog-content hr { border-top-color: #334155; }
+        .preview-blog-content a { color: #3b82f6; text-decoration: underline; }
+        .dark .preview-blog-content a { color: #60a5fa; }
+        .preview-blog-content img { max-width: 100%; border-radius: 0.75rem; margin: 1.5rem 0; }
+        .preview-blog-content strong { font-weight: 600; }
+        .preview-blog-content em { font-style: italic; }
+        .preview-blog-content table { width: 100%; border-collapse: collapse; margin: 0.6rem 0; font-size: 14px; line-height: 1.5; }
+        .preview-blog-content th, .preview-blog-content td { border: 1px solid #e2e8f0; padding: 6px 10px; text-align: left; }
+        /* 根因：正文段落 margin-bottom:1.25rem 与表格相邻时决定表格上方留白，须直接收紧相邻段落/标题 */
+        .preview-blog-content p:has(+ table) { margin-bottom: 0.4rem; }
+        .preview-blog-content table + h2, .preview-blog-content table + h3 { margin-top: 1rem; }
+        .preview-blog-content th p, .preview-blog-content td p { margin: 0; line-height: inherit; }
+        .dark .preview-blog-content th, .dark .preview-blog-content td { border-color: #334155; }
+        .preview-blog-content th { background: #f8fafc; font-weight: 600; }
+        .dark .preview-blog-content th { background: rgba(148,163,184,0.1); }
+        .preview-blog-content .table-wrapper { overflow-x: auto; margin: 1.5rem 0; }
+        .preview-blog-content .blog-img { border-radius: 0.75rem; }
+        .preview-blog-content pre { position: relative; }
+        /* 代码块包裹层：不滚动、作为语言标签/复制按钮的定位上下文（按钮不随 pre 横向滚动移动） */
+        .preview-blog-content .code-block { position: relative; }
+        .preview-blog-content .code-lang-tag {
+            position: absolute; top: 8px; left: 12px;
+            color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: .5px;
+        }
+        .preview-blog-content .code-copy-btn {
+            position: absolute; top: 8px; right: 12px;
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 3px 10px;
+            font-size: 12px; font-weight: 500; line-height: 1.4;
+            border: 1px solid rgba(100,116,139,0.25);
+            border-radius: 6px; cursor: pointer;
+            background: rgba(100,116,139,0.12); color: #475569;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .preview-blog-content .code-copy-btn:hover { background: rgba(100,116,139,0.22); color: #1e293b; }
+        .dark .preview-blog-content .code-copy-btn { background: rgba(148,163,184,0.16); color: #cbd5e1; border-color: rgba(148,163,184,0.25); }
+        .dark .preview-blog-content .code-copy-btn:hover { background: rgba(148,163,184,0.28); color: #f1f5f9; }
+
+        /* 文章内容排版 */
+        .article-body h1 { font-size: 1.75rem; font-weight: 700; margin: 2rem 0 1rem; }
+        .article-body h2 { font-size: 1.4rem; font-weight: 700; margin: 1.75rem 0 0.75rem; }
+        .article-body h3 { font-size: 1.15rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+        .article-body p { margin: 0.75rem 0; line-height: 1.75; }
+        .article-body ul, .article-body ol { margin: 0.75rem 0; padding-left: 1.5rem; }
+        .article-body li { margin: 0.25rem 0; line-height: 1.7; }
+        .article-body code {
+            background: #f1f5f9;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.875em;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+        .dark .article-body code { background: #334155; }
+        .article-body pre {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            scrollbar-width: thin;          /* Firefox：细滚动条 */
+        }
+        .dark .article-body pre { background: #1e293b; color: #e2e8f0; border-color: #334155; }
+        /* 代码块横向滚动条：收窄且不超过页面滚动条粗细（页面竖向滚动条为 8px） */
+        .article-body pre::-webkit-scrollbar { height: 6px; }
+        .article-body pre::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+        .article-body pre::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        .article-body pre code {
+            background: transparent !important;
+            padding: 0;
+            color: inherit;
+        }
+        .article-body blockquote {
+            border-left: 3px solid #3b82f6;
+            padding: 0.5rem 1rem;
+            margin: 1rem 0;
+            background: #f8fafc;
+            color: #475569;
+        }
+        .dark .article-body blockquote {
+            background: #1e293b;
+            color: #94a3b8;
+        }
+        .article-body img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .article-body a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+
+        /* 移动端侧边栏 */
+        @media (max-width: 768px) {
+            .outline-sidebar {
+                position: fixed;
+                left: 0;
+                top: 4rem;
+                z-index: 40;
+                transform: translateX(-100%);
+                box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+            }
+            .outline-sidebar.show {
+                transform: translateX(0);
+            }
+            .detail-content-inner {
+                padding: 24px 16px 60px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
+
+    <!-- 顶栏：由 renderNavbar 统一生成（detail 模式，含左侧自定义插槽） -->
+    <header id="navbar"></header>
+
+        <!-- 主体：侧边栏 + 内容（最大宽度 1280px 居中；左栏固定 320，右栏 = 1280−320 固定，窗口 <1280 时整体自适应） -->
+        <div class="topics-detail-layout mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+
+            <!-- 左侧大纲侧边栏 -->
+            <aside class="outline-sidebar" id="outline-sidebar">
+                <!-- 移动端遮罩 -->
+                <div class="md:hidden absolute inset-0" style="display:none" id="sidebar-backdrop" onclick="toggleSidebar()"></div>
+                <div class="outline-sidebar-header">
+                    <div class="detail-topic-title" id="detail-topic-title">iOS 开发：从 0 到上架</div>
+                </div>
+                <div class="outline-tree" id="outline-tree"><div class="outline-level expanded" data-level-id="lv-39"><button class="outline-level-btn w-full flex items-center justify-between"><span class="flex items-center gap-2"><i class="fa-solid fa-caret-right outline-chevron rotate-90"></i><span>了解专题</span></span></button><div class="outline-articles"><div class="outline-article-node no-subheads" data-article-id="174"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/174/"><span class="flex items-center gap-2"><span class="outline-article-label">导读</span></span></a></div></div></div><div class="outline-level expanded" data-level-id="lv-1"><button class="outline-level-btn w-full flex items-center justify-between"><span class="flex items-center gap-2"><i class="fa-solid fa-caret-right outline-chevron rotate-90"></i><span>第 1 章：开发环境与工具准备</span></span></button><div class="outline-articles"><div class="outline-article-node no-subheads" data-article-id="1"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/1/"><span class="flex items-center gap-2"><span class="outline-article-label">1.1 iOS 背景与开发环境准备</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="2"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/2/"><span class="flex items-center gap-2"><span class="outline-article-label">1.2 Xcode 安装与界面初识</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="4"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/4/"><span class="flex items-center gap-2"><span class="outline-article-label">1.3 模拟器与真机调试基础</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="5"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/5/"><span class="flex items-center gap-2"><span class="outline-article-label">1.4 第一个 Hello World 项目</span></span></a></div></div></div><div class="outline-level expanded" data-level-id="lv-9"><button class="outline-level-btn w-full flex items-center justify-between"><span class="flex items-center gap-2"><i class="fa-solid fa-caret-right outline-chevron rotate-90"></i><span>第 2 章：Swift 语言基础</span></span></button><div class="outline-articles"><div class="outline-article-node no-subheads" data-article-id="42"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/42/"><span class="flex items-center gap-2"><span class="outline-article-label">2.1 变量、常量与数据类型</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="43"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/43/"><span class="flex items-center gap-2"><span class="outline-article-label">2.2 运算符与流程控制</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="44"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/44/"><span class="flex items-center gap-2"><span class="outline-article-label">2.3 函数与闭包</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="45"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/45/"><span class="flex items-center gap-2"><span class="outline-article-label">2.4 面向对象：类与结构体</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="46"><a class="outline-article-btn w-full flex items-center justify-between filter-selected" href="/topics/1/46/"><span class="flex items-center gap-2"><span class="outline-article-label">2.5 枚举与协议</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="47"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/47/"><span class="flex items-center gap-2"><span class="outline-article-label">2.6 错误处理与可选类型</span></span></a></div></div></div><div class="outline-level expanded" data-level-id="lv-10"><button class="outline-level-btn w-full flex items-center justify-between"><span class="flex items-center gap-2"><i class="fa-solid fa-caret-right outline-chevron rotate-90"></i><span>第 3 章：SwiftUI 界面开发入门</span></span></button><div class="outline-articles"><div class="outline-article-node no-subheads" data-article-id="48"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/48/"><span class="flex items-center gap-2"><span class="outline-article-label">3.1 SwiftUI 基础概念与视图</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="49"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/49/"><span class="flex items-center gap-2"><span class="outline-article-label">3.2 UI 布局</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="50"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/50/"><span class="flex items-center gap-2"><span class="outline-article-label">3.3 常用组件</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="51"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/51/"><span class="flex items-center gap-2"><span class="outline-article-label">3.4 状态管理</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="52"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/52/"><span class="flex items-center gap-2"><span class="outline-article-label">3.5 列表与导航</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="53"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/53/"><span class="flex items-center gap-2"><span class="outline-article-label">3.6 表单与输入</span></span></a></div></div></div><div class="outline-level expanded" data-level-id="lv-11"><button class="outline-level-btn w-full flex items-center justify-between"><span class="flex items-center gap-2"><i class="fa-solid fa-caret-right outline-chevron rotate-90"></i><span>第 4 章：数据持久化</span></span></button><div class="outline-articles"><div class="outline-article-node no-subheads" data-article-id="54"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/54/"><span class="flex items-center gap-2"><span class="outline-article-label">4.1 UserDefaults 轻量存储</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="55"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/55/"><span class="flex items-center gap-2"><span class="outline-article-label">4.2 文件读写</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="56"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/56/"><span class="flex items-center gap-2"><span class="outline-article-label">4.3 Core Data 入门</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="57"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/57/"><span class="flex items-center gap-2"><span class="outline-article-label">4.4 SQLite 与第三方库</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="58"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/58/"><span class="flex items-center gap-2"><span class="outline-article-label">4.5 本地数据设计</span></span></a></div></div></div><div class="outline-level expanded" data-level-id="lv-12"><button class="outline-level-btn w-full flex items-center justify-between"><span class="flex items-center gap-2"><i class="fa-solid fa-caret-right outline-chevron rotate-90"></i><span>第 5 章：打包与上架</span></span></button><div class="outline-articles"><div class="outline-article-node no-subheads" data-article-id="59"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/59/"><span class="flex items-center gap-2"><span class="outline-article-label">5.1 证书与描述文件</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="60"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/60/"><span class="flex items-center gap-2"><span class="outline-article-label">5.2 App Store Connect 配置</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="61"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/61/"><span class="flex items-center gap-2"><span class="outline-article-label">5.3 打包与上传</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="62"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/62/"><span class="flex items-center gap-2"><span class="outline-article-label">5.4 审核常见问题与避坑</span></span></a></div><div class="outline-article-node no-subheads" data-article-id="63"><a class="outline-article-btn w-full flex items-center justify-between" href="/topics/1/63/"><span class="flex items-center gap-2"><span class="outline-article-label">5.5 上架后的维护</span></span></a></div></div></div></div>
+            </aside>
+
+            <!-- 右侧内容区 -->
+            <main class="detail-content-area" id="detail-content-area">
+                <div class="detail-content-inner">
+                    <!-- 文章标题 -->
+                    <h1 class="text-3xl font-bold mb-2" id="article-title">2.5 枚举与协议</h1>
+
+                    <!-- 发布/更新时间 -->
+                    <p class="text-sm text-slate-400 dark:text-slate-500 mb-6" id="article-time">发布于 2026-09-19</p>
+
+                    <!-- 标签 -->
+                    <div class="flex flex-wrap gap-2 mb-4" id="article-tags"></div>
+
+                    <!-- 摘要 -->
+                    <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg mb-6 text-sm text-slate-600 dark:text-slate-400 leading-relaxed" id="article-summary" style="display:none"></div>
+
+                    <!-- 实践项目 -->
+                    <div class="mb-6" id="article-practice-section" style="display:none">
+                        <h3 class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1">实践项目</h3>
+                        <div class="text-sm" id="article-practice"></div>
+                    </div>
+
+                    <!-- Markdown 正文 -->
+                    <div class="article-body" id="article-body"><div class="preview-blog-content"><h2>本篇目标</h2><p>掌握 Swift 枚举的定义、关联值与原始值，理解协议的声明、遵循与扩展，学会用协议实现面向协议编程。</p><h2>一、枚举基础</h2><p>枚举用于定义一组相关的值。</p><pre><code class="language-swift">enum Direction {
+    case north
+    case south
+    case east
+    case west
+}
+
+let dir = Direction.north</code></pre><p><strong>简化写法</strong>：</p><pre><code class="language-swift">enum Direction {
+    case north, south, east, west
+}</code></pre><p><strong>使用枚举</strong>：</p><pre><code class="language-swift">var direction = Direction.north
+
+switch direction {
+case .north:
+    print(&amp;quot;向北&amp;quot;)
+case .south:
+    print(&amp;quot;向南&amp;quot;)
+case .east:
+    print(&amp;quot;向东&amp;quot;)
+case .west:
+    print(&amp;quot;向西&amp;quot;)
+}</code></pre><p><strong>特点</strong>：</p><ul><li><p>枚举是值类型。</p></li><li><p>枚举的每个分支都是确定的值。</p></li><li><p>switch 匹配枚举必须穷举，或加 default。</p></li></ul><h2>二、原始值</h2><p>枚举可以有一个原始值，类型可以是 String、Int、Double、Character 等。</p><pre><code class="language-swift">enum Weekday: Int {
+    case monday = 1
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+    case saturday
+    case sunday
+}
+
+print(Weekday.monday.rawValue)  // 1
+print(Weekday.friday.rawValue)  // 5</code></pre><p><strong>自动递增</strong>：</p><pre><code class="language-swift">enum Status: Int {
+    case pending  // 0
+    case running  // 1
+    case done     // 2
+}</code></pre><p><strong>字符串原始值</strong>：</p><pre><code class="language-swift">enum Environment: String {
+    case dev = &amp;quot;development&amp;quot;
+    case prod = &amp;quot;production&amp;quot;
+}
+
+print(Environment.dev.rawValue)  // development</code></pre><p><strong>用原始值初始化</strong>：</p><pre><code class="language-swift">if let env = Environment(rawValue: &amp;quot;development&amp;quot;) {
+    print(env)  // dev
+}</code></pre><p><strong>注意</strong>：</p><ul><li><p>原始值初始化返回可选类型。</p></li><li><p>原始值不能重复。</p></li><li><p>有原始值的枚举，不能有关联值。</p></li></ul><h2>三、关联值</h2><p>枚举的每个分支可以关联不同类型和数量的值。</p><pre><code class="language-swift">enum Barcode {
+    case upc(Int, Int, Int, Int)
+    case qrCode(String)
+}
+
+let barcode1 = Barcode.upc(8, 85909, 51226, 3)
+let barcode2 = Barcode.qrCode(&amp;quot;ABCDEFGHIJKLMNOP&amp;quot;)</code></pre><p><strong>使用关联值</strong>：</p><pre><code class="language-swift">switch barcode1 {
+case .upc(let numberSystem, let manufacturer, let product, let check):
+    print(&amp;quot;UPC: \(numberSystem)-\(manufacturer)-\(product)-\(check)&amp;quot;)
+case .qrCode(let code):
+    print(&amp;quot;QR: \(code)&amp;quot;)
+}</code></pre><p><strong>简写</strong>（所有关联值都用 let）：</p><pre><code class="language-swift">switch barcode1 {
+case let .upc(numberSystem, manufacturer, product, check):
+    print(&amp;quot;UPC: \(numberSystem)-\(manufacturer)-\(product)-\(check)&amp;quot;)
+case let .qrCode(code):
+    print(&amp;quot;QR: \(code)&amp;quot;)
+}</code></pre><p><strong>应用场景</strong>：</p><ul><li><p>网络请求结果：成功（数据）或失败（错误）</p></li><li><p>状态机：加载中、成功、失败</p></li><li><p>表达式：数字、字符串、变量</p></li></ul><h2>四、枚举的属性和方法</h2><p>枚举可以定义计算属性和方法。</p><pre><code class="language-swift">enum CompassPoint {
+    case north, south, east, west
+
+    var description: String {
+        switch self {
+        case .north: return &amp;quot;北&amp;quot;
+        case .south: return &amp;quot;南&amp;quot;
+        case .east: return &amp;quot;东&amp;quot;
+        case .west: return &amp;quot;西&amp;quot;
+        }
+    }
+}
+
+print(CompassPoint.north.description)  // 北</code></pre><p><strong>实例方法</strong>：</p><pre><code class="language-swift">enum TrafficLight {
+    case red, yellow, green
+
+    func canGo() -&amp;gt; Bool {
+        return self == .green
+    }
+}
+
+print(TrafficLight.green.canGo())  // true</code></pre><p><strong>mutating 方法</strong>：</p><pre><code class="language-swift">enum Switch {
+    case off, on
+
+    mutating func toggle() {
+        self = self == .off ? .on : .off
+    }
+}
+
+var s = Switch.off
+s.toggle()
+print(s)  // on</code></pre><h2>五、CaseIterable</h2><p>让枚举可以遍历所有分支。</p><pre><code class="language-swift">enum Direction: CaseIterable {
+    case north, south, east, west
+}
+
+for dir in Direction.allCases {
+    print(dir)
+}</code></pre><p><strong>数量</strong>：</p><pre><code class="language-swift">print(Direction.allCases.count)  // 4</code></pre><h2>六、协议基础</h2><p>协议定义一组方法和属性的要求，遵循协议的类、结构体、枚举必须实现。</p><pre><code class="language-swift">protocol Greetable {
+    var name: String { get }
+    func greet()
+}
+
+struct Person: Greetable {
+    var name: String
+
+    func greet() {
+        print(&amp;quot;Hello, \(name)&amp;quot;)
+    }
+}
+
+let p = Person(name: &amp;quot;Tom&amp;quot;)
+p.greet()  // Hello, Tom</code></pre><p><strong>属性要求</strong>：</p><ul><li><p><code>{ get }</code>：只读，可实现为只读或读写。</p></li><li><p><code>{ get set }</code>：读写，必须可读可写。</p></li></ul><pre><code class="language-swift">protocol Named {
+    var name: String { get set }
+}</code></pre><p><strong>方法要求</strong>：</p><pre><code class="language-swift">protocol Calculable {
+    func add(a: Int, b: Int) -&amp;gt; Int
+}</code></pre><p><strong>mutating 方法要求</strong>：</p><pre><code class="language-swift">protocol Resettable {
+    mutating func reset()
+}
+
+struct Counter: Resettable {
+    var count = 0
+
+    mutating func reset() {
+        count = 0
+    }
+}</code></pre><h2>七、协议作为类型</h2><p>协议可以作为类型使用，存储任何遵循该协议的值。</p><pre><code class="language-swift">protocol Shape {
+    func area() -&amp;gt; Double
+}
+
+struct Circle: Shape {
+    var radius: Double
+
+    func area() -&amp;gt; Double {
+        return .pi * radius * radius
+    }
+}
+
+struct Rectangle: Shape {
+    var width: Double
+    var height: Double
+
+    func area() -&amp;gt; Double {
+        return width * height
+    }
+}
+
+let shapes: [Shape] = [
+    Circle(radius: 1),
+    Rectangle(width: 2, height: 3)
+]
+
+for shape in shapes {
+    print(shape.area())
+}</code></pre><p><strong>用途</strong>：</p><ul><li><p>数组元素类型统一</p></li><li><p>函数参数类型</p></li><li><p>属性类型</p></li></ul><h2>八、协议继承</h2><p>协议可以继承其他协议。</p><pre><code class="language-swift">protocol Named {
+    var name: String { get }
+}
+
+protocol Aged {
+    var age: Int { get }
+}
+
+protocol Person: Named, Aged {
+    func introduce()
+}
+
+struct Student: Person {
+    var name: String
+    var age: Int
+
+    func introduce() {
+        print(&amp;quot;我是 \(name)，今年 \(age) 岁&amp;quot;)
+    }
+}</code></pre><p><strong>注意</strong>：</p><ul><li><p>遵循子协议时，需要实现所有父协议的要求。</p></li><li><p>一个类型可以同时遵循多个协议。</p></li></ul><h2>九、协议扩展</h2><p>协议可以通过扩展提供默认实现。</p><pre><code class="language-swift">protocol Greetable {
+    var name: String { get }
+    func greet()
+}
+
+extension Greetable {
+    func greet() {
+        print(&amp;quot;Hello, \(name)&amp;quot;)
+    }
+}
+
+struct Person: Greetable {
+    var name: String
+}
+
+let p = Person(name: &amp;quot;Tom&amp;quot;)
+p.greet()  // Hello, Tom</code></pre><p><strong>优点</strong>：</p><ul><li><p>减少重复代码。</p></li><li><p>让协议拥有默认行为。</p></li></ul><p><strong>为协议添加约束</strong>：</p><pre><code class="language-swift">extension Collection where Element: Equatable {
+    func allEqual() -&amp;gt; Bool {
+        for element in self {
+            if element != first {
+                return false
+            }
+        }
+        return true
+    }
+}
+
+print([1, 1, 1].allEqual())  // true
+print([1, 2, 1].allEqual())  // false</code></pre><h2>十、协议组合</h2><p>使用 <code>&amp;</code> 组合多个协议。</p><pre><code class="language-swift">protocol Named {
+    var name: String { get }
+}
+
+protocol Aged {
+    var age: Int { get }
+}
+
+func printInfo(person: Named &amp;amp; Aged) {
+    print(&amp;quot;\(person.name)，\(person.age) 岁&amp;quot;)
+}</code></pre><p><strong>用途</strong>：</p><ul><li><p>函数参数要求同时满足多个协议。</p></li><li><p>类型别名简化复杂组合。</p></li></ul><pre><code class="language-swift">typealias PersonInfo = Named &amp;amp; Aged</code></pre><h2>十一、可选协议要求</h2><p>用 <code>@objc</code> 标记的协议可以定义可选要求，仅适用于类。</p><pre><code class="language-swift">@objc protocol DataSource {
+    func numberOfItems() -&amp;gt; Int
+    @objc optional func titleForItem(at index: Int) -&amp;gt; String
+}
+
+class MyDataSource: DataSource {
+    func numberOfItems() -&amp;gt; Int {
+        return 10
+    }
+}</code></pre><p><strong>注意</strong>：</p><ul><li><p>可选要求只能用于 <code>@objc</code> 协议。</p></li><li><p>遵循类型必须是类。</p></li><li><p>纯 Swift 场景建议用协议扩展提供默认实现，替代可选要求。</p></li></ul><h2>十二、面向协议编程</h2><p>Swift 提倡面向协议编程（POP），优先用协议 + 组合，而不是继承。</p><p><strong>示例</strong>：</p><pre><code class="language-swift">protocol Flyable {
+    func fly()
+}
+
+protocol Swimmable {
+    func swim()
+}
+
+struct Duck: Flyable, Swimmable {
+    func fly() {
+        print(&amp;quot;鸭子在飞&amp;quot;)
+    }
+
+    func swim() {
+        print(&amp;quot;鸭子在游泳&amp;quot;)
+    }
+}
+
+struct Fish: Swimmable {
+    func swim() {
+        print(&amp;quot;鱼在游泳&amp;quot;)
+    }
+}</code></pre><p><strong>优点</strong>：</p><ul><li><p>灵活组合能力。</p></li><li><p>避免类的单继承限制。</p></li><li><p>便于测试和替换实现。</p></li></ul><h2>十三、避坑指南</h2><ul><li><p><strong>枚举分支尽量少而清晰</strong>：过多分支考虑拆分。</p></li><li><p><strong>关联值 vs 原始值</strong>：不能同时存在。</p></li><li><p><strong>协议命名规范</strong>：表示能力用 <code>-able</code>、<code>-ible</code>，表示身份用名词。</p></li><li><p><strong>协议扩展默认实现</strong>：注意不要与具体实现冲突。</p></li><li><p><strong>@objc 可选要求</strong>：能不用就不用，优先用协议扩展。</p></li><li><p><strong>协议组合</strong>：类型太多时用 typealias 简化。</p></li></ul><h2>十四、检查清单</h2><ul><li><p>[ ] 能定义枚举，使用原始值</p></li><li><p>[ ] 理解关联值的用法</p></li><li><p>[ ] 会为枚举添加计算属性和方法</p></li><li><p>[ ] 会使用 CaseIterable</p></li><li><p>[ ] 能定义协议，遵循协议</p></li><li><p>[ ] 理解协议作为类型</p></li><li><p>[ ] 会使用协议扩展提供默认实现</p></li><li><p>[ ] 了解面向协议编程的思路</p></li></ul></div></div>
+                    </div>
+
+                    <!-- 上一篇 / 下一篇 -->
+                    <div class="mt-12 pt-6 border-t border-slate-200 dark:border-slate-700 grid grid-cols-2 gap-x-6 gap-y-1" id="article-nav">
+                        <div id="nav-prev" class="text-left"></div>
+                        <div id="nav-next" class="text-right"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- JS -->
+        <script src="../../../vendor/localforage.min.js"></script>
+        <!-- 详情页统一不显示页脚（有意为之；renderFooter 内含 if(!footer) return 保护，不会报错） -->
+
+        <script src="../../../js/api.js?v=20260921c"></script>
+        <script src="../../../js/utils.js"></script>
+        <script src="../../../js/topics.js?v=2"></script>
+        <script src="../../../js/views.js?v=20260921c"></script>
+        <script src="../../../js/seo.js?v=1"></script>
+        <script src="../../../js/theme.js?v=20260921d"></script>
+        <script src="../../../js/auth.js?v=20260921e"></script>
+        <script>
+        (function() {
+            // 初始化主题（参考 theme.js 中的 initTheme）
+            const t = localStorage.getItem('theme-mode') || 'system';
+            const u = new URLSearchParams(location.search).get('theme');
+            const m = (u && ['light','dark','system'].includes(u)) ? u : t;
+            const d = m === 'system' ? (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light') : m;
+            // 统一初始化导航 / 主题 / 登录（initApp 处理 detail 模式）
+            initApp('topics', { type: 'detail' });
+            HeAnAuth.mountLoginButton();
+            // 移动端左侧大纲侧栏按钮：注入导航左侧自定义插槽
+            const leftSlot = document.getElementById('nav-left-custom');
+            if (leftSlot) {
+                leftSlot.innerHTML = '<button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"><i class="fa-solid fa-bars text-lg"></i></button>';
+            }
+        })();
+
+        // 返回上级页面：根据来源智能返回
+        function goBack() {
+            const from = new URLSearchParams(location.search).get('from');
+            if (from === 'home') {
+                window.history.back();
+            } else if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        // loadTopicDetailPage 为 async：需等待并捕获异常
+        (async () => {
+            try {
+                await loadTopicDetailPage();
+                // 支持从首页「最新更新」直达某篇文章：topics/detail.html?series=1&article=5
+                const articleId = new URLSearchParams(location.search).get('article');
+                if (articleId && typeof selectArticle === 'function') {
+                    selectArticle(articleId);
+                }
+            } catch (e) {
+                console.error('[topic detail] 加载失败:', e);
+            }
+        })();
+        </script>
+    <!-- 百度「自动推送」：页面被访问时自动把 URL 推送给百度，加速收录 -->
+    <script>
+    (function () {
+        var bp = document.createElement('script');
+        var protocol = window.location.protocol.split(':')[0];
+        // https 与 http 使用不同的推送地址（官方要求）
+        bp.src = protocol === 'https'
+            ? 'https://zz.bdstatic.com/linksubmit/push.js'
+            : 'http://push.zhanzhang.baidu.com/push.js';
+        var first = document.getElementsByTagName('script')[0];
+        first.parentNode.insertBefore(bp, first);
+    })();
+    </script>
+</body>
+</html>
