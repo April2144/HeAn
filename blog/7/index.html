@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技术选型：我为什么选 HTML/CSS/JS + Python(FastAPI) + MySQL | 禾安</title>
+    <meta name="description" content="不用框架、不追新：从&quot;一个人维护、要长期改&quot;这两条约束出发，说清前端、后端、数据库各自的取舍理由，以及这套组合不适合什么场景。">
+    <link rel="canonical" href="https://hacore.cn/blog/7/">
+    <meta property="og:site_name" content="禾安">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="技术选型：我为什么选 HTML/CSS/JS + Python(FastAPI) + MySQL | 禾安">
+    <meta property="og:description" content="不用框架、不追新：从&quot;一个人维护、要长期改&quot;这两条约束出发，说清前端、后端、数据库各自的取舍理由，以及这套组合不适合什么场景。">
+    <meta property="og:url" content="https://hacore.cn/blog/7/">
+    <meta property="og:image" content="https://hacore.cn/assets/logo-mark.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="技术选型：我为什么选 HTML/CSS/JS + Python(FastAPI) + MySQL | 禾安">
+    <meta name="twitter:description" content="不用框架、不追新：从&quot;一个人维护、要长期改&quot;这两条约束出发，说清前端、后端、数据库各自的取舍理由，以及这套组合不适合什么场景。">
+    <meta name="twitter:image" content="https://hacore.cn/assets/logo-mark.svg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"技术选型：我为什么选 HTML/CSS/JS + Python(FastAPI) + MySQL","description":"不用框架、不追新：从\"一个人维护、要长期改\"这两条约束出发，说清前端、后端、数据库各自的取舍理由，以及这套组合不适合什么场景。","image":"https://hacore.cn/assets/logo-mark.svg","datePublished":"2026-09-24","dateModified":"2026-09-24","author":{"@type":"Person","name":"禾安","url":"https://hacore.cn/about/"},"publisher":{"@type":"Organization","name":"禾安","url":"https://hacore.cn/"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://hacore.cn/blog/7/"},"keywords":["过程分享","技术选型"]}</script>
+    <script src="../../js/config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = TAILWIND_CONFIG;
+    </script>
+    <!-- 暗黑模式防闪烁 -->
+    <script>
+        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../js/common.css?v=20260921d">
+    <link rel="icon" href="data:,">
+</head>
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
+
+    <!-- 顶栏：由 renderNavbar 统一生成（detail 模式） -->
+    <header id="navbar"></header>
+
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+        <article class="fade-in-up">
+            <header class="mb-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="tag-badge" id="article-tag">经验分享</span>
+                    <span class="text-sm text-slate-400" id="article-date">2026-09-24</span>
+                    <span class="text-sm text-primary font-medium" id="article-series" style="display:none;"></span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold mb-6 leading-tight" id="article-title">技术选型：我为什么选 HTML/CSS/JS + Python(FastAPI) + MySQL</h1>
+                <div class="flex items-center gap-3 pb-6 border-b border-slate-200 dark:border-slate-700">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">禾</div>
+                    <div>
+                        <p class="font-medium text-sm">禾安</p>
+                        <p class="text-xs text-slate-500">独立开发者 · 专注移动端iOS开发</p>
+                    </div>
+                </div>
+            </header>
+            <div id="article-cover-wrap" style="display:none" class="rounded-2xl overflow-hidden shadow-lg mb-10">
+                <img id="article-cover" src="" alt="文章封面" class="w-full object-cover">
+            </div>
+            <div class="article-content text-slate-700 dark:text-slate-300" id="article-body"><p>选技术栈最容易踩的坑，是拿&quot;最流行&quot;当标准。流行的东西通常没错，但它不一定匹配你的约束。这篇说清这套组合是怎么定下来的 —— 重点不是&quot;它多好&quot;，而是&quot;它为什么匹配我这边的条件&quot;。</p><h2>一、先列约束，再挑技术</h2><p>动手前只有三条约束，但它们决定了后面所有取舍：</p><ul><li><p>一个人维护：<strong>没有团队分工，出问题得自己查；</strong></p></li><li><p>要长期改：<strong>不是一次性项目，几个月后还会回来加内容、改样式；</strong></p></li><li><p>预算和精力有限：<strong>不想在环境、构建、部署这些环节上反复折腾。</strong></p></li></ul><p>把这三条摆出来，&quot;要不要上框架&quot;&quot;要不要拆微服务&quot;这类问题其实就不用纠结了。</p><h2>二、前端：为什么不上框架</h2><p>这是最容易被质疑的一点。现在的默认答案是 React / Vue，但对我这个场景，它们的收益和成本不匹配：</p><ul><li><p>这个站是内容型的：<strong>页面结构相对固定，交互集中在少数几个地方；</strong></p></li><li><p>上框架就要上构建工具链：<strong>多一层依赖，就多一层排错面；</strong></p></li><li><p>SEO 是硬需求：<strong>内容站要靠搜索引擎带流量，服务端直接输出完整 HTML 最省事。</strong></p></li></ul><p>所以最后是 HTML + Tailwind + 原生 JavaScript：改完刷新就能看效果，不用等打包；页面里需要交互的地方，原生写也够用。</p><p>代价也说清楚：交互一旦复杂到某个程度，原生 JavaScript 会变得难维护 —— 这一点我认，到这个阶段就该换方案，而不是硬撑。</p><h2>三、后端：为什么是 FastAPI</h2><p>后端选型的重点是&quot;改起来快&quot;和&quot;少写胶水代码&quot;。FastAPI 在这两点上比较合手：</p><ul><li><p>类型标注就是校验：<strong>用 Pydantic 定义请求/响应模型，参数校验和错误提示不用自己写；</strong></p></li><li><p>自带接口文档：<strong>写完接口就有可交互的文档页，联调时省掉很多来回对齐；</strong></p></li><li><p>Python 生态：<strong>数据处理、脚本、自动化都顺手 —— 一个人做全栈时这点很重要。</strong></p></li></ul><p>也对比过别的：Node 生态大，但我这边 Python 更熟；Java / Go 稳，对个人站来说是重型装备；PHP 部署简单，但类型和工具链的体验我不太想回头。</p><h2>四、数据库：为什么是 MySQL</h2><p>内容型站点的数据结构天然是关系型的：文章属于某个分组、分组有层级、标签和内容多对多。MySQL 的匹配度很高：</p><ul><li><p>关系、事务、约束都齐：<strong>刚好对应&quot;内容 + 分组 + 标签&quot;这类结构；</strong></p></li><li><p>生态最成熟：<strong>遇到问题基本都能搜到答案，工具链也全；</strong></p></li><li><p>和服务器默认环境兼容：<strong>部署时少一步折腾。</strong></p></li></ul><p>也考虑过：SQLite 单文件、零配置，本地开发很舒服，但作为线上主库，多连接和远程管理的体验一般；MongoDB 灵活，可这里的数据结构并不需要这种灵活 —— 用了反而少一层约束。</p><h2>五、部署：够用就好</h2><p>一台服务器 + Nginx 反向代理 + HTTPS。Nginx 同时承担静态资源和接口转发，页面、附件、接口都走同一个入口，配置一次基本不用动。</p><p>部署走脚本而不是手动传文件：少出低级错误，也方便回滚。</p><h2>六、这套组合的边界</h2><p>说清楚它不适合什么，比列优点更有用：</p><ul><li><p>页面交互很重：<strong>比如复杂后台、实时协作 —— 建议直接上框架；</strong></p></li><li><p>需要横向扩容、高并发：<strong>这套单机配置不够，得往前加缓存和队列；</strong></p></li><li><p>多人协作、要统一规范：<strong>前端构建链和类型系统值得补上。</strong></p></li></ul><h2>结论</h2><p>选型最实用的判断标准不是&quot;哪个最好&quot;，而是&quot;哪一组能让当下这个约束下的项目，持续做下去&quot;。</p><p>这套组合没什么亮点，但它让一个人能长期维护 —— 对这个规模的项目，这就是最重要的指标。</p><h2>感受/反思</h2><p>选型这件事给我的教训是：<strong>不要拿&quot;流不流行&quot;当标准，要拿&quot;我的约束是什么&quot;当标准</strong>。同一套技术放在不同的人、不同的项目上，结论可能完全相反。</p><p>还有一点：<strong>把&quot;不适合什么&quot;写下来，比列优点更有用</strong> —— 它能提醒你什么时候该换方案，而不是等到硬撑不下去才发现。</p><h2>相关推荐</h2><p>专题：全栈开发：从 0 到上线 —— 会把这里提到的每一块逐个展开。后续还会单独写部署脚本怎么写、Nginx 配置怎么做。</p></div>
+            <!-- 文章标签 -->
+            <div class="mt-10 pt-8" id="article-labels-section" style="display:none;">
+                <div class="flex flex-wrap gap-2" id="article-labels"></div>
+            </div>
+        </article>
+    </main>
+
+    <!-- 详情页统一不显示页脚（有意为之） -->
+
+    <script src="../../vendor/localforage.min.js"></script>
+    <script src="../../js/api.js?v=20260921c"></script>
+    <script src="../../js/utils.js"></script>
+    <script src="../../js/views.js?v=20260921c"></script>
+    <script src="../../js/seo.js?v=1"></script>
+    <script src="../../js/theme.js?v=20260921d"></script>
+    <script src="../../js/auth.js?v=20260921e"></script>
+    <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
+    <script src="../../js/renderer.js?v=2"></script>
+    <script>
+        initApp('blog', { type: 'detail' });
+        HeAnAuth.mountLoginButton();
+
+        async function renderBlogDetail() {
+            // 兼容两种 URL：/blog/6/（预渲染真实路径 ✓）与 /blog/detail.html?id=6（旧链接 ✓）
+            const blogId = resolveContentId('blog');
+            const blog = await loadBlog(blogId);
+            if (!blog) return;
+
+            // SEO：标题 + 真实摘要 + 分享卡片 + 结构化数据（统一走 seo.js 单点）✓
+            // ⚠️ 原先只改了 document.title，description 还是写死的「禾安的博客文章」✗
+            if (window.HeAnSeo) {
+                HeAnSeo.apply({
+                    title: `${blog.title} | ${SITE.name}`,
+                    description: blog.summary || '',
+                    image: blog.cover_image || '',
+                    type: 'article',
+                    // 规范链接固定指向新路径 → 旧 ?id= 页也归一到它（避免重复内容 ✗）
+                    url: location.origin + '/blog/' + blogId + '/',
+                    jsonLd: HeAnSeo.jsonLd.article({
+                        title: blog.title,
+                        description: blog.summary || '',
+                        image: blog.cover_image || '',
+                        date: blog.date || '',
+                        tags: blog.tags || [],
+                    }),
+                });
+            } else {
+                document.title = `${blog.title} | ${SITE.name}`;
+            }
+            document.getElementById('article-title').textContent = blog.title;
+            document.getElementById('article-date').textContent = blog.date;
+            // 封面图：无封面时不显示占位图，仅在有封面时渲染
+            const coverWrap = document.getElementById('article-cover-wrap');
+            const coverEl = document.getElementById('article-cover');
+            if (blog.cover_image) {
+                coverEl.src = blog.cover_image;
+                coverEl.alt = blog.title;
+                coverWrap.style.display = '';
+            } else {
+                coverWrap.style.display = 'none';
+            }
+            document.getElementById('article-body').innerHTML = renderContent(blog.content || '');
+
+            // 顶部：分组徽章（显示对应分组名；未分组显示「全部」）
+            const articleTagEl = document.getElementById('article-tag');
+            const groupLabel = (blog.group && blog.group !== '未分组') ? blog.group : '全部';
+            if (TAG_MAP[blog.group]) {
+                // 命中统一标签系统：沿用彩色徽章（含分组名 + 图标）
+                applyGroupColor(articleTagEl, blog.group);
+            } else {
+                // 文件夹分组 / 未分组：中性标签，未分组显示「全部」
+                articleTagEl.className = 'label-tag';
+                articleTagEl.removeAttribute('style');
+                articleTagEl.textContent = groupLabel;
+            }
+
+            // 系列信息（如果有系列分组标签和进度）
+            const seriesEl = document.getElementById('article-series');
+            if (blog.series_name && blog.series_progress) {
+                seriesEl.textContent = `${blog.series_name} · ${blog.series_progress}`;
+                seriesEl.style.display = '';
+            } else {
+                seriesEl.style.display = 'none';
+            }
+
+            // 底部：文章标签（矩形小圆角）
+            const labelsHtml = getLabelsHtml(blog.tags);
+            const labelsSection = document.getElementById('article-labels-section');
+            if (labelsHtml) {
+                document.getElementById('article-labels').innerHTML = labelsHtml;
+                labelsSection.style.display = '';
+            }
+
+        }
+        // 返回上级页面：根据来源智能返回，保持与专题/项目详情页一致
+        function goBack() {
+            const from = new URLSearchParams(location.search).get('from');
+            if (from === 'home') {
+                window.history.back();
+            } else if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        (async () => {
+            try {
+                await initTagMapFromAPI();
+                await renderBlogDetail();
+            } catch (e) {
+                console.error('[blog detail] 渲染失败:', e);
+            }
+        })();
+    </script>
+    <!-- 百度「自动推送」：页面被访问时自动把 URL 推送给百度，加速收录 -->
+    <script>
+    (function () {
+        var bp = document.createElement('script');
+        var protocol = window.location.protocol.split(':')[0];
+        // https 与 http 使用不同的推送地址（官方要求）
+        bp.src = protocol === 'https'
+            ? 'https://zz.bdstatic.com/linksubmit/push.js'
+            : 'http://push.zhanzhang.baidu.com/push.js';
+        var first = document.getElementsByTagName('script')[0];
+        first.parentNode.insertBefore(bp, first);
+    })();
+    </script>
+</body>
+</html>

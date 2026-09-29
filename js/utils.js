@@ -96,6 +96,26 @@ function escapeHtml(str) {
  * @param {string} detailHref 兜底详情页链接
  * @returns {{href: string, external: boolean, label: string}}
  */
+/**
+ * 解析内容 ID —— 优先「真实路径」，回退「旧查询参数」
+ *
+ * 背景：详情页现在有两种 URL（都能用 ✓）
+ *   新（预渲染）：/blog/6/、/projects/4/   ← 静态 HTML，爬虫能直接读到正文 ✓
+ *   旧（兼容）  ：/blog/detail.html?id=6   ← 老外链/已收录页面不 404 ✓
+ * 归一化靠 canonical：旧链接的 canonical 指向新路径 ✓（见 js/seo.js）
+ *
+ * @param {string} kind 路径片段：blog | projects
+ * @returns {number} 内容 ID（解析不到返回 0）
+ */
+function resolveContentId(kind) {
+    // ① 真实路径：/blog/6/ 或 /blog/6/index.html
+    const m = location.pathname.match(new RegExp('/' + kind + '/(\\d+)(?:/|/index\\.html)?$'));
+    if (m) return parseInt(m[1], 10) || 0;
+    // ② 旧查询参数：?id=6
+    const q = new URLSearchParams(location.search).get('id');
+    return (q && parseInt(q, 10)) || 0;
+}
+
 function resolveProjectLink(project, detailHref) {
     // 产品卡片（产品列表 / 首页精选项目）统一进入「二级详情页」，不再直接跳 demo_url；
     // 产品页的真实入口放在详情页的「在线预览」按钮上（见 projects/detail.html，用 project.demo_url）。

@@ -205,7 +205,7 @@ async function renderSidebarProjects() {
         return `
             <li class="topic-simple-item">
                 <i class="fa-solid fa-cube topic-simple-icon"></i>
-                <a href="../projects/detail.html?id=${project.id}&from=topics" class="block group min-w-0">
+                <a href="../projects/${project.id}/?from=topics" class="block group min-w-0">
                     <h4 class="font-semibold text-sm text-slate-800 dark:text-slate-100 group-hover:text-primary transition-theme-color truncate">${escapeHtml(project.title)}</h4>
                     <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5">${escapeHtml(desc)}</p>
                 </a>

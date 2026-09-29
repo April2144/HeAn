@@ -67,7 +67,8 @@
         HeAnAuth.mountLoginButton();
 
         async function renderBlogDetail() {
-            const blogId = parseInt(new URLSearchParams(location.search).get('id')) || 0;
+            // 兼容两种 URL：/blog/6/（预渲染真实路径 ✓）与 /blog/detail.html?id=6（旧链接 ✓）
+            const blogId = resolveContentId('blog');
             const blog = await loadBlog(blogId);
             if (!blog) return;
 
@@ -79,6 +80,8 @@
                     description: blog.summary || '',
                     image: blog.cover_image || '',
                     type: 'article',
+                    // 规范链接固定指向新路径 → 旧 ?id= 页也归一到它（避免重复内容 ✗）
+                    url: location.origin + '/blog/' + blogId + '/',
                     jsonLd: HeAnSeo.jsonLd.article({
                         title: blog.title,
                         description: blog.summary || '',

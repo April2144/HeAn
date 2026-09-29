@@ -94,7 +94,8 @@
         HeAnAuth.mountLoginButton();
 
         async function renderProjectDetail() {
-            const projectId = new URLSearchParams(location.search).get('id') || '0';
+            // 兼容两种 URL：/projects/4/（预渲染真实路径 ✓）与 /projects/detail.html?id=4（旧链接 ✓）
+            const projectId = resolveContentId('projects') || '0';
             const project = await loadProject(projectId);
             if (!project) return;
 
@@ -106,6 +107,8 @@
                     description: _projDesc,
                     image: project.cover_image || '',
                     type: 'website',
+                    // 规范链接固定指向新路径 ✓
+                    url: location.origin + '/projects/' + projectId + '/',
                     jsonLd: HeAnSeo.jsonLd.product({
                         title: project.title,
                         description: _projDesc,

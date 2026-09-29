@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我是如何从零搭建这个网站的 | 禾安</title>
+    <meta name="description" content="个人站从空目录到能访问的完整过程：怎么定内容板块、技术栈按什么标准选、内容结构为什么要统一，以及上线阶段真正花时间的几件事。">
+    <link rel="canonical" href="https://hacore.cn/blog/6/">
+    <meta property="og:site_name" content="禾安">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="我是如何从零搭建这个网站的 | 禾安">
+    <meta property="og:description" content="个人站从空目录到能访问的完整过程：怎么定内容板块、技术栈按什么标准选、内容结构为什么要统一，以及上线阶段真正花时间的几件事。">
+    <meta property="og:url" content="https://hacore.cn/blog/6/">
+    <meta property="og:image" content="https://hacore.cn/assets/logo-mark.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="我是如何从零搭建这个网站的 | 禾安">
+    <meta name="twitter:description" content="个人站从空目录到能访问的完整过程：怎么定内容板块、技术栈按什么标准选、内容结构为什么要统一，以及上线阶段真正花时间的几件事。">
+    <meta name="twitter:image" content="https://hacore.cn/assets/logo-mark.svg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"我是如何从零搭建这个网站的","description":"个人站从空目录到能访问的完整过程：怎么定内容板块、技术栈按什么标准选、内容结构为什么要统一，以及上线阶段真正花时间的几件事。","image":"https://hacore.cn/assets/logo-mark.svg","datePublished":"2026-09-24","dateModified":"2026-09-24","author":{"@type":"Person","name":"禾安","url":"https://hacore.cn/about/"},"publisher":{"@type":"Organization","name":"禾安","url":"https://hacore.cn/"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://hacore.cn/blog/6/"},"keywords":["建站记录","过程分享"]}</script>
+    <script src="../../js/config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = TAILWIND_CONFIG;
+    </script>
+    <!-- 暗黑模式防闪烁 -->
+    <script>
+        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../js/common.css?v=20260921d">
+    <link rel="icon" href="data:,">
+</head>
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
+
+    <!-- 顶栏：由 renderNavbar 统一生成（detail 模式） -->
+    <header id="navbar"></header>
+
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+        <article class="fade-in-up">
+            <header class="mb-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="tag-badge" id="article-tag">过程记录</span>
+                    <span class="text-sm text-slate-400" id="article-date">2026-09-24</span>
+                    <span class="text-sm text-primary font-medium" id="article-series" style="display:none;"></span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold mb-6 leading-tight" id="article-title">我是如何从零搭建这个网站的</h1>
+                <div class="flex items-center gap-3 pb-6 border-b border-slate-200 dark:border-slate-700">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">禾</div>
+                    <div>
+                        <p class="font-medium text-sm">禾安</p>
+                        <p class="text-xs text-slate-500">独立开发者 · 专注移动端iOS开发</p>
+                    </div>
+                </div>
+            </header>
+            <div id="article-cover-wrap" style="display:none" class="rounded-2xl overflow-hidden shadow-lg mb-10">
+                <img id="article-cover" src="" alt="文章封面" class="w-full object-cover">
+            </div>
+            <div class="article-content text-slate-700 dark:text-slate-300" id="article-body"><p>现在这个站点能正常访问了。但它不是一次写完的 —— 中间返工过几轮，也踩了几个回头看很明显的坑。这篇把过程记下来：一是给自己留个存档，二是如果你也在搭个人站，能少走两段弯路。</p><h2>一、先想清楚这个站是干什么的</h2><p>个人站最容易犯的错是&quot;什么都想放&quot;。一开始我的想法是把技术沉淀、项目、文章、联系方式全塞进首页。真动手才发现，关键不是&quot;放什么&quot;，而是&quot;每块内容服务于什么&quot;。最后定成三个板块，职责分得很清：</p><ul><li><p>专题：<strong>系统化的学习路径，按章节组织，一篇一篇往下读；</strong></p></li><li><p>博客：<strong>时间流，记录单点问题和过程复盘；</strong></p></li><li><p>产品：<strong>能直接打开或下载的东西，是资产的积累，也是能力的证据。</strong></p></li></ul><p>这三个定位一旦分清，后面的页面结构、数据结构、导航顺序都顺了。</p><h2>二、技术栈：先看约束，再看喜好</h2><p>约束是「一个人维护，还要能长期改」。所以选型只看三条：改起来快、部署简单、出问题好排查。最后定下来的是：</p><ul><li><p>前台：<strong>HTML + Tailwind + 原生 JavaScript，不引入构建工具 —— 改完刷新就能看效果，不用等打包；</strong></p></li><li><p>后台：<strong>FastAPI（Python），同一套代码既提供接口、又提供管理界面；</strong></p></li><li><p>数据库：<strong>MySQL —— 内容、分组、标签都放在里面；</strong></p></li><li><p>部署：<strong>一台服务器 + Nginx 反向代理 + HTTPS。</strong></p></li></ul><p>这套组合里没有&quot;先进&quot;的东西，但一个人维护够用了：遇到问题基本能靠日志和浏览器直接定位。</p><h2>三、内容驱动：让结构跟着内容走</h2><p>最初我把&quot;专题&quot;和&quot;博客&quot;当成两套独立的东西，各写一套增删改查。做到一半发现重复太多，于是抽出一套统一的「文件夹树」：</p><ul><li><p>内容（专题章节、博客文章）挂在 <strong>content</strong> 模块的文件夹树下；</p></li><li><p>项目挂在 <strong>project</strong> 模块的文件夹树下；</p></li><li><p>分组、排序、公开/私密，都用同一套逻辑。</p></li></ul><p>省下来的不只是代码量 —— 后台的交互也统一了，不用在两套界面之间来回切。</p><h2>四、上线：真正的成本在&quot;来回几次&quot;</h2><p>写功能本身花的时间不多，反复调整的都是细节：</p><ul><li><p>前台有缓存：<strong>改了前端资源要处理版本号，否则拿到的还是旧页面；</strong></p></li><li><p>本地改完内容，线上不会自动变：<strong>数据在数据库里，中间漏了一次同步，排查了好一会儿；</strong></p></li><li><p>部署尽量脚本化：<strong>比手动传文件稳，而且部署完顺手验一下服务状态，能第一时间发现问题。</strong></p></li></ul><p>这几件事都不难，但每一件都值得固化成流程，不然下次还会踩一遍。</p><h2>五、V1.0 现在是什么状态</h2><p>不急着&quot;填满&quot;，先把结构和流程跑顺，后面加内容才不别扭。目前：</p><ul><li><p>专题：<strong>第一个专题（iOS 开发）的基础篇已上线，按章节持续更新；</strong></p></li><li><p>博客：<strong>从这篇开始按节奏更新，记录过程和技术点；</strong></p></li><li><p>产品：<strong>还没放 —— 等第一个真正能用的东西做完再上。</strong></p></li></ul><h2>感受</h2><p>回头做这件事，最大的体会是：<strong>个人站的难点不在写页面，而在&quot;先把要放什么想清楚&quot;</strong>。一开始我急着写代码，结果内容分类改了两次，页面结构也跟着返工。</p><p>如果重来一次，我会先花半天把&quot;三个板块各自服务什么&quot;写成一页纸，再动手写第一行代码。</p><h2>相关推荐</h2><p>专题：iOS 开发：从 0 到上架（正在更新）。后续会写技术栈选型、部署脚本怎么写、内容同步里踩过的坑。</p></div>
+            <!-- 文章标签 -->
+            <div class="mt-10 pt-8" id="article-labels-section" style="display:none;">
+                <div class="flex flex-wrap gap-2" id="article-labels"></div>
+            </div>
+        </article>
+    </main>
+
+    <!-- 详情页统一不显示页脚（有意为之） -->
+
+    <script src="../../vendor/localforage.min.js"></script>
+    <script src="../../js/api.js?v=20260921c"></script>
+    <script src="../../js/utils.js"></script>
+    <script src="../../js/views.js?v=20260921c"></script>
+    <script src="../../js/seo.js?v=1"></script>
+    <script src="../../js/theme.js?v=20260921d"></script>
+    <script src="../../js/auth.js?v=20260921e"></script>
+    <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
+    <script src="../../js/renderer.js?v=2"></script>
+    <script>
+        initApp('blog', { type: 'detail' });
+        HeAnAuth.mountLoginButton();
+
+        async function renderBlogDetail() {
+            // 兼容两种 URL：/blog/6/（预渲染真实路径 ✓）与 /blog/detail.html?id=6（旧链接 ✓）
+            const blogId = resolveContentId('blog');
+            const blog = await loadBlog(blogId);
+            if (!blog) return;
+
+            // SEO：标题 + 真实摘要 + 分享卡片 + 结构化数据（统一走 seo.js 单点）✓
+            // ⚠️ 原先只改了 document.title，description 还是写死的「禾安的博客文章」✗
+            if (window.HeAnSeo) {
+                HeAnSeo.apply({
+                    title: `${blog.title} | ${SITE.name}`,
+                    description: blog.summary || '',
+                    image: blog.cover_image || '',
+                    type: 'article',
+                    // 规范链接固定指向新路径 → 旧 ?id= 页也归一到它（避免重复内容 ✗）
+                    url: location.origin + '/blog/' + blogId + '/',
+                    jsonLd: HeAnSeo.jsonLd.article({
+                        title: blog.title,
+                        description: blog.summary || '',
+                        image: blog.cover_image || '',
+                        date: blog.date || '',
+                        tags: blog.tags || [],
+                    }),
+                });
+            } else {
+                document.title = `${blog.title} | ${SITE.name}`;
+            }
+            document.getElementById('article-title').textContent = blog.title;
+            document.getElementById('article-date').textContent = blog.date;
+            // 封面图：无封面时不显示占位图，仅在有封面时渲染
+            const coverWrap = document.getElementById('article-cover-wrap');
+            const coverEl = document.getElementById('article-cover');
+            if (blog.cover_image) {
+                coverEl.src = blog.cover_image;
+                coverEl.alt = blog.title;
+                coverWrap.style.display = '';
+            } else {
+                coverWrap.style.display = 'none';
+            }
+            document.getElementById('article-body').innerHTML = renderContent(blog.content || '');
+
+            // 顶部：分组徽章（显示对应分组名；未分组显示「全部」）
+            const articleTagEl = document.getElementById('article-tag');
+            const groupLabel = (blog.group && blog.group !== '未分组') ? blog.group : '全部';
+            if (TAG_MAP[blog.group]) {
+                // 命中统一标签系统：沿用彩色徽章（含分组名 + 图标）
+                applyGroupColor(articleTagEl, blog.group);
+            } else {
+                // 文件夹分组 / 未分组：中性标签，未分组显示「全部」
+                articleTagEl.className = 'label-tag';
+                articleTagEl.removeAttribute('style');
+                articleTagEl.textContent = groupLabel;
+            }
+
+            // 系列信息（如果有系列分组标签和进度）
+            const seriesEl = document.getElementById('article-series');
+            if (blog.series_name && blog.series_progress) {
+                seriesEl.textContent = `${blog.series_name} · ${blog.series_progress}`;
+                seriesEl.style.display = '';
+            } else {
+                seriesEl.style.display = 'none';
+            }
+
+            // 底部：文章标签（矩形小圆角）
+            const labelsHtml = getLabelsHtml(blog.tags);
+            const labelsSection = document.getElementById('article-labels-section');
+            if (labelsHtml) {
+                document.getElementById('article-labels').innerHTML = labelsHtml;
+                labelsSection.style.display = '';
+            }
+
+        }
+        // 返回上级页面：根据来源智能返回，保持与专题/项目详情页一致
+        function goBack() {
+            const from = new URLSearchParams(location.search).get('from');
+            if (from === 'home') {
+                window.history.back();
+            } else if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        (async () => {
+            try {
+                await initTagMapFromAPI();
+                await renderBlogDetail();
+            } catch (e) {
+                console.error('[blog detail] 渲染失败:', e);
+            }
+        })();
+    </script>
+    <!-- 百度「自动推送」：页面被访问时自动把 URL 推送给百度，加速收录 -->
+    <script>
+    (function () {
+        var bp = document.createElement('script');
+        var protocol = window.location.protocol.split(':')[0];
+        // https 与 http 使用不同的推送地址（官方要求）
+        bp.src = protocol === 'https'
+            ? 'https://zz.bdstatic.com/linksubmit/push.js'
+            : 'http://push.zhanzhang.baidu.com/push.js';
+        var first = document.getElementsByTagName('script')[0];
+        first.parentNode.insertBefore(bp, first);
+    })();
+    </script>
+</body>
+</html>

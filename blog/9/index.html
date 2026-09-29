@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用 AI 搭建后台与 CMS：我负责什么，AI 负责什么 | 禾安</title>
+    <meta name="description" content="把后台开发拆成两堆：凡是&quot;决定要什么&quot;的自己做，凡是&quot;按已定结构去实现&quot;的交给 AI。文中给了实际分工、两个踩过的坑，以及一条关于验收的判断。">
+    <link rel="canonical" href="https://hacore.cn/blog/9/">
+    <meta property="og:site_name" content="禾安">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="用 AI 搭建后台与 CMS：我负责什么，AI 负责什么 | 禾安">
+    <meta property="og:description" content="把后台开发拆成两堆：凡是&quot;决定要什么&quot;的自己做，凡是&quot;按已定结构去实现&quot;的交给 AI。文中给了实际分工、两个踩过的坑，以及一条关于验收的判断。">
+    <meta property="og:url" content="https://hacore.cn/blog/9/">
+    <meta property="og:image" content="https://hacore.cn/assets/logo-mark.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="用 AI 搭建后台与 CMS：我负责什么，AI 负责什么 | 禾安">
+    <meta name="twitter:description" content="把后台开发拆成两堆：凡是&quot;决定要什么&quot;的自己做，凡是&quot;按已定结构去实现&quot;的交给 AI。文中给了实际分工、两个踩过的坑，以及一条关于验收的判断。">
+    <meta name="twitter:image" content="https://hacore.cn/assets/logo-mark.svg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"用 AI 搭建后台与 CMS：我负责什么，AI 负责什么","description":"把后台开发拆成两堆：凡是\"决定要什么\"的自己做，凡是\"按已定结构去实现\"的交给 AI。文中给了实际分工、两个踩过的坑，以及一条关于验收的判断。","image":"https://hacore.cn/assets/logo-mark.svg","datePublished":"2026-09-24","dateModified":"2026-09-24","author":{"@type":"Person","name":"禾安","url":"https://hacore.cn/about/"},"publisher":{"@type":"Organization","name":"禾安","url":"https://hacore.cn/"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://hacore.cn/blog/9/"},"keywords":["过程分享","AI开发"]}</script>
+    <script src="../../js/config.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = TAILWIND_CONFIG;
+    </script>
+    <!-- 暗黑模式防闪烁 -->
+    <script>
+        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../js/common.css?v=20260921d">
+    <link rel="icon" href="data:,">
+</head>
+<body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans">
+
+    <!-- 顶栏：由 renderNavbar 统一生成（detail 模式） -->
+    <header id="navbar"></header>
+
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+        <article class="fade-in-up">
+            <header class="mb-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="tag-badge" id="article-tag">经验分享</span>
+                    <span class="text-sm text-slate-400" id="article-date">2026-09-24</span>
+                    <span class="text-sm text-primary font-medium" id="article-series" style="display:none;"></span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold mb-6 leading-tight" id="article-title">用 AI 搭建后台与 CMS：我负责什么，AI 负责什么</h1>
+                <div class="flex items-center gap-3 pb-6 border-b border-slate-200 dark:border-slate-700">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold">禾</div>
+                    <div>
+                        <p class="font-medium text-sm">禾安</p>
+                        <p class="text-xs text-slate-500">独立开发者 · 专注移动端iOS开发</p>
+                    </div>
+                </div>
+            </header>
+            <div id="article-cover-wrap" style="display:none" class="rounded-2xl overflow-hidden shadow-lg mb-10">
+                <img id="article-cover" src="" alt="文章封面" class="w-full object-cover">
+            </div>
+            <div class="article-content text-slate-700 dark:text-slate-300" id="article-body"><h2>用 AI 搭建后台与 CMS：我负责什么，AI 负责什么</h2><p>后台是整站里最容易失控的部分 —— 它要管内容、管分组、管排序、管发布状态，字段一多就容易乱。我从一开始就给自己划了条线：哪些必须自己想清楚，哪些可以直接交给 AI。这条线划清楚了，效率才真的起来。</p><h2>一、先划清分工</h2><p>开工之前我把要做的事分成了两堆，分法很简单：</p><ul><li><p>凡是「决定要什么」的，我来：<strong>内容有哪些类型、每一类要存什么字段、分组怎么套、什么状态算可发布 —— 这些是结构，定错了后面全是返工；</strong></p></li><li><p>凡是「按已定的结构去实现」的，交给 AI：<strong>增删改查、列表渲染、表单校验、批量处理脚本 —— 目标明确、可以逐条验收。</strong></p></li></ul><h2>二、过程中的实际分工</h2><p>具体落到这次的后台开发上，大致是这样：</p><ul><li><p>我定内容模型：<strong>内容和项目分开管，各自挂一棵文件夹树；分组、排序、公开/私密都走同一套逻辑 —— 这样后台只维护一套交互，不用做两遍；</strong></p></li><li><p>AI 写增删改查：<strong>列表、详情、编辑、发布/下线这些标准操作，直接生成；</strong></p></li><li><p>我定交互规则：<strong>比如文件夹要能拖动排序，而且排序结果必须落到数据库 ——规则我先说清，实现交给 AI；</strong></p></li><li><p>AI 写批量脚本：<strong>批量插图、批量调顺序这类&quot;一次动很多条&quot;的活，用脚本做，带改前备份；</strong></p></li><li><p>我做验收：<strong>每条改动都要能验证 —— 比如&quot;改完两端数据逐字节一致&quot;，校验条件我定，验证过程可以自动化。</strong></p></li></ul><h2>三、踩过的坑</h2><p>也有翻车的时候，两个印象最深：</p><ul><li><p>字段值不能靠猜：<strong>有一次建分组时，我按现有数据的写法推断了一个字段值，结果后端根本查不到那批数据 —— 页面上分组一个都没出来。教训是：填字段前先看后端怎么查，别照现有数据的值推断；</strong></p></li><li><p>改完必须同步：<strong>后台数据在数据库里，本机改完不会自动到线上。有一次在本地把文章状态改了，线上还是旧的 —— 排查了一阵才想起来这回事。</strong></p></li></ul><h2>四、结果</h2><p>这套分工跑下来，后台现在能稳定管理：</p><ul><li><p>内容和项目两套内容，各带一棵分组树；</p></li><li><p>分组的拖动排序（结果直接写库）；</p></li><li><p>发布 / 下线状态、以及列表的展示顺序。</p></li></ul><p>工作量比预想的小，而且因为我一开始就把结构定死了，中间几乎没有大改。</p><h2>感受/反思</h2><p>这段经历里最有用的一条体会是：<strong>AI 提高的是&quot;实现&quot;的效率，不是&quot;决策&quot;的效率</strong>。结构、字段、规则这些要拿主意的地方，交给 AI 反而更慢 —— 因为它不知道你的项目里什么更重要。</p><p>另一条是关于验收的：<strong>凡是能定义出校验条件的事，就可以放心交出去</strong>。&quot;两端逐字节一致&quot;这种条件一旦定下来，谁执行都不容易出错；反过来，如果一件事你自己都说不清怎么算做对了，那大概也不该急着交给 AI。</p><h2>相关推荐</h2><p>专题：AI 搭建网站/CMS 实战：从 0 到 1 —— 会把内容模型、后台交互、批量处理这几块逐个展开。</p></div>
+            <!-- 文章标签 -->
+            <div class="mt-10 pt-8" id="article-labels-section" style="display:none;">
+                <div class="flex flex-wrap gap-2" id="article-labels"></div>
+            </div>
+        </article>
+    </main>
+
+    <!-- 详情页统一不显示页脚（有意为之） -->
+
+    <script src="../../vendor/localforage.min.js"></script>
+    <script src="../../js/api.js?v=20260921c"></script>
+    <script src="../../js/utils.js"></script>
+    <script src="../../js/views.js?v=20260921c"></script>
+    <script src="../../js/seo.js?v=1"></script>
+    <script src="../../js/theme.js?v=20260921d"></script>
+    <script src="../../js/auth.js?v=20260921e"></script>
+    <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径） -->
+    <script src="../../js/renderer.js?v=2"></script>
+    <script>
+        initApp('blog', { type: 'detail' });
+        HeAnAuth.mountLoginButton();
+
+        async function renderBlogDetail() {
+            // 兼容两种 URL：/blog/6/（预渲染真实路径 ✓）与 /blog/detail.html?id=6（旧链接 ✓）
+            const blogId = resolveContentId('blog');
+            const blog = await loadBlog(blogId);
+            if (!blog) return;
+
+            // SEO：标题 + 真实摘要 + 分享卡片 + 结构化数据（统一走 seo.js 单点）✓
+            // ⚠️ 原先只改了 document.title，description 还是写死的「禾安的博客文章」✗
+            if (window.HeAnSeo) {
+                HeAnSeo.apply({
+                    title: `${blog.title} | ${SITE.name}`,
+                    description: blog.summary || '',
+                    image: blog.cover_image || '',
+                    type: 'article',
+                    // 规范链接固定指向新路径 → 旧 ?id= 页也归一到它（避免重复内容 ✗）
+                    url: location.origin + '/blog/' + blogId + '/',
+                    jsonLd: HeAnSeo.jsonLd.article({
+                        title: blog.title,
+                        description: blog.summary || '',
+                        image: blog.cover_image || '',
+                        date: blog.date || '',
+                        tags: blog.tags || [],
+                    }),
+                });
+            } else {
+                document.title = `${blog.title} | ${SITE.name}`;
+            }
+            document.getElementById('article-title').textContent = blog.title;
+            document.getElementById('article-date').textContent = blog.date;
+            // 封面图：无封面时不显示占位图，仅在有封面时渲染
+            const coverWrap = document.getElementById('article-cover-wrap');
+            const coverEl = document.getElementById('article-cover');
+            if (blog.cover_image) {
+                coverEl.src = blog.cover_image;
+                coverEl.alt = blog.title;
+                coverWrap.style.display = '';
+            } else {
+                coverWrap.style.display = 'none';
+            }
+            document.getElementById('article-body').innerHTML = renderContent(blog.content || '');
+
+            // 顶部：分组徽章（显示对应分组名；未分组显示「全部」）
+            const articleTagEl = document.getElementById('article-tag');
+            const groupLabel = (blog.group && blog.group !== '未分组') ? blog.group : '全部';
+            if (TAG_MAP[blog.group]) {
+                // 命中统一标签系统：沿用彩色徽章（含分组名 + 图标）
+                applyGroupColor(articleTagEl, blog.group);
+            } else {
+                // 文件夹分组 / 未分组：中性标签，未分组显示「全部」
+                articleTagEl.className = 'label-tag';
+                articleTagEl.removeAttribute('style');
+                articleTagEl.textContent = groupLabel;
+            }
+
+            // 系列信息（如果有系列分组标签和进度）
+            const seriesEl = document.getElementById('article-series');
+            if (blog.series_name && blog.series_progress) {
+                seriesEl.textContent = `${blog.series_name} · ${blog.series_progress}`;
+                seriesEl.style.display = '';
+            } else {
+                seriesEl.style.display = 'none';
+            }
+
+            // 底部：文章标签（矩形小圆角）
+            const labelsHtml = getLabelsHtml(blog.tags);
+            const labelsSection = document.getElementById('article-labels-section');
+            if (labelsHtml) {
+                document.getElementById('article-labels').innerHTML = labelsHtml;
+                labelsSection.style.display = '';
+            }
+
+        }
+        // 返回上级页面：根据来源智能返回，保持与专题/项目详情页一致
+        function goBack() {
+            const from = new URLSearchParams(location.search).get('from');
+            if (from === 'home') {
+                window.history.back();
+            } else if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        (async () => {
+            try {
+                await initTagMapFromAPI();
+                await renderBlogDetail();
+            } catch (e) {
+                console.error('[blog detail] 渲染失败:', e);
+            }
+        })();
+    </script>
+    <!-- 百度「自动推送」：页面被访问时自动把 URL 推送给百度，加速收录 -->
+    <script>
+    (function () {
+        var bp = document.createElement('script');
+        var protocol = window.location.protocol.split(':')[0];
+        // https 与 http 使用不同的推送地址（官方要求）
+        bp.src = protocol === 'https'
+            ? 'https://zz.bdstatic.com/linksubmit/push.js'
+            : 'http://push.zhanzhang.baidu.com/push.js';
+        var first = document.getElementsByTagName('script')[0];
+        first.parentNode.insertBefore(bp, first);
+    })();
+    </script>
+</body>
+</html>
