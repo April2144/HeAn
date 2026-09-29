@@ -170,31 +170,50 @@ function trackPageViewAuto(pageType, pageId = 0) {
     });
 }
 
-// 由页面 activePage 与 URL 参数自动解析 page_type/page_id 并上报（列表页/详情页统一入口）
-var _PAGE_TYPE_MAP = {
-    home: 'home',
-    blog: 'blog',
-    blogs: 'blog_list',
-    project: 'project',
-    projects: 'project_list',
-    topics: 'topics_list',
-    series: 'series',
-    about: 'about',
+// 埋点的 page_type / page_id 统一【按 URL 路径】判定（列表页/详情页共用这一个入口）
+//
+// ⚠️ 为什么不用各页面传入的 activePage：它是"导航 tab 高亮用"的页面名，不是内容类型 ✗
+//    · projects/detail.html 传 'projects' → 被记成 project_list ✗
+//      → 后台「内容分析 → 产品」按 page_type='project' 过滤时查不到 → 全是 0 ✗（实测事故）
+//    · blog/index.html（列表页）传 'blog' → 记成 blog 且 id=0 ✗
+//      → 列表 PV 全堆到"博客 id=0"上，把真实文章的数据盖住 ✗
+//    · 专题详情页传 'topics' → 记成 topics_list ✗（详情被算进列表）
+//    路径是唯一可靠来源 ✓（预渲染后的真实路径 /blog/6/、/projects/4/、/topics/1/47/ 都能正确解析 ✓）
+var _PAGE_TYPE_MAP = {          // 仅作旧式 URL（未预渲染、走 ?id= 查询参数）的兜底
+    home: 'home', blog: 'blog', blogs: 'blog_list',
+    project: 'project', projects: 'project_list',
+    topics: 'topics_list', series: 'series', about: 'about',
 };
+
+/** 按路径解析内容类型与 ID（规则与 gen_sitemap/gen_static 的真实路径保持一致 ✓） */
+function _pathTypeInfo(pathname) {
+    var p = (pathname || location.pathname || '').replace(/\/index\.html$/, '/');
+    var m;
+    if ((m = p.match(/^\/blog\/(\d+)\/?$/)))      return { type: 'blog', id: parseInt(m[1], 10) };
+    if ((m = p.match(/^\/projects\/(\d+)\/?$/)))  return { type: 'project', id: parseInt(m[1], 10) };
+    // 专题：/topics/1/（系列）与 /topics/1/47/（系列内文章）都归到系列，id = 系列号 ✓
+    if ((m = p.match(/^\/topics\/(\d+)(?:\/\d+)?\/?$/))) return { type: 'series', id: parseInt(m[1], 10) };
+    if (/^\/blog\/?$/.test(p))     return { type: 'blog_list', id: 0 };
+    if (/^\/projects\/?$/.test(p)) return { type: 'project_list', id: 0 };
+    if (/^\/topics\/?$/.test(p))   return { type: 'topics_list', id: 0 };
+    if (/^\/about\/?$/.test(p))    return { type: 'about', id: 0 };
+    if (p === '/' || p === '')     return { type: 'home', id: 0 };
+    return null;   // 认不出来 → 走旧式兜底 ✓
+}
+
 function autoTrackPageView(activePage) {
-    const params = new URLSearchParams(window.location.search);
-    // 专题详情页的 page_type 应按「series」归类。
-    // 不能用 activePage 判定：它的值是 'topics'（同时用于导航 tab 高亮，不能改），
-    // 会误标成 topics_list，导致后台统计里专题 PV/UV 被算进「专题列表」。
-    // 故统一按 URL 特征判定：带 ?series= 的页面即为专题详情。
-    const isSeriesDetail = !!params.get('series');
-    const pageType = isSeriesDetail
-        ? 'series'
-        : (_PAGE_TYPE_MAP[activePage] || activePage || 'page');
-    let pageId = 0;
-    const id = params.get('id') || params.get('series') || params.get('article') || params.get('topic');
-    if (id) pageId = parseInt(id) || 0;
-    trackPageViewAuto(pageType, pageId);
+    var info = _pathTypeInfo(location.pathname);
+    if (!info) {
+        // 兜底：未预渲染的旧式 URL（如 /blog/detail.html?id=6，或带 ?series= 的旧链接）
+        var params = new URLSearchParams(window.location.search);
+        var isSeriesDetail = !!params.get('series');
+        var pageType = isSeriesDetail ? 'series' : (_PAGE_TYPE_MAP[activePage] || activePage || 'page');
+        var pageId = 0;
+        var id = params.get('id') || params.get('series') || params.get('article') || params.get('topic');
+        if (id) pageId = parseInt(id) || 0;
+        info = { type: pageType, id: pageId };
+    }
+    trackPageViewAuto(info.type, info.id);
 }
 
 // ---------- 降级：读取本地 JSON ----------
