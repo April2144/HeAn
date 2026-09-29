@@ -55,7 +55,14 @@
         </div>
     </main>
 
-    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12"></footer>
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
+        <!-- ⚠️ 无 JS 时的静态回退（站点名 + 备案号）：爬虫不执行 JS，必须静态可读 ✓
+             JS 加载后由 renderFooter() 整体替换 → 真实用户看到的仍是原页脚 ✓ 内容由 gen_static.py 同步，勿手改 ✗ -->
+        <div id="filing-static" class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 leading-relaxed">
+            <p>禾安的笔记</p>
+            <p><a href="https://beian.miit.gov.cn" rel="noopener">豫ICP备2026043016号</a> · <a href="https://beian.mps.gov.cn/#/query/webSearch?code=41018302000609" rel="noopener">豫公网安备41018302000609号</a></p>
+        </div>
+    </footer>
 
     <script src="../vendor/localforage.min.js"></script>
     <script src="../js/api.js?v=20260921c"></script>
