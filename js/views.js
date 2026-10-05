@@ -10,10 +10,14 @@
 // 全站 tabs 配置（单点定义，main 导航复用）
 const NAV_TABS = [
     { key: 'home',     label: '首页',   href: 'index.html' },
-    { key: 'topics',   label: '专题',   href: 'topics/index.html' },
-    { key: 'projects', label: '产品',   href: 'projects/index.html' },
-    { key: 'blog',     label: '博客',   href: 'blog/index.html' },
-    { key: 'about',    label: '关于我', href: 'about/index.html' },
+    // ⚠️ 用「目录形式」（topics/ 而非 topics/index.html）：
+    //    ① SSR 后详情页由后端渲染，列表页走目录 URL 更规范 ✓
+    //    ② 旧的 xxx/index.html 在 SSR 网关下会被当成路径参数 → 422 参数校验失败 ✗
+    //    navHref() 会自动补上站点根前缀（根目录部署 / 子目录部署都适用 ✓）
+    { key: 'topics',   label: '专题',   href: 'topics/' },
+    { key: 'projects', label: '产品',   href: 'projects/' },
+    { key: 'blog',     label: '博客',   href: 'blog/' },
+    { key: 'about',    label: '关于我', href: 'about/' },
 ];
 
 // 站点根前缀（'.' / '..' / '/HeAn'，末尾不带斜杠，与 api.js 的 getRoot 实现保持一致）

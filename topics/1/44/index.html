@@ -713,7 +713,8 @@ print(flat)  // [1, 2, 3, 4, 5]</code></pre><h2>十三、避坑指南</h2><ul><l
             } else if (window.history.length > 1) {
                 window.history.back();
             } else {
-                window.location.href = 'index.html';
+                // 回列表页：用 navHref（见 blog/detail.html 的说明 ✓）
+                window.location.href = navHref('topics/');
             }
         }
         // loadTopicDetailPage 为 async：需等待并捕获异常

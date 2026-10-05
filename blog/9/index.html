@@ -160,7 +160,10 @@
             } else if (window.history.length > 1) {
                 window.history.back();
             } else {
-                window.location.href = 'index.html';
+                // 回列表页：用 navHref 生成「站根 + blog/」✓
+                //   ⚠️ 不能写相对的 'index.html'：预渲染后页面在 /blog/6/ 下，
+                //      相对路径会解析成 /blog/6/index.html（指向自己）✗
+                window.location.href = navHref('blog/');
             }
         }
         (async () => {

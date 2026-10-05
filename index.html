@@ -75,7 +75,7 @@
                 <a href="#projects" class="btn-primary px-8 py-3 rounded-lg">
                     看看产品
                 </a>
-                <a href="./about/index.html#about-cta-section" class="btn-ghost px-8 py-3 rounded-lg">
+                <a href="./about/#about-cta-section" class="btn-ghost px-8 py-3 rounded-lg">
                     联系我
                 </a>
             </div>
@@ -90,7 +90,7 @@
                     <h2 class="text-3xl font-bold mb-4">精选专题</h2>
                     <p class="text-slate-600 dark:text-slate-400">系统化学习路线，构建完整知识体系</p>
                 </div>
-                <a href="topics/index.html" class="text-primary hover:underline hidden md:block">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
+                <a href="topics/" class="text-primary hover:underline hidden md:block">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
             </div>
 
             <div class="flex gap-6 overflow-x-auto pb-4 pt-4 -mt-4 snap-x snap-mandatory scrollbar-hide" id="topics-grid" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
@@ -98,7 +98,7 @@
             </div>
 
             <div class="mt-8 text-center md:hidden">
-                <a href="topics/index.html" class="text-primary hover:underline">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
+                <a href="topics/" class="text-primary hover:underline">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
             </div>
         </div>
     </section>
@@ -111,7 +111,7 @@
                     <h2 class="text-3xl font-bold mb-4">精选产品</h2>
                     <p class="text-slate-600 dark:text-slate-400">我做的、你能用的东西</p>
                 </div>
-                <a href="projects/index.html" class="text-primary hover:underline hidden md:block">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
+                <a href="projects/" class="text-primary hover:underline hidden md:block">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
             </div>
 
             <div class="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" id="projects-grid" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
@@ -119,7 +119,7 @@
             </div>
 
             <div class="mt-8 text-center md:hidden">
-                <a href="projects/index.html" class="text-primary hover:underline">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
+                <a href="projects/" class="text-primary hover:underline">更多 <i class="fas fa-angle-double-right ml-1"></i></a>
             </div>
         </div>
     </section>
@@ -254,7 +254,7 @@
                 // （否则产品区被隐藏后，按钮点了会没反应）
                 const heroProductBtn = document.querySelector('a[href="#projects"]');
                 if (heroProductBtn) {
-                    heroProductBtn.href = allProjects.length ? '#projects' : 'projects/index.html';
+                    heroProductBtn.href = allProjects.length ? '#projects' : 'projects/';
                 }
                 // 半空状态：仅 1 个推荐项目时去掉横向滚动/吸附，改为左对齐单卡片（避免孤卡 + 大片空白）
                 if (allProjects.length === 1) {

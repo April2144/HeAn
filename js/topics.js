@@ -164,8 +164,8 @@ function renderEmptyState() {
             title: '暂无专题内容',
             description: '专题内容正在筹备中，敬请期待。',
             links: [
-                { href: navHref('projects/index.html'), label: '项目作品' },
-                { href: navHref('blog/index.html'), label: '博客文章' },
+                { href: navHref('projects/'), label: '项目作品' },
+                { href: navHref('blog/'), label: '博客文章' },
             ],
         });
     }

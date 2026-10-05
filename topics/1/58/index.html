@@ -618,7 +618,8 @@ Library/
             } else if (window.history.length > 1) {
                 window.history.back();
             } else {
-                window.location.href = 'index.html';
+                // 回列表页：用 navHref（见 blog/detail.html 的说明 ✓）
+                window.location.href = navHref('topics/');
             }
         }
         // loadTopicDetailPage 为 async：需等待并捕获异常
