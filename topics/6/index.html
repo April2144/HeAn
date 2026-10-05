@@ -22,11 +22,11 @@
         (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
     </script>
     <script src="../../js/config.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../../assets/vendor/tailwind.js"></script>
     <script>
         tailwind.config = TAILWIND_CONFIG;
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/vendor/font-awesome/all.min.css">
     <!-- Tiptap JSON 文档模型渲染层（正文标准渲染路径，无外部依赖） -->
     <script src="../../js/renderer.js?v=2"></script>
     <link rel="stylesheet" href="../../js/common.css?v=20260921d">

@@ -22,11 +22,13 @@
         (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
     </script>
     <script src="../js/config.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+        <!-- ⚠️ Tailwind / Font Awesome 已本地化（assets/vendor/）：不再依赖外网 CDN（DNS 污染 / 断网时页面才不会丢样式）
+         来源：cdn.tailwindcss.com（浏览器运行版）、cdnjs.cloudflare.com/…/font-awesome/6.4.0 —— 升级时需重新下载替换 ✓ -->
+    <script src="../assets/vendor/tailwind.js"></script>
     <script>
         tailwind.config = TAILWIND_CONFIG;
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/vendor/font-awesome/all.min.css">
     <link rel="stylesheet" href="../js/common.css?v=20260921d">
     <link rel="icon" href="/assets/logo-mark.svg">
 </head>
