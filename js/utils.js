@@ -148,3 +148,37 @@ function resolveProjectLink(project, detailHref) {
     // if (demo) return { href: demo, external: true, label: '查看产品' };
     return { href: detailHref, external: false, label: '查看详情' };
 }
+
+/* ==================== 工具：本地开发时用【本地工具】 ====================
+ * 背景（实测问题）：项目数据里的工具入口是【写死的线上绝对地址】
+ *     projects.demo_url = https://hacore.cn/tools/compress/
+ *   → 本地打开站点点「在线预览」会跳到线上工具 ✗（用的是线上服务）
+ *
+ * 设计（简化版）：本地/开发环境 → 一律指向【本地工具】；线上 → 原样用线上地址 ✓
+ *   ⚠️ 前提：本地工具服务要先跑起来 → 用 my_server/scripts/tools_dev.sh 一键启动
+ *      （没起服务时按钮会连不上 —— 这是预期行为：本地开发就该用本地服务 ✓）
+ *
+ * ⚠️ 浏览器【禁止】从 http 页面跳 file:// ✗ → 本地工具必须用 http 伺服
+ *      （tools_dev.sh 已帮你起好；纯静态页也仍可直接双击打开，两不冲突 ✓）
+ * =================================================================== */
+const TOOL_LOCAL_MAP = {
+    //  线上路径              → 本地地址（端口与 tools_dev.sh 保持一致）
+    '/tools/compress/': 'http://127.0.0.1:8661/',
+    '/tools/rename/': 'http://127.0.0.1:8662/',
+};
+
+/** 当前是否为「本地/开发」环境（线上访客永远 false → 直接用线上工具 ✓） */
+function isLocalSiteEnv() {
+    const h = location.hostname;
+    return h === 'localhost' || h === '127.0.0.1' || h === 'dev.hacore.cn';
+}
+
+/** 线上工具地址 → 本地工具地址（非本地环境或无映射 → 原样返回） */
+function localToolUrl(onlineUrl) {
+    const u = String(onlineUrl || '').trim();
+    if (!isLocalSiteEnv()) return u;
+    for (const key in TOOL_LOCAL_MAP) {
+        if (u.indexOf(key) !== -1) return TOOL_LOCAL_MAP[key];
+    }
+    return u;
+}
