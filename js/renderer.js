@@ -178,6 +178,10 @@ function parseTiptapJson(str) {
     try {
         const d = JSON.parse(str);
         if (d && d.type === 'doc') return d;
+        // ⚠️ 兼容「裸数组」格式（历史 / 导入数据 ✗）
+        //    实测文章 54、55 的 content 就是 [{…}] ✗ → 以前返回 null ✗ → 正文渲染成空白页 ✗
+        //    2026-10-09 修复 ✓（与 Python 侧 parse_tiptap_json 同步 ✓）
+        if (Array.isArray(d)) return { type: 'doc', content: d };
     } catch (e) {}
     return null;
 }

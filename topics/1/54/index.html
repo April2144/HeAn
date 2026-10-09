@@ -4,28 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4.1 UserDefaults 轻量存储 | iOS 开发：从 0 到上架 | 禾安的笔记</title>
-    <meta name="description" content="本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。
-
-适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。
-学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。">
+    <meta name="description" content="本篇目标理解 UserDefaults 的用途与限制，掌握基本类型的存储、读取、删除，学会封装 UserDefaults 管理类，能正确处理默认值与数据类型。一、UserDefaults 是什么UserDefaults 是 iOS 提供的轻…">
     <link rel="canonical" href="https://hacore.cn/topics/1/54/">
     <meta property="og:site_name" content="禾安的笔记">
     <meta property="og:type" content="article">
     <meta property="og:title" content="4.1 UserDefaults 轻量存储 | iOS 开发：从 0 到上架 | 禾安的笔记">
-    <meta property="og:description" content="本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。
-
-适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。
-学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。">
+    <meta property="og:description" content="本篇目标理解 UserDefaults 的用途与限制，掌握基本类型的存储、读取、删除，学会封装 UserDefaults 管理类，能正确处理默认值与数据类型。一、UserDefaults 是什么UserDefaults 是 iOS 提供的轻…">
     <meta property="og:url" content="https://hacore.cn/topics/1/54/">
     <meta property="og:image" content="https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="4.1 UserDefaults 轻量存储 | iOS 开发：从 0 到上架 | 禾安的笔记">
-    <meta name="twitter:description" content="本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。
-
-适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。
-学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。">
+    <meta name="twitter:description" content="本篇目标理解 UserDefaults 的用途与限制，掌握基本类型的存储、读取、删除，学会封装 UserDefaults 管理类，能正确处理默认值与数据类型。一、UserDefaults 是什么UserDefaults 是 iOS 提供的轻…">
     <meta name="twitter:image" content="https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Course","name":"4.1 UserDefaults 轻量存储","description":"本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。\n\n适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。\n学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。","image":"https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png","url":"https://hacore.cn/topics/1/54/","provider":{"@type":"Person","name":"禾安的笔记","url":"https://hacore.cn/about/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Course","name":"4.1 UserDefaults 轻量存储","description":"本篇目标理解 UserDefaults 的用途与限制，掌握基本类型的存储、读取、删除，学会封装 UserDefaults 管理类，能正确处理默认值与数据类型。一、UserDefaults 是什么UserDefaults 是 iOS 提供的轻…","image":"https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png","url":"https://hacore.cn/topics/1/54/","provider":{"@type":"Person","name":"禾安的笔记","url":"https://hacore.cn/about/"}}</script>
     <!-- 暗黑模式防闪烁 -->
     <script>
         (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
@@ -522,7 +513,129 @@
                     </div>
 
                     <!-- Markdown 正文 -->
-                    <div class="article-body" id="article-body"><div class="preview-blog-content"></div></div>
+                    <div class="article-body" id="article-body"><div class="preview-blog-content"><h2>本篇目标</h2><p>理解 UserDefaults 的用途与限制，掌握基本类型的存储、读取、删除，学会封装 UserDefaults 管理类，能正确处理默认值与数据类型。</p><h2>一、UserDefaults 是什么</h2><p>UserDefaults 是 iOS 提供的轻量级键值存储，用于保存用户偏好和少量数据。</p><p><strong>适合存储</strong>：</p><ul><li><p>用户设置（主题、字号、语言）</p></li><li><p>开关状态（是否开启通知）</p></li><li><p>简单标记（是否首次启动、是否已登录）</p></li><li><p>少量用户信息（用户名、昵称）</p></li></ul><p><strong>不适合存储</strong>：</p><ul><li><p>大量数据（图片、文件、列表）</p></li><li><p>敏感信息（密码、Token）</p></li><li><p>复杂对象（应使用文件或数据库）</p></li></ul><p><strong>特点</strong>：</p><ul><li><p>基于 plist 文件存储。</p></li><li><p>数据自动持久化。</p></li><li><p>读写速度快。</p></li><li><p>不需要手动保存。</p></li><li><p>应用重启后数据仍在。</p></li></ul><h2>二、基础读写</h2><p><strong>存储</strong>：</p><pre><code class="language-swift">UserDefaults.standard.set(&quot;Tom&quot;, forKey: &quot;username&quot;)
+UserDefaults.standard.set(25, forKey: &quot;age&quot;)
+UserDefaults.standard.set(true, forKey: &quot;isFirstLaunch&quot;)
+UserDefaults.standard.set(1.75, forKey: &quot;height&quot;)</code></pre><p><strong>读取</strong>：</p><pre><code class="language-swift">let username = UserDefaults.standard.string(forKey: &quot;username&quot;)
+let age = UserDefaults.standard.integer(forKey: &quot;age&quot;)
+let isFirstLaunch = UserDefaults.standard.bool(forKey: &quot;isFirstLaunch&quot;)
+let height = UserDefaults.standard.double(forKey: &quot;height&quot;)</code></pre><p><strong>对应读取方法</strong>：</p><table class="hean-table"><thead><tr><th><p>存储类型</p></th><th><p>读取方法</p></th><th><p>默认值</p></th></tr></thead><tbody><tr><td><p>String</p></td><td><p><code>string(forKey:)</code></p></td><td><p>nil</p></td></tr><tr><td><p>Int</p></td><td><p><code>integer(forKey:)</code></p></td><td><p>0</p></td></tr><tr><td><p>Bool</p></td><td><p><code>bool(forKey:)</code></p></td><td><p>false</p></td></tr><tr><td><p>Double</p></td><td><p><code>double(forKey:)</code></p></td><td><p>0.0</p></td></tr><tr><td><p>Float</p></td><td><p><code>float(forKey:)</code></p></td><td><p>0.0</p></td></tr><tr><td><p>Data</p></td><td><p><code>data(forKey:)</code></p></td><td><p>nil</p></td></tr><tr><td><p>Array</p></td><td><p><code>array(forKey:)</code></p></td><td><p>nil</p></td></tr><tr><td><p>Dictionary</p></td><td><p><code>dictionary(forKey:)</code></p></td><td><p>nil</p></td></tr></tbody></table><p><strong>注意</strong>：</p><ul><li><p><code>string(forKey:)</code> 返回可选类型。</p></li><li><p><code>integer(forKey:)</code> 等返回非可选类型，不存在时返回默认值。</p></li><li><p>类型不匹配时读取可能失败。</p></li></ul><h2>三、删除与检查</h2><p><strong>删除单个键</strong>：</p><pre><code class="language-swift">UserDefaults.standard.removeObject(forKey: &quot;username&quot;)</code></pre><p><strong>检查键是否存在</strong>：</p><pre><code class="language-swift">if UserDefaults.standard.object(forKey: &quot;username&quot;) != nil {
+    print(&quot;存在&quot;)
+}</code></pre><p><strong>注意</strong>：</p><ul><li><p>不能通过 <code>string(forKey:) == nil</code> 判断，因为存储空字符串也会返回空字符串。</p></li><li><p>用 <code>object(forKey:)</code> 判断更准确。</p></li></ul><p><strong>删除所有数据</strong>：</p><pre><code class="language-swift">if let domain = Bundle.main.bundleIdentifier {
+    UserDefaults.standard.removePersistentDomain(forName: domain)
+}</code></pre><p><strong>慎用</strong>：会清除应用所有 UserDefaults 数据。</p><h2>四、默认值处理</h2><p><strong>使用 `??` 提供默认值</strong>：</p><pre><code class="language-swift">let username = UserDefaults.standard.string(forKey: &quot;username&quot;) ?? &quot;Guest&quot;</code></pre><p><strong>注册默认值</strong>：</p><pre><code class="language-swift">UserDefaults.standard.register(defaults: [
+    &quot;username&quot;: &quot;Guest&quot;,
+    &quot;fontSize&quot;: 14,
+    &quot;isDarkMode&quot;: false
+])
+
+let username = UserDefaults.standard.string(forKey: &quot;username&quot;)  // Guest</code></pre><p><strong>说明</strong>：</p><ul><li><p><code>register</code> 注册的默认值不写入磁盘。</p></li><li><p>只在键不存在时生效。</p></li><li><p>适合应用启动时初始化默认配置。</p></li></ul><h2>五、存储数组与字典</h2><p><strong>存储数组</strong>：</p><pre><code class="language-swift">let fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;orange&quot;]
+UserDefaults.standard.set(fruits, forKey: &quot;fruits&quot;)
+
+let saved = UserDefaults.standard.stringArray(forKey: &quot;fruits&quot;)</code></pre><p><strong>存储字典</strong>：</p><pre><code class="language-swift">let settings = [&quot;theme&quot;: &quot;dark&quot;, &quot;fontSize&quot;: 14]
+UserDefaults.standard.set(settings, forKey: &quot;settings&quot;)
+
+let savedSettings = UserDefaults.standard.dictionary(forKey: &quot;settings&quot;)</code></pre><p><strong>注意</strong>：</p><ul><li><p>数组和字典元素必须是 plist 支持的类型。</p></li><li><p>支持类型：String、Int、Double、Bool、Date、Data、Array、Dictionary。</p></li></ul><h2>六、存储自定义对象</h2><p>UserDefaults 不能直接存储自定义对象，需要先编码。</p><p><strong>使用 Codable + JSON</strong>：</p><pre><code class="language-swift">struct User: Codable {
+    var name: String
+    var age: Int
+    var isVIP: Bool
+}
+
+// 存储
+let user = User(name: &quot;Tom&quot;, age: 25, isVIP: true)
+if let data = try? JSONEncoder().encode(user) {
+    UserDefaults.standard.set(data, forKey: &quot;currentUser&quot;)
+}
+
+// 读取
+if let data = UserDefaults.standard.data(forKey: &quot;currentUser&quot;),
+   let savedUser = try? JSONDecoder().decode(User.self, from: data) {
+    print(savedUser.name)
+}</code></pre><p><strong>说明</strong>：</p><ul><li><p><code>Codable</code> 让对象可以编码和解码。</p></li><li><p>存储的是 Data 类型。</p></li><li><p>读取时解码回对象。</p></li></ul><h2>七、封装 UserDefaults 管理类</h2><p>直接使用 UserDefaults 键名容易出错，建议封装。</p><p><strong>定义 Keys</strong>：</p><pre><code class="language-swift">enum UserDefaultsKeys {
+    static let username = &quot;username&quot;
+    static let fontSize = &quot;fontSize&quot;
+    static let isDarkMode = &quot;isDarkMode&quot;
+    static let isFirstLaunch = &quot;isFirstLaunch&quot;
+}</code></pre><p><strong>封装管理类</strong>：</p><pre><code class="language-swift">class AppSettings {
+    static let shared = AppSettings()
+    private let defaults = UserDefaults.standard
+
+    private init() {
+        defaults.register(defaults: [
+            UserDefaultsKeys.username: &quot;Guest&quot;,
+            UserDefaultsKeys.fontSize: 14,
+            UserDefaultsKeys.isDarkMode: false,
+            UserDefaultsKeys.isFirstLaunch: true
+        ])
+    }
+
+    var username: String {
+        get { defaults.string(forKey: UserDefaultsKeys.username) ?? &quot;Guest&quot; }
+        set { defaults.set(newValue, forKey: UserDefaultsKeys.username) }
+    }
+
+    var fontSize: Int {
+        get { defaults.integer(forKey: UserDefaultsKeys.fontSize) }
+        set { defaults.set(newValue, forKey: UserDefaultsKeys.fontSize) }
+    }
+
+    var isDarkMode: Bool {
+        get { defaults.bool(forKey: UserDefaultsKeys.isDarkMode) }
+        set { defaults.set(newValue, forKey: UserDefaultsKeys.isDarkMode) }
+    }
+
+    var isFirstLaunch: Bool {
+        get { defaults.bool(forKey: UserDefaultsKeys.isFirstLaunch) }
+        set { defaults.set(newValue, forKey: UserDefaultsKeys.isFirstLaunch) }
+    }
+}</code></pre><p><strong>使用</strong>：</p><pre><code class="language-swift">AppSettings.shared.username = &quot;Tom&quot;
+print(AppSettings.shared.username)  // Tom</code></pre><p><strong>优点</strong>：</p><ul><li><p>键名集中管理。</p></li><li><p>类型安全。</p></li><li><p>默认值统一注册。</p></li><li><p>便于维护和修改。</p></li></ul><h2>八、属性包装器封装</h2><p>可以用 <code>@propertyWrapper</code> 简化。</p><pre><code class="language-swift">@propertyWrapper
+struct UserDefault&lt;T&gt; {
+    let key: String
+    let defaultValue: T
+
+    var wrappedValue: T {
+        get {
+            UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: key)
+        }
+    }
+}
+
+enum Settings {
+    @UserDefault(key: &quot;username&quot;, defaultValue: &quot;Guest&quot;)
+    static var username: String
+
+    @UserDefault(key: &quot;fontSize&quot;, defaultValue: 14)
+    static var fontSize: Int
+
+    @UserDefault(key: &quot;isDarkMode&quot;, defaultValue: false)
+    static var isDarkMode: Bool
+}
+
+Settings.username = &quot;Tom&quot;
+print(Settings.username)  // Tom</code></pre><p><strong>优点</strong>：</p><ul><li><p>语法简洁。</p></li><li><p>类型安全。</p></li><li><p>可读性高。</p></li></ul><p><strong>注意</strong>：</p><ul><li><p>属性包装器需要泛型支持。</p></li><li><p>存储复杂类型时注意可选性。</p></li></ul><h2>九、与 SwiftUI 结合</h2><p><strong>@AppStorage</strong>：SwiftUI 提供的属性包装器，底层使用 UserDefaults。</p><pre><code class="language-swift">struct SettingsView: View {
+    @AppStorage(&quot;username&quot;) private var username = &quot;Guest&quot;
+    @AppStorage(&quot;isDarkMode&quot;) private var isDarkMode = false
+    @AppStorage(&quot;fontSize&quot;) private var fontSize = 14
+
+    var body: some View {
+        Form {
+            TextField(&quot;用户名&quot;, text: $username)
+            Toggle(&quot;深色模式&quot;, isOn: $isDarkMode)
+            Stepper(&quot;字号：\(fontSize)&quot;, value: $fontSize, in: 12...24)
+        }
+    }
+}</code></pre><p><strong>特点</strong>：</p><ul><li><p>自动读写 UserDefaults。</p></li><li><p>值变化时自动刷新界面。</p></li><li><p>支持 String、Int、Double、Bool、URL、Data。</p></li></ul><p><strong>指定存储</strong>：</p><pre><code class="language-swift">@AppStorage(&quot;username&quot;, store: UserDefaults(suiteName: &quot;group.com.example&quot;))
+private var username = &quot;Guest&quot;</code></pre><p><strong>用于 App Group 共享</strong>：适合主 App 与扩展之间共享数据。</p><h2>十、观察变化</h2><p><strong>监听单个键</strong>：</p><pre><code class="language-swift">NotificationCenter.default.addObserver(
+    forName: UserDefaults.didChangeNotification,
+    object: nil,
+    queue: .main
+) { _ in
+    print(&quot;UserDefaults 发生变化&quot;)
+}</code></pre><p><strong>注意</strong>：</p><ul><li><p><code>didChangeNotification</code> 是整个 UserDefaults 变化。</p></li><li><p>不能精确到具体键。</p></li><li><p>真实项目中，通常用 @AppStorage 或 KVO。</p></li></ul><h2>十一、使用注意事项</h2><p><strong>注意事项</strong>：</p><ul><li><p>不要存敏感信息。</p></li><li><p>不要存大量数据。</p></li><li><p>键名要有命名规范。</p></li><li><p>数据大小控制在几百 KB 以内。</p></li><li><p>应用卸载后 UserDefaults 数据会被清除。</p></li></ul><h2>十二、避坑指南</h2><ul><li><p><strong>敏感信息不要存</strong>：密码、Token 应使用 Keychain。</p></li><li><p><strong>不要存大量数据</strong>：大数组、图片用文件或数据库。</p></li><li><p><strong>不要用 string(forKey:) 判断存在</strong>：用 object(forKey:)。</p></li><li><p><strong>键名要统一管理</strong>：避免硬编码字符串。</p></li><li><p><strong>默认值要注册</strong>：否则第一次读取可能为空。</p></li><li><p><strong>类型要一致</strong>：存 String 读 String，不要混用。</p></li><li><p><strong>@AppStorage 只支持基本类型</strong>：自定义对象需要编码。</p></li></ul><h2>十三、检查清单</h2><ul><li><p>[ ] 理解 UserDefaults 的用途与限制</p></li><li><p>[ ] 会存储和读取基本类型</p></li><li><p>[ ] 会删除和检查键</p></li><li><p>[ ] 会处理默认值</p></li><li><p>[ ] 能存储数组和字典</p></li><li><p>[ ] 能存储自定义对象（Codable）</p></li><li><p>[ ] 会封装 UserDefaults 管理类</p></li><li><p>[ ] 会使用 @AppStorage</p></li><li><p>[ ] 了解 UserDefaults 的性能边界</p></li></ul></div></div>
                     </div>
 
                     <!-- 上一篇 / 下一篇 -->

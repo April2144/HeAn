@@ -4,28 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4.3 Core Data 入门 | iOS 开发：从 0 到上架 | 禾安的笔记</title>
-    <meta name="description" content="本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。
-
-适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。
-学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。">
+    <meta name="description" content="本篇目标理解 Core Data 的基本概念，掌握数据模型、实体、上下文、增删改查操作，能用 Core Data 完成一个简单的数据存储模块。一、Core Data 是什么Core Data 是 Apple 提供的对象图管理与持久化框架，用…">
     <link rel="canonical" href="https://hacore.cn/topics/1/56/">
     <meta property="og:site_name" content="禾安的笔记">
     <meta property="og:type" content="article">
     <meta property="og:title" content="4.3 Core Data 入门 | iOS 开发：从 0 到上架 | 禾安的笔记">
-    <meta property="og:description" content="本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。
-
-适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。
-学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。">
+    <meta property="og:description" content="本篇目标理解 Core Data 的基本概念，掌握数据模型、实体、上下文、增删改查操作，能用 Core Data 完成一个简单的数据存储模块。一、Core Data 是什么Core Data 是 Apple 提供的对象图管理与持久化框架，用…">
     <meta property="og:url" content="https://hacore.cn/topics/1/56/">
     <meta property="og:image" content="https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="4.3 Core Data 入门 | iOS 开发：从 0 到上架 | 禾安的笔记">
-    <meta name="twitter:description" content="本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。
-
-适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。
-学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。">
+    <meta name="twitter:description" content="本篇目标理解 Core Data 的基本概念，掌握数据模型、实体、上下文、增删改查操作，能用 Core Data 完成一个简单的数据存储模块。一、Core Data 是什么Core Data 是 Apple 提供的对象图管理与持久化框架，用…">
     <meta name="twitter:image" content="https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Course","name":"4.3 Core Data 入门","description":"本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。\n\n适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。\n学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。","image":"https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png","url":"https://hacore.cn/topics/1/56/","provider":{"@type":"Person","name":"禾安的笔记","url":"https://hacore.cn/about/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Course","name":"4.3 Core Data 入门","description":"本篇目标理解 Core Data 的基本概念，掌握数据模型、实体、上下文、增删改查操作，能用 Core Data 完成一个简单的数据存储模块。一、Core Data 是什么Core Data 是 Apple 提供的对象图管理与持久化框架，用…","image":"https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png","url":"https://hacore.cn/topics/1/56/","provider":{"@type":"Person","name":"禾安的笔记","url":"https://hacore.cn/about/"}}</script>
     <!-- 暗黑模式防闪烁 -->
     <script>
         (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();

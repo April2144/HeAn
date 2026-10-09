@@ -4,28 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4.2 文件读写 | iOS 开发：从 0 到上架 | 禾安的笔记</title>
-    <meta name="description" content="本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。
-
-适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。
-学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。">
+    <meta name="description" content="本篇目标理解 iOS 沙盒目录结构，掌握文件路径获取、文本与 Data 读写、JSON 文件的编码与解码，能独立完成文件的保存、读取、删除与目录管理。一、iOS 沙盒机制iOS 应用运行在沙盒中，每个应用只能访问自己的目录，无法访问其他应用…">
     <link rel="canonical" href="https://hacore.cn/topics/1/55/">
     <meta property="og:site_name" content="禾安的笔记">
     <meta property="og:type" content="article">
     <meta property="og:title" content="4.2 文件读写 | iOS 开发：从 0 到上架 | 禾安的笔记">
-    <meta property="og:description" content="本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。
-
-适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。
-学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。">
+    <meta property="og:description" content="本篇目标理解 iOS 沙盒目录结构，掌握文件路径获取、文本与 Data 读写、JSON 文件的编码与解码，能独立完成文件的保存、读取、删除与目录管理。一、iOS 沙盒机制iOS 应用运行在沙盒中，每个应用只能访问自己的目录，无法访问其他应用…">
     <meta property="og:url" content="https://hacore.cn/topics/1/55/">
     <meta property="og:image" content="https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="4.2 文件读写 | iOS 开发：从 0 到上架 | 禾安的笔记">
-    <meta name="twitter:description" content="本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。
-
-适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。
-学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。">
+    <meta name="twitter:description" content="本篇目标理解 iOS 沙盒目录结构，掌握文件路径获取、文本与 Data 读写、JSON 文件的编码与解码，能独立完成文件的保存、读取、删除与目录管理。一、iOS 沙盒机制iOS 应用运行在沙盒中，每个应用只能访问自己的目录，无法访问其他应用…">
     <meta name="twitter:image" content="https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Course","name":"4.2 文件读写","description":"本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发、数据持久化，到调试测试、打包上架，按真实开发流程拆解。基础篇免费，帮你跑通第一个可上架的离线 App；进阶篇聚焦架构设计、性能优化、内购与订阅接入，适合想做出商业级 App 的开发者。每个章节都配有可复制的代码、真实截图和避坑清单，学完即可动手做出自己的产品。\n\n适合谁：零基础想学 iOS 开发的人；有其他语言基础想转 iOS 的开发者；有 iOS 基础想系统提升的开发者。\n学完产出：基础篇——独立完成并上架一个离线 App；进阶篇——掌握商业级 App 架构与内购订阅接入。","image":"https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png","url":"https://hacore.cn/topics/1/55/","provider":{"@type":"Person","name":"禾安的笔记","url":"https://hacore.cn/about/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Course","name":"4.2 文件读写","description":"本篇目标理解 iOS 沙盒目录结构，掌握文件路径获取、文本与 Data 读写、JSON 文件的编码与解码，能独立完成文件的保存、读取、删除与目录管理。一、iOS 沙盒机制iOS 应用运行在沙盒中，每个应用只能访问自己的目录，无法访问其他应用…","image":"https://hacore.cn/uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png","url":"https://hacore.cn/topics/1/55/","provider":{"@type":"Person","name":"禾安的笔记","url":"https://hacore.cn/about/"}}</script>
     <!-- 暗黑模式防闪烁 -->
     <script>
         (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
@@ -522,7 +513,173 @@
                     </div>
 
                     <!-- Markdown 正文 -->
-                    <div class="article-body" id="article-body"><div class="preview-blog-content"></div></div>
+                    <div class="article-body" id="article-body"><div class="preview-blog-content"><h2>本篇目标</h2><p>理解 iOS 沙盒目录结构，掌握文件路径获取、文本与 Data 读写、JSON 文件的编码与解码，能独立完成文件的保存、读取、删除与目录管理。</p><h2>一、iOS 沙盒机制</h2><p>iOS 应用运行在沙盒中，每个应用只能访问自己的目录，无法访问其他应用的数据。</p><p><strong>沙盒的好处</strong>：</p><ul><li><p>数据隔离，安全性高</p></li><li><p>卸载应用时自动清理数据</p></li><li><p>不同应用之间互不干扰</p></li></ul><p><strong>沙盒目录结构</strong>：</p><pre><code class="language-text">App Sandbox/
+├── Documents/          // 用户数据，iTunes 备份
+├── Library/
+│   ├── Caches/         // 缓存，可能被系统清理
+│   ├── Preferences/    // UserDefaults 存储
+│   └── Application Support/  // 应用支持文件
+├── tmp/                // 临时文件，随时可能被清理
+└── SystemData/         // 系统数据</code></pre><p><strong>各目录用途</strong>：</p><table class="hean-table"><thead><tr><th><p>目录</p></th><th><p>用途</p></th><th><p>是否备份</p></th></tr></thead><tbody><tr><td><p>Documents</p></td><td><p>用户生成的数据</p></td><td><p>是</p></td></tr><tr><td><p>Library/Caches</p></td><td><p>可重新生成的缓存</p></td><td><p>否</p></td></tr><tr><td><p>Library/Preferences</p></td><td><p>UserDefaults</p></td><td><p>是</p></td></tr><tr><td><p>Library/Application Support</p></td><td><p>应用支持文件</p></td><td><p>是</p></td></tr><tr><td><p>tmp</p></td><td><p>临时文件</p></td><td><p>否</p></td></tr></tbody></table><h2>二、获取目录路径</h2><p><strong>获取 Documents 目录</strong>：</p><pre><code class="language-swift">let documentsURL = FileManager.default.urls(
+    for: .documentDirectory,
+    in: .userDomainMask
+).first!
+
+print(documentsURL.path)</code></pre><p><strong>获取 Caches 目录</strong>：</p><pre><code class="language-swift">let cachesURL = FileManager.default.urls(
+    for: .cachesDirectory,
+    in: .userDomainMask
+).first!</code></pre><p><strong>获取 tmp 目录</strong>：</p><pre><code class="language-swift">let tmpURL = FileManager.default.temporaryDirectory</code></pre><p><strong>获取 Application Support 目录</strong>：</p><pre><code class="language-swift">let supportURL = FileManager.default.urls(
+    for: .applicationSupportDirectory,
+    in: .userDomainMask
+).first!</code></pre><p><strong>说明</strong>：</p><ul><li><p>返回的是 URL 数组，通常取第一个。</p></li><li><p><code>userDomainMask</code> 表示用户目录。</p></li><li><p>Application Support 目录可能不存在，需要手动创建。</p></li></ul><h2>三、文件路径拼接</h2><p><strong>使用 URL 拼接</strong>：</p><pre><code class="language-swift">let documentsURL = FileManager.default.urls(
+    for: .documentDirectory,
+    in: .userDomainMask
+).first!
+
+let fileURL = documentsURL.appendingPathComponent(&quot;notes.txt&quot;)
+print(fileURL.path)</code></pre><p><strong>推荐用 URL</strong>：</p><ul><li><p>更安全，自动处理路径分隔符。</p></li><li><p>支持中文、空格等特殊字符。</p></li><li><p>配合 FileManager API 使用更方便。</p></li></ul><p><strong>避免手动拼接字符串</strong>：</p><pre><code class="language-swift">// 不推荐
+let path = documentsURL.path + &quot;/notes.txt&quot;
+
+// 推荐
+let fileURL = documentsURL.appendingPathComponent(&quot;notes.txt&quot;)</code></pre><h2>四、写入文本文件</h2><p><strong>写入 String</strong>：</p><pre><code class="language-swift">let content = &quot;Hello, iOS!&quot;
+let fileURL = documentsURL.appendingPathComponent(&quot;greeting.txt&quot;)
+
+do {
+    try content.write(to: fileURL, atomically: true, encoding: .utf8)
+    print(&quot;写入成功&quot;)
+} catch {
+    print(&quot;写入失败：\(error)&quot;)
+}</code></pre><p><strong>参数说明</strong>：</p><ul><li><p><code>to</code>：目标文件 URL。</p></li><li><p><code>atomically</code>：是否原子写入，建议 true。</p></li><li><p><code>encoding</code>：编码格式，通常用 <code>.utf8</code>。</p></li></ul><p><strong>原子写入的好处</strong>：</p><ul><li><p>先写临时文件，再替换目标文件。</p></li><li><p>避免写入中途失败导致文件损坏。</p></li></ul><h2>五、读取文本文件</h2><p><strong>读取 String</strong>：</p><pre><code class="language-swift">let fileURL = documentsURL.appendingPathComponent(&quot;greeting.txt&quot;)
+
+do {
+    let content = try String(contentsOf: fileURL, encoding: .utf8)
+    print(content)
+} catch {
+    print(&quot;读取失败：\(error)&quot;)
+}</code></pre><p><strong>读取失败常见原因</strong>：</p><ul><li><p>文件不存在</p></li><li><p>编码不匹配</p></li><li><p>权限问题</p></li><li><p>路径错误</p></li></ul><p><strong>读取时判断文件是否存在</strong>：</p><pre><code class="language-swift">if FileManager.default.fileExists(atPath: fileURL.path) {
+    let content = try? String(contentsOf: fileURL, encoding: .utf8)
+    print(content ?? &quot;&quot;)
+} else {
+    print(&quot;文件不存在&quot;)
+}</code></pre><h2>六、写入 Data</h2><p><strong>写入二进制数据</strong>：</p><pre><code class="language-swift">let data = &quot;Hello&quot;.data(using: .utf8)!
+let fileURL = documentsURL.appendingPathComponent(&quot;data.bin&quot;)
+
+do {
+    try data.write(to: fileURL)
+    print(&quot;写入成功&quot;)
+} catch {
+    print(&quot;写入失败：\(error)&quot;)
+}</code></pre><p><strong>读取 Data</strong>：</p><pre><code class="language-swift">do {
+    let data = try Data(contentsOf: fileURL)
+    if let content = String(data: data, encoding: .utf8) {
+        print(content)
+    }
+} catch {
+    print(&quot;读取失败：\(error)&quot;)
+}</code></pre><p><strong>适用场景</strong>：</p><ul><li><p>图片、音频等二进制文件</p></li><li><p>加密后的数据</p></li><li><p>序列化后的对象</p></li></ul><h2>七、JSON 文件读写</h2><p>JSON 是 iOS 中常用的数据交换格式。</p><p><strong>定义 Codable 模型</strong>：</p><pre><code class="language-swift">struct Note: Codable {
+    var id: UUID
+    var title: String
+    var content: String
+    var createdAt: Date
+}</code></pre><p><strong>写入 JSON 文件</strong>：</p><pre><code class="language-swift">let note = Note(
+    id: UUID(),
+    title: &quot;第一条笔记&quot;,
+    content: &quot;这是笔记内容&quot;,
+    createdAt: Date()
+)
+
+let fileURL = documentsURL.appendingPathComponent(&quot;notes.json&quot;)
+
+do {
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = .prettyPrinted
+    encoder.dateEncodingStrategy = .iso8601
+
+    let data = try encoder.encode([note])
+    try data.write(to: fileURL)
+    print(&quot;写入成功&quot;)
+} catch {
+    print(&quot;写入失败：\(error)&quot;)
+}</code></pre><p><strong>读取 JSON 文件</strong>：</p><pre><code class="language-swift">do {
+    let data = try Data(contentsOf: fileURL)
+    let decoder = JSONDecoder()
+    decoder.dateDecodingStrategy = .iso8601
+
+    let notes = try decoder.decode([Note].self, from: data)
+    print(notes)
+} catch {
+    print(&quot;读取失败：\(error)&quot;)
+}</code></pre><p><strong>日期编码策略</strong>：</p><table class="hean-table"><thead><tr><th><p>策略</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>.deferredToDate</code></p></td><td><p>默认，时间戳</p></td></tr><tr><td><p><code>.iso8601</code></p></td><td><p>ISO 8601 字符串</p></td></tr><tr><td><p><code>.secondsSince1970</code></p></td><td><p>秒级时间戳</p></td></tr><tr><td><p><code>.millisecondsSince1970</code></p></td><td><p>毫秒级时间戳</p></td></tr></tbody></table><h2>八、文件管理操作</h2><p><strong>判断文件是否存在</strong>：</p><pre><code class="language-swift">FileManager.default.fileExists(atPath: fileURL.path)</code></pre><p><strong>删除文件</strong>：</p><pre><code class="language-swift">do {
+    try FileManager.default.removeItem(at: fileURL)
+    print(&quot;删除成功&quot;)
+} catch {
+    print(&quot;删除失败：\(error)&quot;)
+}</code></pre><p><strong>移动文件</strong>：</p><pre><code class="language-swift">let newURL = documentsURL.appendingPathComponent(&quot;new.txt&quot;)
+try FileManager.default.moveItem(at: oldURL, to: newURL)</code></pre><p><strong>复制文件</strong>：</p><pre><code class="language-swift">try FileManager.default.copyItem(at: sourceURL, to: destinationURL)</code></pre><p><strong>创建目录</strong>：</p><pre><code class="language-swift">let folderURL = documentsURL.appendingPathComponent(&quot;Notes&quot;)
+
+do {
+    try FileManager.default.createDirectory(
+        at: folderURL,
+        withIntermediateDirectories: true
+    )
+} catch {
+    print(&quot;创建失败：\(error)&quot;)
+}</code></pre><p><strong>说明</strong>：</p><ul><li><p><code>withIntermediateDirectories: true</code> 会自动创建中间目录。</p></li><li><p>目录已存在时不会报错。</p></li></ul><p><strong>列出目录内容</strong>：</p><pre><code class="language-swift">do {
+    let contents = try FileManager.default.contentsOfDirectory(
+        at: documentsURL,
+        includingPropertiesForKeys: nil
+    )
+    for url in contents {
+        print(url.lastPathComponent)
+    }
+} catch {
+    print(&quot;读取失败：\(error)&quot;)
+}</code></pre><p><strong>获取文件属性</strong>：</p><pre><code class="language-swift">let attributes = try FileManager.default.attributesOfItem(atPath: fileURL.path)
+let size = attributes[.size] as? Int64 ?? 0
+print(&quot;文件大小：\(size) 字节&quot;)</code></pre><h2>九、封装文件管理类</h2><pre><code class="language-swift">class FileStorage {
+    static let shared = FileStorage()
+    private let fileManager = FileManager.default
+
+    private init() {}
+
+    private var documentsURL: URL {
+        fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+    }
+
+    func fileURL(for name: String) -&gt; URL {
+        documentsURL.appendingPathComponent(name)
+    }
+
+    func save&lt;T: Encodable&gt;(_ object: T, to name: String) throws {
+        let url = fileURL(for: name)
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        let data = try encoder.encode(object)
+        try data.write(to: url, options: .atomic)
+    }
+
+    func load&lt;T: Decodable&gt;(_ type: T.Type, from name: String) throws -&gt; T {
+        let url = fileURL(for: name)
+        let data = try Data(contentsOf: url)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return try decoder.decode(T.self, from: data)
+    }
+
+    func delete(_ name: String) throws {
+        let url = fileURL(for: name)
+        try fileManager.removeItem(at: url)
+    }
+
+    func exists(_ name: String) -&gt; Bool {
+        let url = fileURL(for: name)
+        return fileManager.fileExists(atPath: url.path)
+    }
+}</code></pre><p><strong>使用</strong>：</p><pre><code class="language-swift">let notes = [Note(id: UUID(), title: &quot;标题&quot;, content: &quot;内容&quot;, createdAt: Date())]
+
+try FileStorage.shared.save(notes, to: &quot;notes.json&quot;)
+
+let loaded = try FileStorage.shared.load([Note].self, from: &quot;notes.json&quot;)</code></pre><h2>十、文件保护与安全</h2><p><strong>文件保护等级</strong>：</p><pre><code class="language-swift">try (data as NSData).write(to: fileURL, options: .completeFileProtection)</code></pre><p><strong>常用保护等级</strong>：</p><table class="hean-table"><thead><tr><th><p>等级</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>.completeFileProtection</code></p></td><td><p>锁屏后完全不可访问</p></td></tr><tr><td><p><code>.completeUnlessOpen</code></p></td><td><p>锁屏后已打开的可继续访问</p></td></tr><tr><td><p><code>.completeUntilFirstUserAuthentication</code></p></td><td><p>首次解锁后可访问</p></td></tr><tr><td><p><code>.none</code></p></td><td><p>无保护</p></td></tr></tbody></table><p><strong>适用场景</strong>：</p><ul><li><p>用户敏感数据使用 <code>.completeFileProtection</code></p></li><li><p>后台任务需要访问的使用 <code>.completeUntilFirstUserAuthentication</code></p></li></ul><p><strong>不建议直接存敏感数据</strong>：</p><ul><li><p>密码、Token 使用 Keychain。</p></li><li><p>文件加密后再写入。</p></li></ul><h2>十一、使用注意事项</h2><p><strong>注意事项</strong>：</p><ul><li><p>tmp 目录可能被系统清理。</p></li><li><p>Caches 目录也可能被清理。</p></li><li><p>重要数据放 Documents。</p></li><li><p>大文件不要放 UserDefaults。</p></li></ul><h2>十二、避坑指南</h2><ul><li><p><strong>不要手动拼路径</strong>：用 URL 拼接。</p></li><li><p><strong>写入要捕获异常</strong>：文件操作可能失败。</p></li><li><p><strong>原子写入</strong>：避免文件损坏。</p></li><li><p><strong>tmp 目录不持久</strong>：重要数据不要放 tmp。</p></li><li><p><strong>Caches 会被清理</strong>：可重新生成的缓存才放这里。</p></li><li><p><strong>JSON 日期格式</strong>：编码和解码策略要一致。</p></li><li><p><strong>文件操作不要放主线程</strong>：大文件异步处理。</p></li><li><p><strong>敏感数据加密</strong>：不要明文存储。</p></li></ul><h2>十三、检查清单</h2><ul><li><p>[ ] 理解 iOS 沙盒目录结构</p></li><li><p>[ ] 能获取 Documents、Caches、tmp 目录</p></li><li><p>[ ] 会使用 URL 拼接文件路径</p></li><li><p>[ ] 能读写文本文件</p></li><li><p>[ ] 能读写 Data</p></li><li><p>[ ] 能读写 JSON 文件</p></li><li><p>[ ] 会判断、删除、移动、复制文件</p></li><li><p>[ ] 会创建目录并列出内容</p></li><li><p>[ ] 能封装文件管理类</p></li><li><p>[ ] 了解文件保护等级</p></li></ul></div></div>
                     </div>
 
                     <!-- 上一篇 / 下一篇 -->
