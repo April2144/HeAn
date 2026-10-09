@@ -275,6 +275,9 @@
                     projectsGrid.classList.remove('overflow-x-auto', 'snap-x', 'snap-mandatory', 'scrollbar-hide');
                     projectsGrid.style.overflowX = 'visible';
                 }
+                // ⚠️ 必须先清空：容器里可能有「静态卡片」（爬虫可见版 ✓ 由 gen_home_cards.py 注入 ✓）
+                //    否则下面的 appendChild 会把卡片渲染成**两份** ✗（实测：产品 4 张 / 博客 10 条 ✗）
+                projectsGrid.innerHTML = '';
                 allProjects.forEach(project => {
                     // 按平台类型决定跳转：app→商店链接，web→网站链接，都没有则进详情页（老项目兜底）
                     const link = resolveProjectLink(project, `projects/${project.id}/?from=home`);
@@ -309,6 +312,8 @@
                     const sec = document.getElementById('updates');
                     if (sec) sec.style.display = 'none';
                 }
+                // ⚠️ 同上：先清空静态卡片（否则博客会显示两份 ✗）
+                grid.innerHTML = '';
                 items.forEach(it => {
                     // 只含博客（专题文章不进首页，避免与「精选专题」重复）
                     const card = document.createElement('a');
