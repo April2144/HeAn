@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -534,11 +534,11 @@ struct MyApp: App {
     let container: NSPersistentContainer
 
     init() {
-        container = NSPersistentContainer(name: &amp;quot;Model&amp;quot;)
+        container = NSPersistentContainer(name: &quot;Model&quot;)
 
         container.loadPersistentStores { description, error in
             if let error = error {
-                fatalError(&amp;quot;加载失败：\(error)&amp;quot;)
+                fatalError(&quot;加载失败：\(error)&quot;)
             }
         }
 
@@ -555,24 +555,24 @@ struct MyApp: App {
     @Environment(\.managedObjectContext) private var context
 
     var body: some View {
-        Text(&amp;quot;内容&amp;quot;)
+        Text(&quot;内容&quot;)
     }
 }</code></pre><h2>五、创建数据</h2><p><strong>使用 NSEntityDescription</strong>：</p><pre><code class="language-swift">let note = Note(context: context)
 note.id = UUID()
-note.title = &amp;quot;第一条笔记&amp;quot;
-note.content = &amp;quot;这是内容&amp;quot;
+note.title = &quot;第一条笔记&quot;
+note.content = &quot;这是内容&quot;
 note.createdAt = Date()
 
 do {
     try context.save()
-    print(&amp;quot;保存成功&amp;quot;)
+    print(&quot;保存成功&quot;)
 } catch {
-    print(&amp;quot;保存失败：\(error)&amp;quot;)
+    print(&quot;保存失败：\(error)&quot;)
 }</code></pre><p><strong>说明</strong>：</p><ul><li><p><code>Note(context:)</code> 是自动生成的初始化器。</p></li><li><p>修改属性后需要调用 <code>save()</code>。</p></li><li><p>上下文会自动跟踪对象变化。</p></li></ul><p><strong>批量创建</strong>：</p><pre><code class="language-swift">for i in 1...5 {
     let note = Note(context: context)
     note.id = UUID()
-    note.title = &amp;quot;笔记 \(i)&amp;quot;
-    note.content = &amp;quot;内容 \(i)&amp;quot;
+    note.title = &quot;笔记 \(i)&quot;
+    note.content = &quot;内容 \(i)&quot;
     note.createdAt = Date()
 }
 
@@ -583,41 +583,41 @@ try? context.save()</code></pre><h2>六、查询数据</h2><p><strong>使用 @Fe
         sortDescriptors: [NSSortDescriptor(keyPath: \Note.createdAt, ascending: false)],
         animation: .default
     )
-    private var notes: FetchedResults&amp;lt;Note&amp;gt;
+    private var notes: FetchedResults&lt;Note&gt;
 
     var body: some View {
         List {
             ForEach(notes) { note in
                 VStack(alignment: .leading) {
-                    Text(note.title ?? &amp;quot;&amp;quot;)
+                    Text(note.title ?? &quot;&quot;)
                         .font(.headline)
-                    Text(note.content ?? &amp;quot;&amp;quot;)
+                    Text(note.content ?? &quot;&quot;)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
             }
         }
     }
-}</code></pre><p><strong>使用 NSFetchRequest（代码中）</strong>：</p><pre><code class="language-swift">let request: NSFetchRequest&amp;lt;Note&amp;gt; = Note.fetchRequest()
+}</code></pre><p><strong>使用 NSFetchRequest（代码中）</strong>：</p><pre><code class="language-swift">let request: NSFetchRequest&lt;Note&gt; = Note.fetchRequest()
 request.sortDescriptors = [NSSortDescriptor(keyPath: \Note.createdAt, ascending: false)]
 request.fetchLimit = 10
 
 do {
     let notes = try context.fetch(request)
-    print(&amp;quot;共 \(notes.count) 条&amp;quot;)
+    print(&quot;共 \(notes.count) 条&quot;)
 } catch {
-    print(&amp;quot;查询失败：\(error)&amp;quot;)
-}</code></pre><p><strong>带条件查询</strong>：</p><pre><code class="language-swift">let request: NSFetchRequest&amp;lt;Note&amp;gt; = Note.fetchRequest()
-request.predicate = NSPredicate(format: &amp;quot;title CONTAINS %@&amp;quot;, &amp;quot;iOS&amp;quot;)
+    print(&quot;查询失败：\(error)&quot;)
+}</code></pre><p><strong>带条件查询</strong>：</p><pre><code class="language-swift">let request: NSFetchRequest&lt;Note&gt; = Note.fetchRequest()
+request.predicate = NSPredicate(format: &quot;title CONTAINS %@&quot;, &quot;iOS&quot;)
 request.sortDescriptors = [NSSortDescriptor(keyPath: \Note.createdAt, ascending: false)]
 
-let results = try? context.fetch(request)</code></pre><p><strong>常用 NSPredicate</strong>：</p><table class="hean-table"><thead><tr><th><p>格式</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>&quot;title == %@&quot;</code></p></td><td><p>等于</p></td></tr><tr><td><p><code>&quot;title CONTAINS %@&quot;</code></p></td><td><p>包含</p></td></tr><tr><td><p><code>&quot;createdAt &gt; %@&quot;</code></p></td><td><p>大于</p></td></tr><tr><td><p><code>&quot;title BEGINSWITH %@&quot;</code></p></td><td><p>前缀</p></td></tr><tr><td><p><code>&quot;title ENDSWITH %@&quot;</code></p></td><td><p>后缀</p></td></tr><tr><td><p><code>&quot;age BETWEEN {18, 30}&quot;</code></p></td><td><p>范围</p></td></tr></tbody></table><h2>七、更新数据</h2><p><strong>直接修改属性</strong>：</p><pre><code class="language-swift">let request: NSFetchRequest&amp;lt;Note&amp;gt; = Note.fetchRequest()
+let results = try? context.fetch(request)</code></pre><p><strong>常用 NSPredicate</strong>：</p><table class="hean-table"><thead><tr><th><p>格式</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>&quot;title == %@&quot;</code></p></td><td><p>等于</p></td></tr><tr><td><p><code>&quot;title CONTAINS %@&quot;</code></p></td><td><p>包含</p></td></tr><tr><td><p><code>&quot;createdAt &gt; %@&quot;</code></p></td><td><p>大于</p></td></tr><tr><td><p><code>&quot;title BEGINSWITH %@&quot;</code></p></td><td><p>前缀</p></td></tr><tr><td><p><code>&quot;title ENDSWITH %@&quot;</code></p></td><td><p>后缀</p></td></tr><tr><td><p><code>&quot;age BETWEEN {18, 30}&quot;</code></p></td><td><p>范围</p></td></tr></tbody></table><h2>七、更新数据</h2><p><strong>直接修改属性</strong>：</p><pre><code class="language-swift">let request: NSFetchRequest&lt;Note&gt; = Note.fetchRequest()
 if let note = try? context.fetch(request).first {
-    note.title = &amp;quot;新标题&amp;quot;
+    note.title = &quot;新标题&quot;
     try? context.save()
 }</code></pre><p><strong>说明</strong>：</p><ul><li><p>Core Data 对象是引用类型。</p></li><li><p>修改属性后，调用 <code>save()</code> 持久化。</p></li><li><p>未保存的修改在上下文中存在，但不写入磁盘。</p></li></ul><h2>八、删除数据</h2><p><strong>删除单条</strong>：</p><pre><code class="language-swift">context.delete(note)
 try? context.save()</code></pre><p><strong>在列表中删除</strong>：</p><pre><code class="language-swift">ForEach(notes) { note in
-    Text(note.title ?? &amp;quot;&amp;quot;)
+    Text(note.title ?? &quot;&quot;)
 }
 .onDelete { indexSet in
     indexSet.forEach { index in
@@ -625,33 +625,33 @@ try? context.save()</code></pre><p><strong>在列表中删除</strong>：</p><pr
         context.delete(note)
     }
     try? context.save()
-}</code></pre><p><strong>批量删除</strong>：</p><pre><code class="language-swift">let request: NSFetchRequest&amp;lt;NSFetchRequestResult&amp;gt; = Note.fetchRequest()
+}</code></pre><p><strong>批量删除</strong>：</p><pre><code class="language-swift">let request: NSFetchRequest&lt;NSFetchRequestResult&gt; = Note.fetchRequest()
 let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
 
 do {
     try context.execute(deleteRequest)
     try context.save()
 } catch {
-    print(&amp;quot;批量删除失败：\(error)&amp;quot;)
+    print(&quot;批量删除失败：\(error)&quot;)
 }</code></pre><h2>九、排序与分页</h2><p><strong>排序</strong>：</p><pre><code class="language-swift">request.sortDescriptors = [
     NSSortDescriptor(keyPath: \Note.createdAt, ascending: false),
     NSSortDescriptor(keyPath: \Note.title, ascending: true)
 ]</code></pre><p><strong>分页</strong>：</p><pre><code class="language-swift">request.fetchOffset = 0
 request.fetchLimit = 20</code></pre><p><strong>说明</strong>：</p><ul><li><p><code>fetchOffset</code>：跳过的记录数。</p></li><li><p><code>fetchLimit</code>：返回的最大记录数。</p></li><li><p>用于列表分页加载。</p></li></ul><h2>十、数据模型关系</h2><p><strong>一对多关系</strong>：</p><p>例如：分类（Category）与笔记（Note）。</p><ul><li><p>Category 有 <code>notes</code>（to-many）</p></li><li><p>Note 有 <code>category</code>（to-one）</p></li></ul><p><strong>定义</strong>：</p><ul><li><p>在 Category 实体中添加 <code>notes</code>，类型为 To Many。</p></li><li><p>在 Note 实体中添加 <code>category</code>，类型为 To One。</p></li><li><p>设置反向关系。</p></li></ul><p><strong>使用</strong>：</p><pre><code class="language-swift">let category = Category(context: context)
-category.name = &amp;quot;工作&amp;quot;
+category.name = &quot;工作&quot;
 
 let note = Note(context: context)
-note.title = &amp;quot;会议记录&amp;quot;
+note.title = &quot;会议记录&quot;
 note.category = category
 
-try? context.save()</code></pre><p><strong>查询某分类下的笔记</strong>：</p><pre><code class="language-swift">let request: NSFetchRequest&amp;lt;Note&amp;gt; = Note.fetchRequest()
-request.predicate = NSPredicate(format: &amp;quot;category.name == %@&amp;quot;, &amp;quot;工作&amp;quot;)
+try? context.save()</code></pre><p><strong>查询某分类下的笔记</strong>：</p><pre><code class="language-swift">let request: NSFetchRequest&lt;Note&gt; = Note.fetchRequest()
+request.predicate = NSPredicate(format: &quot;category.name == %@&quot;, &quot;工作&quot;)
 let notes = try? context.fetch(request)</code></pre><h2>十一、数据校验</h2><p>在数据模型中，可以为属性设置校验规则：</p><ul><li><p>最小长度</p></li><li><p>最大长度</p></li><li><p>最小值</p></li><li><p>最大值</p></li><li><p>是否可选</p></li></ul><p><strong>保存前校验</strong>：</p><pre><code class="language-swift">do {
     try context.save()
 } catch let error as NSError {
-    print(&amp;quot;校验失败：\(error.userInfo)&amp;quot;)
+    print(&quot;校验失败：\(error.userInfo)&quot;)
 }</code></pre><p><strong>手动校验</strong>：</p><pre><code class="language-swift">if note.title?.isEmpty == true {
-    print(&amp;quot;标题不能为空&amp;quot;)
+    print(&quot;标题不能为空&quot;)
 }</code></pre><h2>十二、封装 Core Data 操作</h2><pre><code class="language-swift">class NoteRepository {
     private let context: NSManagedObjectContext
 
@@ -659,7 +659,7 @@ let notes = try? context.fetch(request)</code></pre><h2>十一、数据校验</h
         self.context = context
     }
 
-    func create(title: String, content: String) -&amp;gt; Note {
+    func create(title: String, content: String) -&gt; Note {
         let note = Note(context: context)
         note.id = UUID()
         note.title = title
@@ -668,8 +668,8 @@ let notes = try? context.fetch(request)</code></pre><h2>十一、数据校验</h
         return note
     }
 
-    func fetchAll() -&amp;gt; [Note] {
-        let request: NSFetchRequest&amp;lt;Note&amp;gt; = Note.fetchRequest()
+    func fetchAll() -&gt; [Note] {
+        let request: NSFetchRequest&lt;Note&gt; = Note.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \Note.createdAt, ascending: false)]
         return (try? context.fetch(request)) ?? []
     }
@@ -688,7 +688,7 @@ let notes = try? context.fetch(request)</code></pre><h2>十一、数据校验</h
         }
     }
 }</code></pre><p><strong>使用</strong>：</p><pre><code class="language-swift">let repo = NoteRepository(context: context)
-let note = repo.create(title: &amp;quot;标题&amp;quot;, content: &amp;quot;内容&amp;quot;)
+let note = repo.create(title: &quot;标题&quot;, content: &quot;内容&quot;)
 repo.save()</code></pre><h2>十三、避坑指南</h2><ul><li><p><strong>不要在错误线程操作上下文</strong>：viewContext 是主线程。</p></li><li><p><strong>修改后要 save</strong>：否则不会持久化。</p></li><li><p><strong>@FetchRequest 自动刷新</strong>：数据变化时界面自动更新。</p></li><li><p><strong>批量删除要合并上下文</strong>：否则 @FetchRequest 不会刷新。</p></li><li><p><strong>实体属性可选性</strong>：String 属性建议用可选类型或提供默认值。</p></li><li><p><strong>数据迁移</strong>：模型变化时要配置迁移策略。</p></li><li><p><strong>不要存大文件</strong>：图片、音频用文件系统。</p></li></ul><h2>十四、检查清单</h2><ul><li><p>[ ] 理解 Core Data 的核心概念</p></li><li><p>[ ] 能创建数据模型和实体</p></li><li><p>[ ] 会初始化 PersistentContainer</p></li><li><p>[ ] 能创建、查询、更新、删除数据</p></li><li><p>[ ] 会使用 @FetchRequest</p></li><li><p>[ ] 会使用 NSPredicate 条件查询</p></li><li><p>[ ] 理解数据模型关系</p></li><li><p>[ ] 能封装 Core Data 操作</p></li><li><p>[ ] 了解数据迁移</p></li></ul></div></div>
                     </div>
 

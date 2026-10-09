@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -522,15 +522,15 @@
                     </div>
 
                     <!-- Markdown 正文 -->
-                    <div class="article-body" id="article-body"><div class="preview-blog-content"><h2>本篇目标</h2><p>掌握 Swift 中变量与常量的声明方式，理解基本数据类型，学会类型推断与类型注解，能正确选择 var 与 let。</p><h2>一、变量与常量</h2><p>Swift 用 <code>var</code> 声明变量，用 <code>let</code> 声明常量。</p><pre><code class="language-swift">var name = &amp;quot;Swift&amp;quot;       // 变量，可以修改
+                    <div class="article-body" id="article-body"><div class="preview-blog-content"><h2>本篇目标</h2><p>掌握 Swift 中变量与常量的声明方式，理解基本数据类型，学会类型推断与类型注解，能正确选择 var 与 let。</p><h2>一、变量与常量</h2><p>Swift 用 <code>var</code> 声明变量，用 <code>let</code> 声明常量。</p><pre><code class="language-swift">var name = &quot;Swift&quot;       // 变量，可以修改
 let version = 5.9        // 常量，不可修改</code></pre><p><strong>变量</strong>：值可以改变。</p><pre><code class="language-swift">var count = 0
 count = 1
 count = 2
 print(count)  // 输出 2</code></pre><p><strong>常量</strong>：值一旦赋值，不能修改。</p><pre><code class="language-swift">let pi = 3.14159
-// pi = 3.14  // 报错：Cannot assign to value: &amp;#39;pi&amp;#39; is a &amp;#39;let&amp;#39; constant</code></pre><p><strong>选择原则</strong>：</p><ul><li><p>默认用 <code>let</code>，除非确定需要修改。</p></li><li><p>需要修改时用 <code>var</code>。</p></li><li><p>编译器会提示不必要的 <code>var</code>。</p></li></ul><h2>二、类型推断与类型注解</h2><p><strong>类型推断</strong>：Swift 会根据初始值自动推断类型。</p><pre><code class="language-swift">let name = &amp;quot;Swift&amp;quot;       // 推断为 String
+// pi = 3.14  // 报错：Cannot assign to value: &#39;pi&#39; is a &#39;let&#39; constant</code></pre><p><strong>选择原则</strong>：</p><ul><li><p>默认用 <code>let</code>，除非确定需要修改。</p></li><li><p>需要修改时用 <code>var</code>。</p></li><li><p>编译器会提示不必要的 <code>var</code>。</p></li></ul><h2>二、类型推断与类型注解</h2><p><strong>类型推断</strong>：Swift 会根据初始值自动推断类型。</p><pre><code class="language-swift">let name = &quot;Swift&quot;       // 推断为 String
 let year = 2014          // 推断为 Int
 let price = 9.99         // 推断为 Double
-let isOpen = true        // 推断为 Bool</code></pre><p><strong>类型注解</strong>：显式声明类型。</p><pre><code class="language-swift">let name: String = &amp;quot;Swift&amp;quot;
+let isOpen = true        // 推断为 Bool</code></pre><p><strong>类型注解</strong>：显式声明类型。</p><pre><code class="language-swift">let name: String = &quot;Swift&quot;
 let year: Int = 2014
 let price: Double = 9.99
 let isOpen: Bool = true</code></pre><p><strong>什么时候用类型注解</strong>：</p><ul><li><p>初始值无法推断类型时</p></li><li><p>想明确类型时</p></li><li><p>声明时不赋值，稍后赋值时</p></li></ul><pre><code class="language-swift">var score: Int
@@ -547,30 +547,30 @@ let hex = 0x11           // 十六进制</code></pre><p><strong>数字分隔符<
 let phone = 138_0000_0000</code></pre><h3>浮点数 Double 与 Float</h3><pre><code class="language-swift">let pi: Double = 3.14159
 let rate: Float = 0.5</code></pre><ul><li><p><strong>Double</strong>：64 位，精度高，默认浮点类型</p></li><li><p><strong>Float</strong>：32 位，精度低，占用小</p></li></ul><pre><code class="language-swift">let a = 3.14        // 默认推断为 Double
 let b: Float = 3.14 // 显式声明 Float</code></pre><h3>布尔 Bool</h3><pre><code class="language-swift">let isTrue: Bool = true
-let isFalse: Bool = false</code></pre><h3>字符串 String</h3><pre><code class="language-swift">let name: String = &amp;quot;Swift&amp;quot;
-let greeting = &amp;quot;Hello, \(name)!&amp;quot;   // 字符串插值</code></pre><p><strong>多行字符串</strong>：</p><pre><code class="language-swift">let text = &amp;quot;&amp;quot;&amp;quot;
+let isFalse: Bool = false</code></pre><h3>字符串 String</h3><pre><code class="language-swift">let name: String = &quot;Swift&quot;
+let greeting = &quot;Hello, \(name)!&quot;   // 字符串插值</code></pre><p><strong>多行字符串</strong>：</p><pre><code class="language-swift">let text = &quot;&quot;&quot;
 这是第一行
 这是第二行
 这是第三行
-&amp;quot;&amp;quot;&amp;quot;</code></pre><p><strong>字符串常用操作</strong>：</p><pre><code class="language-swift">let str = &amp;quot;Hello&amp;quot;
+&quot;&quot;&quot;</code></pre><p><strong>字符串常用操作</strong>：</p><pre><code class="language-swift">let str = &quot;Hello&quot;
 print(str.count)            // 5
 print(str.isEmpty)          // false
 print(str.uppercased())     // HELLO
 print(str.lowercased())     // hello
-print(str.hasPrefix(&amp;quot;He&amp;quot;))  // true
-print(str.hasSuffix(&amp;quot;lo&amp;quot;))  // true</code></pre><h3>字符 Character</h3><pre><code class="language-swift">let letter: Character = &amp;quot;A&amp;quot;</code></pre><h2>四、类型转换</h2><p>Swift 是强类型语言，不同类型不能直接运算。</p><p><strong>整数与浮点数转换</strong>：</p><pre><code class="language-swift">let intValue = 10
+print(str.hasPrefix(&quot;He&quot;))  // true
+print(str.hasSuffix(&quot;lo&quot;))  // true</code></pre><h3>字符 Character</h3><pre><code class="language-swift">let letter: Character = &quot;A&quot;</code></pre><h2>四、类型转换</h2><p>Swift 是强类型语言，不同类型不能直接运算。</p><p><strong>整数与浮点数转换</strong>：</p><pre><code class="language-swift">let intValue = 10
 let doubleValue = 3.14
 
 let result = Double(intValue) + doubleValue  // 13.14
-let result2 = intValue + Int(doubleValue)    // 13</code></pre><p><strong>字符串与数字转换</strong>：</p><pre><code class="language-swift">let str = &amp;quot;123&amp;quot;
+let result2 = intValue + Int(doubleValue)    // 13</code></pre><p><strong>字符串与数字转换</strong>：</p><pre><code class="language-swift">let str = &quot;123&quot;
 let num = Int(str)       // Optional(123)
-let num2 = Int(&amp;quot;abc&amp;quot;)    // nil
+let num2 = Int(&quot;abc&quot;)    // nil
 
 let number = 456
-let str2 = String(number)  // &amp;quot;456&amp;quot;</code></pre><p><strong>注意</strong>：</p><ul><li><p><code>Int(&quot;abc&quot;)</code> 返回可选类型，可能为 nil</p></li><li><p>转换可能失败，需要用可选类型处理</p></li></ul><h2>五、类型别名</h2><p>用 <code>typealias</code> 给类型起别名：</p><pre><code class="language-swift">typealias UserID = Int
+let str2 = String(number)  // &quot;456&quot;</code></pre><p><strong>注意</strong>：</p><ul><li><p><code>Int(&quot;abc&quot;)</code> 返回可选类型，可能为 nil</p></li><li><p>转换可能失败，需要用可选类型处理</p></li></ul><h2>五、类型别名</h2><p>用 <code>typealias</code> 给类型起别名：</p><pre><code class="language-swift">typealias UserID = Int
 
-let id: UserID = 1001</code></pre><p><strong>用途</strong>：</p><ul><li><p>让代码语义更清晰</p></li><li><p>简化复杂类型</p></li></ul><pre><code class="language-swift">typealias Completion = (Bool, String) -&amp;gt; Void</code></pre><h2>六、元组 Tuple</h2><p>元组可以把多个值组合成一个复合值。</p><pre><code class="language-swift">let person = (&amp;quot;Tom&amp;quot;, 25)
-let person2 = (name: &amp;quot;Tom&amp;quot;, age: 25)</code></pre><p><strong>访问元组元素</strong>：</p><pre><code class="language-swift">let person = (name: &amp;quot;Tom&amp;quot;, age: 25)
+let id: UserID = 1001</code></pre><p><strong>用途</strong>：</p><ul><li><p>让代码语义更清晰</p></li><li><p>简化复杂类型</p></li></ul><pre><code class="language-swift">typealias Completion = (Bool, String) -&gt; Void</code></pre><h2>六、元组 Tuple</h2><p>元组可以把多个值组合成一个复合值。</p><pre><code class="language-swift">let person = (&quot;Tom&quot;, 25)
+let person2 = (name: &quot;Tom&quot;, age: 25)</code></pre><p><strong>访问元组元素</strong>：</p><pre><code class="language-swift">let person = (name: &quot;Tom&quot;, age: 25)
 print(person.name)   // Tom
 print(person.age)    // 25
 

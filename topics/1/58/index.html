@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -555,8 +555,8 @@ func saveToKeychain(key: String, value: String) {
     SecItemAdd(query as CFDictionary, nil)
 }</code></pre><p><strong>文件加密</strong>：</p><ul><li><p>使用 CryptoKit 加密敏感文件。</p></li><li><p>使用文件保护等级。</p></li></ul><p><strong>注意</strong>：</p><ul><li><p>不要明文存储密码。</p></li><li><p>不要将敏感信息写入日志。</p></li><li><p>不要将敏感数据上传到第三方。</p></li></ul><h2>七、数据量增长应对</h2><p><strong>问题</strong>：</p><ul><li><p>数据量增长导致查询变慢。</p></li><li><p>存储空间占用增加。</p></li><li><p>启动加载时间变长。</p></li></ul><p><strong>应对策略</strong>：</p><table class="hean-table"><thead><tr><th><p>策略</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p>分页查询</p></td><td><p>每次只加载一部分</p></td></tr><tr><td><p>索引优化</p></td><td><p>为常用查询字段加索引</p></td></tr><tr><td><p>数据归档</p></td><td><p>旧数据归档到文件</p></td></tr><tr><td><p>定期清理</p></td><td><p>删除过期数据</p></td></tr><tr><td><p>懒加载</p></td><td><p>需要时才加载</p></td></tr></tbody></table><p><strong>分页示例</strong>：</p><pre><code class="language-swift">request.fetchOffset = page * pageSize
 request.fetchLimit = pageSize</code></pre><p><strong>归档示例</strong>：</p><pre><code class="language-swift">func archiveOldNotes(before date: Date) {
-    let request: NSFetchRequest&amp;lt;Note&amp;gt; = Note.fetchRequest()
-    request.predicate = NSPredicate(format: &amp;quot;createdAt &amp;lt; %@&amp;quot;, date as NSDate)
+    let request: NSFetchRequest&lt;Note&gt; = Note.fetchRequest()
+    request.predicate = NSPredicate(format: &quot;createdAt &lt; %@&quot;, date as NSDate)
     let oldNotes = try? context.fetch(request)
     // 导出到归档文件，然后删除
 }</code></pre><h2>八、综合设计示例</h2><p><strong>需求</strong>：一个笔记应用，支持分类、搜索、离线使用。</p><p><strong>存储设计</strong>：</p><table class="hean-table"><thead><tr><th><p>数据</p></th><th><p>存储方案</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p>笔记</p></td><td><p>Core Data</p></td><td><p>支持查询、排序、关系</p></td></tr><tr><td><p>分类</p></td><td><p>Core Data</p></td><td><p>与笔记一对多</p></td></tr><tr><td><p>用户设置</p></td><td><p>UserDefaults</p></td><td><p>主题、字号、排序</p></td></tr><tr><td><p>登录凭证</p></td><td><p>Keychain</p></td><td><p>Token</p></td></tr><tr><td><p>图片附件</p></td><td><p>文件系统</p></td><td><p>Documents 目录</p></td></tr><tr><td><p>网络缓存</p></td><td><p>Caches</p></td><td><p>图片、接口结果</p></td></tr></tbody></table><p><strong>目录结构</strong>：</p><pre><code class="language-text">Documents/

@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -536,106 +536,106 @@ let b = 3
 
 print(a == b)   // false
 print(a != b)   // true
-print(a &amp;gt; b)    // true
-print(a &amp;lt; b)    // false
-print(a &amp;gt;= b)   // true
-print(a &amp;lt;= b)   // false</code></pre><p><strong>用于字符串</strong>：</p><pre><code class="language-swift">let s1 = &amp;quot;apple&amp;quot;
-let s2 = &amp;quot;banana&amp;quot;
-print(s1 &amp;lt; s2)  // true（按字典序）</code></pre><h2>三、逻辑运算符</h2><pre><code class="language-swift">let isOpen = true
+print(a &gt; b)    // true
+print(a &lt; b)    // false
+print(a &gt;= b)   // true
+print(a &lt;= b)   // false</code></pre><p><strong>用于字符串</strong>：</p><pre><code class="language-swift">let s1 = &quot;apple&quot;
+let s2 = &quot;banana&quot;
+print(s1 &lt; s2)  // true（按字典序）</code></pre><h2>三、逻辑运算符</h2><pre><code class="language-swift">let isOpen = true
 let isReady = false
 
 print(!isOpen)           // false
-print(isOpen &amp;amp;&amp;amp; isReady) // false
-print(isOpen || isReady) // true</code></pre><p><strong>短路求值</strong>：</p><ul><li><p><code>&amp;&amp;</code>：左边为 false，右边不再计算。</p></li><li><p><code>||</code>：左边为 true，右边不再计算。</p></li></ul><pre><code class="language-swift">func check() -&amp;gt; Bool {
-    print(&amp;quot;check 被调用&amp;quot;)
+print(isOpen &amp;&amp; isReady) // false
+print(isOpen || isReady) // true</code></pre><p><strong>短路求值</strong>：</p><ul><li><p><code>&amp;&amp;</code>：左边为 false，右边不再计算。</p></li><li><p><code>||</code>：左边为 true，右边不再计算。</p></li></ul><pre><code class="language-swift">func check() -&gt; Bool {
+    print(&quot;check 被调用&quot;)
     return true
 }
 
-let result = false &amp;amp;&amp;amp; check()  // check 不会被调用</code></pre><h2>四、赋值运算符</h2><pre><code class="language-swift">var a = 10
+let result = false &amp;&amp; check()  // check 不会被调用</code></pre><h2>四、赋值运算符</h2><pre><code class="language-swift">var a = 10
 a += 5   // 等价于 a = a + 5，结果 15
 a -= 3   // 12
 a *= 2   // 24
 a /= 4   // 6
 a %= 4   // 2</code></pre><p><strong>注意</strong>：</p><ul><li><p>Swift 的赋值表达式不返回值，不能写成 <code>if (a = 10)</code>。</p></li><li><p>复合赋值运算符简化代码。</p></li></ul><h2>五、区间运算符</h2><p><strong>闭区间</strong>：<code>...</code> 包含两端。</p><pre><code class="language-swift">for i in 1...5 {
     print(i)  // 1, 2, 3, 4, 5
-}</code></pre><p><strong>半开区间</strong>：<code>..&lt;</code> 包含左端，不包含右端。</p><pre><code class="language-swift">for i in 1..&amp;lt;5 {
+}</code></pre><p><strong>半开区间</strong>：<code>..&lt;</code> 包含左端，不包含右端。</p><pre><code class="language-swift">for i in 1..&lt;5 {
     print(i)  // 1, 2, 3, 4
 }</code></pre><p><strong>单侧区间</strong>：</p><pre><code class="language-swift">let array = [1, 2, 3, 4, 5]
 for item in array[2...] {
     print(item)  // 3, 4, 5
 }
 
-for item in array[..&amp;lt;3] {
+for item in array[..&lt;3] {
     print(item)  // 1, 2, 3
 }</code></pre><h2>六、三元运算符</h2><pre><code class="language-swift">let score = 85
-let result = score &amp;gt;= 60 ? &amp;quot;及格&amp;quot; : &amp;quot;不及格&amp;quot;
-print(result)  // 及格</code></pre><p><strong>嵌套三元</strong>（不推荐过度使用）：</p><pre><code class="language-swift">let grade = score &amp;gt;= 90 ? &amp;quot;A&amp;quot; : score &amp;gt;= 60 ? &amp;quot;B&amp;quot; : &amp;quot;C&amp;quot;</code></pre><h2>七、条件语句</h2><h3>if</h3><pre><code class="language-swift">let age = 18
+let result = score &gt;= 60 ? &quot;及格&quot; : &quot;不及格&quot;
+print(result)  // 及格</code></pre><p><strong>嵌套三元</strong>（不推荐过度使用）：</p><pre><code class="language-swift">let grade = score &gt;= 90 ? &quot;A&quot; : score &gt;= 60 ? &quot;B&quot; : &quot;C&quot;</code></pre><h2>七、条件语句</h2><h3>if</h3><pre><code class="language-swift">let age = 18
 
-if age &amp;gt;= 18 {
-    print(&amp;quot;已成年&amp;quot;)
+if age &gt;= 18 {
+    print(&quot;已成年&quot;)
 } else {
-    print(&amp;quot;未成年&amp;quot;)
+    print(&quot;未成年&quot;)
 }</code></pre><h3>if-else if-else</h3><pre><code class="language-swift">let score = 85
 
-if score &amp;gt;= 90 {
-    print(&amp;quot;优秀&amp;quot;)
-} else if score &amp;gt;= 60 {
-    print(&amp;quot;及格&amp;quot;)
+if score &gt;= 90 {
+    print(&quot;优秀&quot;)
+} else if score &gt;= 60 {
+    print(&quot;及格&quot;)
 } else {
-    print(&amp;quot;不及格&amp;quot;)
+    print(&quot;不及格&quot;)
 }</code></pre><h3>guard</h3><p><code>guard</code> 用于提前退出，常用于函数开头。</p><pre><code class="language-swift">func greet(name: String?) {
     guard let name = name else {
-        print(&amp;quot;名字为空&amp;quot;)
+        print(&quot;名字为空&quot;)
         return
     }
-    print(&amp;quot;Hello, \(name)&amp;quot;)
-}</code></pre><p><strong>与 if 的区别</strong>：</p><ul><li><p><code>guard</code> 必须带 <code>else</code>，且 <code>else</code> 中必须退出当前作用域。</p></li><li><p><code>guard</code> 后面的代码可以继续使用解包后的变量。</p></li></ul><h2>八、switch</h2><pre><code class="language-swift">let fruit = &amp;quot;apple&amp;quot;
+    print(&quot;Hello, \(name)&quot;)
+}</code></pre><p><strong>与 if 的区别</strong>：</p><ul><li><p><code>guard</code> 必须带 <code>else</code>，且 <code>else</code> 中必须退出当前作用域。</p></li><li><p><code>guard</code> 后面的代码可以继续使用解包后的变量。</p></li></ul><h2>八、switch</h2><pre><code class="language-swift">let fruit = &quot;apple&quot;
 
 switch fruit {
-case &amp;quot;apple&amp;quot;:
-    print(&amp;quot;苹果&amp;quot;)
-case &amp;quot;banana&amp;quot;:
-    print(&amp;quot;香蕉&amp;quot;)
+case &quot;apple&quot;:
+    print(&quot;苹果&quot;)
+case &quot;banana&quot;:
+    print(&quot;香蕉&quot;)
 default:
-    print(&amp;quot;未知&amp;quot;)
+    print(&quot;未知&quot;)
 }</code></pre><p><strong>特点</strong>：</p><ul><li><p>不需要 <code>break</code>，自动跳出。</p></li><li><p>必须穷举所有情况，或加 <code>default</code>。</p></li><li><p>支持区间、元组、值绑定。</p></li></ul><p><strong>区间匹配</strong>：</p><pre><code class="language-swift">let score = 85
 
 switch score {
 case 90...100:
-    print(&amp;quot;优秀&amp;quot;)
-case 60..&amp;lt;90:
-    print(&amp;quot;及格&amp;quot;)
+    print(&quot;优秀&quot;)
+case 60..&lt;90:
+    print(&quot;及格&quot;)
 default:
-    print(&amp;quot;不及格&amp;quot;)
+    print(&quot;不及格&quot;)
 }</code></pre><p><strong>值绑定</strong>：</p><pre><code class="language-swift">let point = (2, 0)
 
 switch point {
 case (let x, 0):
-    print(&amp;quot;在 x 轴上，x = \(x)&amp;quot;)
+    print(&quot;在 x 轴上，x = \(x)&quot;)
 case (0, let y):
-    print(&amp;quot;在 y 轴上，y = \(y)&amp;quot;)
+    print(&quot;在 y 轴上，y = \(y)&quot;)
 default:
-    print(&amp;quot;其他位置&amp;quot;)
+    print(&quot;其他位置&quot;)
 }</code></pre><p><strong>where 子句</strong>：</p><pre><code class="language-swift">let number = 12
 
 switch number {
 case let n where n % 2 == 0:
-    print(&amp;quot;偶数&amp;quot;)
+    print(&quot;偶数&quot;)
 default:
-    print(&amp;quot;奇数&amp;quot;)
+    print(&quot;奇数&quot;)
 }</code></pre><h2>九、循环语句</h2><h3>for-in</h3><pre><code class="language-swift">for i in 1...5 {
     print(i)
 }
 
-let names = [&amp;quot;Tom&amp;quot;, &amp;quot;Jerry&amp;quot;, &amp;quot;Spike&amp;quot;]
+let names = [&quot;Tom&quot;, &quot;Jerry&quot;, &quot;Spike&quot;]
 for name in names {
     print(name)
-}</code></pre><p><strong>遍历字典</strong>：</p><pre><code class="language-swift">let dict = [&amp;quot;a&amp;quot;: 1, &amp;quot;b&amp;quot;: 2]
+}</code></pre><p><strong>遍历字典</strong>：</p><pre><code class="language-swift">let dict = [&quot;a&quot;: 1, &quot;b&quot;: 2]
 for (key, value) in dict {
-    print(&amp;quot;\(key): \(value)&amp;quot;)
+    print(&quot;\(key): \(value)&quot;)
 }</code></pre><h3>while</h3><pre><code class="language-swift">var count = 0
 
-while count &amp;lt; 5 {
+while count &lt; 5 {
     print(count)
     count += 1
 }</code></pre><h3>repeat-while</h3><p>至少执行一次。</p><pre><code class="language-swift">var count = 0
@@ -643,7 +643,7 @@ while count &amp;lt; 5 {
 repeat {
     print(count)
     count += 1
-} while count &amp;lt; 5</code></pre><h3>break 与 continue</h3><pre><code class="language-swift">for i in 1...10 {
+} while count &lt; 5</code></pre><h3>break 与 continue</h3><pre><code class="language-swift">for i in 1...10 {
     if i == 5 {
         break      // 跳出整个循环
     }
@@ -660,7 +660,7 @@ for i in 1...5 {
         if j == 2 {
             continue outer
         }
-        print(&amp;quot;\(i), \(j)&amp;quot;)
+        print(&quot;\(i), \(j)&quot;)
     }
 }</code></pre><h2>十、避坑指南</h2><ul><li><p><strong>整数除法会丢精度</strong>：需要小数时先转 Double。</p></li><li><p><strong>switch 必须穷举</strong>：否则编译器报错。</p></li><li><p><strong>guard 的 else 必须退出</strong>：return、break、continue、throw 等。</p></li><li><p><strong>for-in 中不要修改集合</strong>：可能导致运行时错误。</p></li><li><p><strong>三元运算符不要嵌套太深</strong>：影响可读性。</p></li><li><p><strong>逻辑运算符短路</strong>：注意副作用函数的调用顺序。</p></li></ul><h2>十一、检查清单</h2><ul><li><p>[ ] 掌握算术、比较、逻辑运算符</p></li><li><p>[ ] 能使用赋值和区间运算符</p></li><li><p>[ ] 会使用 if、guard、switch</p></li><li><p>[ ] 掌握 for-in、while、repeat-while</p></li><li><p>[ ] 会使用 break、continue 和带标签循环</p></li><li><p>[ ] 理解短路求值</p></li></ul></div></div>
                     </div>

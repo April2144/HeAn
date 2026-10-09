@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -538,7 +538,7 @@ print(p1.x)  // 1.0</code></pre><p><strong>定义类</strong>：</p><pre><code c
     }
 }
 
-let person = Person(name: &amp;quot;Tom&amp;quot;, age: 25)
+let person = Person(name: &quot;Tom&quot;, age: 25)
 print(person.name)  // Tom</code></pre><p><strong>基本区别</strong>：</p><table class="hean-table"><thead><tr><th><p>特性</p></th><th><p>结构体 struct</p></th><th><p>类 class</p></th></tr></thead><tbody><tr><td><p>类型</p></td><td><p>值类型</p></td><td><p>引用类型</p></td></tr><tr><td><p>继承</p></td><td><p>不支持</p></td><td><p>支持</p></td></tr><tr><td><p>初始化器</p></td><td><p>自动生成成员初始化器</p></td><td><p>需要手写 init</p></td></tr><tr><td><p>析构器</p></td><td><p>无</p></td><td><p>有 deinit</p></td></tr><tr><td><p>引用计数</p></td><td><p>无</p></td><td><p>有 ARC</p></td></tr><tr><td><p>赋值/传参</p></td><td><p>拷贝</p></td><td><p>引用同一实例</p></td></tr></tbody></table><h2>二、属性</h2><h3>存储属性</h3><pre><code class="language-swift">struct Student {
     var name: String
     var age: Int
@@ -576,10 +576,10 @@ print(square.side)  // 3.0</code></pre><p><strong>只读计算属性简写</stro
 }</code></pre><h3>属性观察器</h3><p><code>willSet</code> 在赋值前调用，<code>didSet</code> 在赋值后调用。</p><pre><code class="language-swift">class StepCounter {
     var steps: Int = 0 {
         willSet {
-            print(&amp;quot;即将设置为 \(newValue)&amp;quot;)
+            print(&quot;即将设置为 \(newValue)&quot;)
         }
         didSet {
-            print(&amp;quot;从 \(oldValue) 变为 \(steps)&amp;quot;)
+            print(&quot;从 \(oldValue) 变为 \(steps)&quot;)
         }
     }
 }
@@ -588,13 +588,13 @@ let counter = StepCounter()
 counter.steps = 100
 // 即将设置为 100
 // 从 0 变为 100</code></pre><p><strong>注意</strong>：</p><ul><li><p>属性观察器不适用于计算属性。</p></li><li><p><code>willSet</code> 使用 <code>newValue</code>，<code>didSet</code> 使用 <code>oldValue</code>。</p></li></ul><h3>类型属性</h3><p>用 <code>static</code> 声明，属于类型本身。</p><pre><code class="language-swift">struct AppInfo {
-    static let name = &amp;quot;MyApp&amp;quot;
-    static var version = &amp;quot;1.0&amp;quot;
+    static let name = &quot;MyApp&quot;
+    static var version = &quot;1.0&quot;
 }
 
 print(AppInfo.name)  // MyApp</code></pre><p><strong>类中可用 `class` 修饰可被重写的类型属性</strong>：</p><pre><code class="language-swift">class Animal {
     class var category: String {
-        return &amp;quot;动物&amp;quot;
+        return &quot;动物&quot;
     }
 }</code></pre><h2>三、方法</h2><h3>实例方法</h3><pre><code class="language-swift">class Counter {
     var count = 0
@@ -623,20 +623,20 @@ print(AppInfo.name)  // MyApp</code></pre><p><strong>类中可用 `class` 修饰
 var point = Point()
 point.moveBy(x: 1, y: 2)
 print(point.x, point.y)  // 1.0 2.0</code></pre><h3>类型方法</h3><p>用 <code>static</code> 或 <code>class</code> 声明。</p><pre><code class="language-swift">struct MathHelper {
-    static func square(_ x: Int) -&amp;gt; Int {
+    static func square(_ x: Int) -&gt; Int {
         return x * x
     }
 }
 
 print(MathHelper.square(5))  // 25</code></pre><p><strong>类中可重写的类型方法</strong>：</p><pre><code class="language-swift">class Base {
-    class func info() -&amp;gt; String {
-        return &amp;quot;Base&amp;quot;
+    class func info() -&gt; String {
+        return &quot;Base&quot;
     }
 }
 
 class Sub: Base {
-    override class func info() -&amp;gt; String {
-        return &amp;quot;Sub&amp;quot;
+    override class func info() -&gt; String {
+        return &quot;Sub&quot;
     }
 }</code></pre><h2>四、初始化器</h2><h3>结构体成员初始化器</h3><p>结构体会自动生成成员初始化器。</p><pre><code class="language-swift">struct Point {
     var x: Double
@@ -660,7 +660,7 @@ let p = Point(x: 1, y: 2)</code></pre><p><strong>自定义初始化器后</stron
         self.age = age
     }
 }</code></pre><p><strong>默认初始化器</strong>：</p><p>如果所有属性都有默认值，类会获得默认初始化器。</p><pre><code class="language-swift">class Settings {
-    var theme = &amp;quot;light&amp;quot;
+    var theme = &quot;light&quot;
     var fontSize = 14
 }
 
@@ -678,12 +678,12 @@ let settings = Settings()</code></pre><h3>指定初始化器与便利初始化�
     }
 }
 
-let p1 = Person(name: &amp;quot;Tom&amp;quot;)            // age 默认 0
-let p2 = Person(name: &amp;quot;Jerry&amp;quot;, age: 20)</code></pre><h3>可失败初始化器</h3><p>用 <code>init?</code> 声明，可能返回 nil。</p><pre><code class="language-swift">struct Temperature {
+let p1 = Person(name: &quot;Tom&quot;)            // age 默认 0
+let p2 = Person(name: &quot;Jerry&quot;, age: 20)</code></pre><h3>可失败初始化器</h3><p>用 <code>init?</code> 声明，可能返回 nil。</p><pre><code class="language-swift">struct Temperature {
     var celsius: Double
 
     init?(celsius: Double) {
-        if celsius &amp;lt; -273.15 {
+        if celsius &lt; -273.15 {
             return nil
         }
         self.celsius = celsius
@@ -696,11 +696,11 @@ let t2 = Temperature(celsius: -300)   // nil</code></pre><h3>析构器</h3><p>�
 
     init(path: String) {
         self.path = path
-        print(&amp;quot;打开文件：\(path)&amp;quot;)
+        print(&quot;打开文件：\(path)&quot;)
     }
 
     deinit {
-        print(&amp;quot;关闭文件：\(path)&amp;quot;)
+        print(&quot;关闭文件：\(path)&quot;)
     }
 }</code></pre><h2>五、继承</h2><p>类可以继承另一个类，获取父类的属性和方法。</p><pre><code class="language-swift">class Animal {
     var name: String
@@ -710,26 +710,26 @@ let t2 = Temperature(celsius: -300)   // nil</code></pre><h3>析构器</h3><p>�
     }
 
     func makeSound() {
-        print(&amp;quot;动物发出声音&amp;quot;)
+        print(&quot;动物发出声音&quot;)
     }
 }
 
 class Dog: Animal {
     override func makeSound() {
-        print(&amp;quot;汪汪&amp;quot;)
+        print(&quot;汪汪&quot;)
     }
 
     func fetch() {
-        print(&amp;quot;\(name) 在捡球&amp;quot;)
+        print(&quot;\(name) 在捡球&quot;)
     }
 }
 
-let dog = Dog(name: &amp;quot;旺财&amp;quot;)
+let dog = Dog(name: &quot;旺财&quot;)
 dog.makeSound()  // 汪汪
 dog.fetch()      // 旺财 在捡球</code></pre><p><strong>重写</strong>：</p><ul><li><p>方法、属性、下标都可以重写。</p></li><li><p>重写需要用 <code>override</code> 关键字。</p></li><li><p>用 <code>super</code> 调用父类实现。</p></li></ul><pre><code class="language-swift">class Cat: Animal {
     override func makeSound() {
         super.makeSound()
-        print(&amp;quot;喵喵&amp;quot;)
+        print(&quot;喵喵&quot;)
     }
 }</code></pre><p><strong>防止重写</strong>：</p><p>用 <code>final</code> 标记。</p><pre><code class="language-swift">final class FinalClass {
     // 不能被继承
@@ -756,7 +756,7 @@ var p1 = Point(x: 1, y: 2)
 var p2 = p1       // 引用同一实例
 p2.x = 10
 print(p1.x)       // 10，p1 也被修改</code></pre><p><strong>判断是否同一实例</strong>：</p><pre><code class="language-swift">if p1 === p2 {
-    print(&amp;quot;同一个实例&amp;quot;)
+    print(&quot;同一个实例&quot;)
 }</code></pre><p><strong>选择建议</strong>：</p><table class="hean-table"><thead><tr><th><p>场景</p></th><th><p>推荐</p></th></tr></thead><tbody><tr><td><p>数据模型、值语义</p></td><td><p>结构体</p></td></tr><tr><td><p>需要继承、共享状态</p></td><td><p>类</p></td></tr><tr><td><p>小型、简单数据结构</p></td><td><p>结构体</p></td></tr><tr><td><p>需要引用计数、生命周期管理</p></td><td><p>类</p></td></tr><tr><td><p>SwiftUI 视图</p></td><td><p>结构体</p></td></tr><tr><td><p>ViewModel、Manager</p></td><td><p>类</p></td></tr></tbody></table><h2>七、避坑指南</h2><ul><li><p><strong>结构体是值类型</strong>：赋值、传参都会拷贝，注意性能。</p></li><li><p><strong>类是引用类型</strong>：多个变量指向同一实例，修改会互相影响。</p></li><li><p><strong>mutating 不能漏</strong>：结构体方法修改属性时必须加。</p></li><li><p><strong>类必须先初始化所有属性</strong>：否则编译报错。</p></li><li><p><strong>继承要慎用</strong>：优先使用组合。</p></li><li><p><strong>循环引用</strong>：类之间相互持有强引用会导致内存泄漏，使用 <code>weak</code> 或 <code>unowned</code>。</p></li><li><p><strong>final 提升性能</strong>：不需要继承的类加 <code>final</code>，编译器可优化。</p></li></ul><h2>八、检查清单</h2><ul><li><p>[ ] 能定义结构体和类</p></li><li><p>[ ] 理解存储属性、计算属性、属性观察器</p></li><li><p>[ ] 会使用实例方法与类型方法</p></li><li><p>[ ] 理解 mutating 的作用</p></li><li><p>[ ] 会写初始化器与便利初始化器</p></li><li><p>[ ] 理解继承与重写</p></li><li><p>[ ] 能区分值类型与引用类型</p></li><li><p>[ ] 能根据场景选择类或结构体</p></li></ul></div></div>
                     </div>
 

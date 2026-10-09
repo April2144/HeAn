@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -522,35 +522,35 @@
                     </div>
 
                     <!-- Markdown 正文 -->
-                    <div class="article-body" id="article-body"><div class="preview-blog-content"><h2>本篇目标</h2><p>理解可选类型的本质，掌握可选绑定、解包方式，学会使用 do-catch、throws、defer 处理错误，能编写健壮的 Swift 代码。</p><h2>一、可选类型基础</h2><p>可选类型表示一个值可能为空。</p><pre><code class="language-swift">var name: String? = &amp;quot;Tom&amp;quot;
+                    <div class="article-body" id="article-body"><div class="preview-blog-content"><h2>本篇目标</h2><p>理解可选类型的本质，掌握可选绑定、解包方式，学会使用 do-catch、throws、defer 处理错误，能编写健壮的 Swift 代码。</p><h2>一、可选类型基础</h2><p>可选类型表示一个值可能为空。</p><pre><code class="language-swift">var name: String? = &quot;Tom&quot;
 var age: Int? = nil</code></pre><p><strong>语法</strong>：</p><ul><li><p><code>String?</code> 等价于 <code>Optional&lt;String&gt;</code>。</p></li><li><p><code>nil</code> 表示没有值。</p></li><li><p>非可选类型不能赋值为 nil。</p></li></ul><pre><code class="language-swift">var a: String = nil       // 报错
-var b: String? = nil      // 正确</code></pre><p><strong>为什么需要可选类型</strong>：</p><ul><li><p>转换可能失败：<code>Int(&quot;abc&quot;)</code> 返回 nil。</p></li><li><p>字典取值可能不存在。</p></li><li><p>网络请求可能失败。</p></li><li><p>API 返回值可能为空。</p></li></ul><pre><code class="language-swift">let str = &amp;quot;123&amp;quot;
+var b: String? = nil      // 正确</code></pre><p><strong>为什么需要可选类型</strong>：</p><ul><li><p>转换可能失败：<code>Int(&quot;abc&quot;)</code> 返回 nil。</p></li><li><p>字典取值可能不存在。</p></li><li><p>网络请求可能失败。</p></li><li><p>API 返回值可能为空。</p></li></ul><pre><code class="language-swift">let str = &quot;123&quot;
 let number = Int(str)     // Optional(123)
 
-let str2 = &amp;quot;abc&amp;quot;
-let number2 = Int(str2)   // nil</code></pre><h2>二、强制解包</h2><p>用 <code>!</code> 强制解包，如果值为 nil 会崩溃。</p><pre><code class="language-swift">var name: String? = &amp;quot;Tom&amp;quot;
+let str2 = &quot;abc&quot;
+let number2 = Int(str2)   // nil</code></pre><h2>二、强制解包</h2><p>用 <code>!</code> 强制解包，如果值为 nil 会崩溃。</p><pre><code class="language-swift">var name: String? = &quot;Tom&quot;
 print(name!)  // Tom</code></pre><p><strong>危险写法</strong>：</p><pre><code class="language-swift">var name: String? = nil
-print(name!)  // 运行时崩溃</code></pre><p><strong>建议</strong>：</p><ul><li><p>尽量不用 <code>!</code> 强制解包。</p></li><li><p>只有确定不为 nil 时才用。</p></li><li><p>用可选绑定替代。</p></li></ul><h2>三、可选绑定</h2><p>用 <code>if let</code> 或 <code>guard let</code> 安全解包。</p><p><strong>if let</strong>：</p><pre><code class="language-swift">var name: String? = &amp;quot;Tom&amp;quot;
+print(name!)  // 运行时崩溃</code></pre><p><strong>建议</strong>：</p><ul><li><p>尽量不用 <code>!</code> 强制解包。</p></li><li><p>只有确定不为 nil 时才用。</p></li><li><p>用可选绑定替代。</p></li></ul><h2>三、可选绑定</h2><p>用 <code>if let</code> 或 <code>guard let</code> 安全解包。</p><p><strong>if let</strong>：</p><pre><code class="language-swift">var name: String? = &quot;Tom&quot;
 
 if let unwrappedName = name {
-    print(&amp;quot;Hello, \(unwrappedName)&amp;quot;)
+    print(&quot;Hello, \(unwrappedName)&quot;)
 } else {
-    print(&amp;quot;name 为 nil&amp;quot;)
+    print(&quot;name 为 nil&quot;)
 }</code></pre><p><strong>简写</strong>（Swift 5.7+）：</p><pre><code class="language-swift">if let name {
-    print(&amp;quot;Hello, \(name)&amp;quot;)
+    print(&quot;Hello, \(name)&quot;)
 }</code></pre><p><strong>guard let</strong>：</p><pre><code class="language-swift">func greet(name: String?) {
     guard let name = name else {
-        print(&amp;quot;name 为 nil&amp;quot;)
+        print(&quot;name 为 nil&quot;)
         return
     }
-    print(&amp;quot;Hello, \(name)&amp;quot;)
-}</code></pre><p><strong>guard 与 if 的区别</strong>：</p><table class="hean-table"><thead><tr><th><p>特性</p></th><th><p>if let</p></th><th><p>guard let</p></th></tr></thead><tbody><tr><td><p>作用域</p></td><td><p>只在 if 块内</p></td><td><p>函数剩余部分都可用</p></td></tr><tr><td><p>必须退出</p></td><td><p>不需要</p></td><td><p>else 中必须退出</p></td></tr><tr><td><p>适用场景</p></td><td><p>分支判断</p></td><td><p>参数校验</p></td></tr></tbody></table><p><strong>多个可选绑定</strong>：</p><pre><code class="language-swift">let name: String? = &amp;quot;Tom&amp;quot;
+    print(&quot;Hello, \(name)&quot;)
+}</code></pre><p><strong>guard 与 if 的区别</strong>：</p><table class="hean-table"><thead><tr><th><p>特性</p></th><th><p>if let</p></th><th><p>guard let</p></th></tr></thead><tbody><tr><td><p>作用域</p></td><td><p>只在 if 块内</p></td><td><p>函数剩余部分都可用</p></td></tr><tr><td><p>必须退出</p></td><td><p>不需要</p></td><td><p>else 中必须退出</p></td></tr><tr><td><p>适用场景</p></td><td><p>分支判断</p></td><td><p>参数校验</p></td></tr></tbody></table><p><strong>多个可选绑定</strong>：</p><pre><code class="language-swift">let name: String? = &quot;Tom&quot;
 let age: Int? = 25
 
 if let name = name, let age = age {
-    print(&amp;quot;\(name)，\(age) 岁&amp;quot;)
-}</code></pre><p><strong>带条件</strong>：</p><pre><code class="language-swift">if let name = name, name.count &amp;gt; 2 {
-    print(&amp;quot;名字长度超过 2&amp;quot;)
+    print(&quot;\(name)，\(age) 岁&quot;)
+}</code></pre><p><strong>带条件</strong>：</p><pre><code class="language-swift">if let name = name, name.count &gt; 2 {
+    print(&quot;名字长度超过 2&quot;)
 }</code></pre><h2>四、可选链</h2><p>用 <code>?.</code> 安全访问可选值的属性或方法。</p><pre><code class="language-swift">class Person {
     var name: String
     var address: Address?
@@ -568,13 +568,13 @@ class Address {
     }
 }
 
-let person = Person(name: &amp;quot;Tom&amp;quot;)
-let city = person.address?.city  // nil</code></pre><p><strong>可选链的特点</strong>：</p><ul><li><p>任意一层为 nil，整个表达式返回 nil。</p></li><li><p>返回值始终是可选类型。</p></li><li><p>可以链式调用。</p></li></ul><pre><code class="language-swift">person.address?.city?.count  // Optional&amp;lt;Int&amp;gt;</code></pre><p><strong>可选链调用方法</strong>：</p><pre><code class="language-swift">person.address?.printInfo()</code></pre><h2>五、nil 合并运算符</h2><p>用 <code>??</code> 提供默认值。</p><pre><code class="language-swift">let name: String? = nil
-let displayName = name ?? &amp;quot;匿名&amp;quot;
+let person = Person(name: &quot;Tom&quot;)
+let city = person.address?.city  // nil</code></pre><p><strong>可选链的特点</strong>：</p><ul><li><p>任意一层为 nil，整个表达式返回 nil。</p></li><li><p>返回值始终是可选类型。</p></li><li><p>可以链式调用。</p></li></ul><pre><code class="language-swift">person.address?.city?.count  // Optional&lt;Int&gt;</code></pre><p><strong>可选链调用方法</strong>：</p><pre><code class="language-swift">person.address?.printInfo()</code></pre><h2>五、nil 合并运算符</h2><p>用 <code>??</code> 提供默认值。</p><pre><code class="language-swift">let name: String? = nil
+let displayName = name ?? &quot;匿名&quot;
 print(displayName)  // 匿名</code></pre><p><strong>链式使用</strong>：</p><pre><code class="language-swift">let a: String? = nil
 let b: String? = nil
-let result = a ?? b ?? &amp;quot;默认值&amp;quot;
-print(result)  // 默认值</code></pre><p><strong>注意</strong>：</p><ul><li><p><code>??</code> 左边是可选类型。</p></li><li><p>右边是默认值，类型要与解包后一致。</p></li></ul><h2>六、隐式解包可选类型</h2><p>用 <code>!</code> 声明，使用时自动解包。</p><pre><code class="language-swift">var name: String! = &amp;quot;Tom&amp;quot;
+let result = a ?? b ?? &quot;默认值&quot;
+print(result)  // 默认值</code></pre><p><strong>注意</strong>：</p><ul><li><p><code>??</code> 左边是可选类型。</p></li><li><p>右边是默认值，类型要与解包后一致。</p></li></ul><h2>六、隐式解包可选类型</h2><p>用 <code>!</code> 声明，使用时自动解包。</p><pre><code class="language-swift">var name: String! = &quot;Tom&quot;
 print(name)  // 不需要 !</code></pre><p><strong>使用场景</strong>：</p><ul><li><p>IBOutlet 连接。</p></li><li><p>初始化后一定会赋值的属性。</p></li></ul><pre><code class="language-swift">class ViewController {
     @IBOutlet var label: UILabel!
 }</code></pre><p><strong>风险</strong>：</p><ul><li><p>值为 nil 时崩溃。</p></li><li><p>尽量少用，优先用可选绑定。</p></li></ul><h2>七、可选类型的比较</h2><p>可选类型可以用 <code>==</code> 和 <code>!=</code> 比较。</p><pre><code class="language-swift">let a: Int? = 1
@@ -589,64 +589,64 @@ print(c == nil) // true</code></pre><p><strong>注意</strong>：</p><ul><li><p>
     case invalidFormat
 }
 
-func readFile(path: String) throws -&amp;gt; String {
+func readFile(path: String) throws -&gt; String {
     if path.isEmpty {
         throw FileError.notFound
     }
-    return &amp;quot;文件内容&amp;quot;
+    return &quot;文件内容&quot;
 }</code></pre><p><strong>调用 throws 函数</strong>：</p><pre><code class="language-swift">do {
-    let content = try readFile(path: &amp;quot;test.txt&amp;quot;)
+    let content = try readFile(path: &quot;test.txt&quot;)
     print(content)
 } catch {
-    print(&amp;quot;读取失败：\(error)&amp;quot;)
+    print(&quot;读取失败：\(error)&quot;)
 }</code></pre><h2>九、do-catch</h2><p>用 do-catch 捕获并处理错误。</p><pre><code class="language-swift">do {
-    let content = try readFile(path: &amp;quot;&amp;quot;)
+    let content = try readFile(path: &quot;&quot;)
     print(content)
 } catch FileError.notFound {
-    print(&amp;quot;文件不存在&amp;quot;)
+    print(&quot;文件不存在&quot;)
 } catch FileError.noPermission {
-    print(&amp;quot;没有权限&amp;quot;)
+    print(&quot;没有权限&quot;)
 } catch {
-    print(&amp;quot;其他错误：\(error)&amp;quot;)
+    print(&quot;其他错误：\(error)&quot;)
 }</code></pre><p><strong>catch 的用法</strong>：</p><ul><li><p>可以针对特定错误类型捕获。</p></li><li><p>最后一个 catch 捕获所有错误。</p></li><li><p><code>error</code> 是隐式变量。</p></li></ul><h2>十、try 的三种形式</h2><p><strong>try</strong>：必须放在 do-catch 中，或函数声明为 throws。</p><pre><code class="language-swift">do {
-    let content = try readFile(path: &amp;quot;test.txt&amp;quot;)
+    let content = try readFile(path: &quot;test.txt&quot;)
 } catch {
     print(error)
-}</code></pre><p><strong>try?</strong>：失败返回 nil。</p><pre><code class="language-swift">let content = try? readFile(path: &amp;quot;&amp;quot;)
-// content 是 String? 类型</code></pre><p><strong>try!</strong>：失败时崩溃。</p><pre><code class="language-swift">let content = try! readFile(path: &amp;quot;test.txt&amp;quot;)</code></pre><p><strong>对比</strong>：</p><table class="hean-table"><thead><tr><th><p>形式</p></th><th><p>失败行为</p></th><th><p>返回类型</p></th></tr></thead><tbody><tr><td><p>try</p></td><td><p>抛出错误</p></td><td><p>正常类型</p></td></tr><tr><td><p>try?</p></td><td><p>返回 nil</p></td><td><p>可选类型</p></td></tr><tr><td><p>try!</p></td><td><p>崩溃</p></td><td><p>正常类型</p></td></tr></tbody></table><p><strong>建议</strong>：</p><ul><li><p>优先用 try + do-catch。</p></li><li><p>简单场景可用 try?。</p></li><li><p>尽量不用 try!。</p></li></ul><h2>十一、throws 函数与传播</h2><p>函数可以声明为 throws，把错误向上抛。</p><pre><code class="language-swift">func loadConfig() throws -&amp;gt; String {
-    let content = try readFile(path: &amp;quot;config.json&amp;quot;)
+}</code></pre><p><strong>try?</strong>：失败返回 nil。</p><pre><code class="language-swift">let content = try? readFile(path: &quot;&quot;)
+// content 是 String? 类型</code></pre><p><strong>try!</strong>：失败时崩溃。</p><pre><code class="language-swift">let content = try! readFile(path: &quot;test.txt&quot;)</code></pre><p><strong>对比</strong>：</p><table class="hean-table"><thead><tr><th><p>形式</p></th><th><p>失败行为</p></th><th><p>返回类型</p></th></tr></thead><tbody><tr><td><p>try</p></td><td><p>抛出错误</p></td><td><p>正常类型</p></td></tr><tr><td><p>try?</p></td><td><p>返回 nil</p></td><td><p>可选类型</p></td></tr><tr><td><p>try!</p></td><td><p>崩溃</p></td><td><p>正常类型</p></td></tr></tbody></table><p><strong>建议</strong>：</p><ul><li><p>优先用 try + do-catch。</p></li><li><p>简单场景可用 try?。</p></li><li><p>尽量不用 try!。</p></li></ul><h2>十一、throws 函数与传播</h2><p>函数可以声明为 throws，把错误向上抛。</p><pre><code class="language-swift">func loadConfig() throws -&gt; String {
+    let content = try readFile(path: &quot;config.json&quot;)
     return content
 }</code></pre><p><strong>调用方处理</strong>：</p><pre><code class="language-swift">do {
     let config = try loadConfig()
 } catch {
     print(error)
-}</code></pre><p><strong>throws 与 rethrows</strong>：</p><p><code>rethrows</code> 表示只有闭包参数抛错时才抛错。</p><pre><code class="language-swift">func perform(_ action: () throws -&amp;gt; Void) rethrows {
+}</code></pre><p><strong>throws 与 rethrows</strong>：</p><p><code>rethrows</code> 表示只有闭包参数抛错时才抛错。</p><pre><code class="language-swift">func perform(_ action: () throws -&gt; Void) rethrows {
     try action()
 }</code></pre><h2>十二、defer</h2><p><code>defer</code> 在离开当前作用域时执行，无论是否抛错。</p><pre><code class="language-swift">func process() {
     defer {
-        print(&amp;quot;清理资源&amp;quot;)
+        print(&quot;清理资源&quot;)
     }
-    print(&amp;quot;开始处理&amp;quot;)
-    print(&amp;quot;处理中&amp;quot;)
+    print(&quot;开始处理&quot;)
+    print(&quot;处理中&quot;)
 }
 
 process()
 // 开始处理
 // 处理中
 // 清理资源</code></pre><p><strong>执行顺序</strong>：</p><ul><li><p>多个 defer 按逆序执行。</p></li><li><p>常用于文件关闭、锁释放、资源清理。</p></li></ul><pre><code class="language-swift">func openFile() {
-    defer { print(&amp;quot;关闭文件&amp;quot;) }
-    defer { print(&amp;quot;解锁&amp;quot;) }
-    print(&amp;quot;打开文件&amp;quot;)
+    defer { print(&quot;关闭文件&quot;) }
+    defer { print(&quot;解锁&quot;) }
+    print(&quot;打开文件&quot;)
 }
 // 打开文件
 // 解锁
-// 关闭文件</code></pre><h2>十三、Result 类型</h2><p><code>Result</code> 是 Swift 提供的枚举，用于表示成功或失败。</p><pre><code class="language-swift">enum Result&amp;lt;Success, Failure: Error&amp;gt; {
+// 关闭文件</code></pre><h2>十三、Result 类型</h2><p><code>Result</code> 是 Swift 提供的枚举，用于表示成功或失败。</p><pre><code class="language-swift">enum Result&lt;Success, Failure: Error&gt; {
     case success(Success)
     case failure(Failure)
-}</code></pre><p><strong>使用示例</strong>：</p><pre><code class="language-swift">func fetchData(completion: (Result&amp;lt;String, Error&amp;gt;) -&amp;gt; Void) {
+}</code></pre><p><strong>使用示例</strong>：</p><pre><code class="language-swift">func fetchData(completion: (Result&lt;String, Error&gt;) -&gt; Void) {
     let success = true
     if success {
-        completion(.success(&amp;quot;数据&amp;quot;))
+        completion(.success(&quot;数据&quot;))
     } else {
         completion(.failure(FileError.notFound))
     }
@@ -655,9 +655,9 @@ process()
 fetchData { result in
     switch result {
     case .success(let data):
-        print(&amp;quot;成功：\(data)&amp;quot;)
+        print(&quot;成功：\(data)&quot;)
     case .failure(let error):
-        print(&amp;quot;失败：\(error)&amp;quot;)
+        print(&quot;失败：\(error)&quot;)
     }
 }</code></pre><p><strong>应用场景</strong>：</p><ul><li><p>异步回调。</p></li><li><p>网络请求封装。</p></li><li><p>不想用 throws 的场景。</p></li></ul><h2>十四、自定义错误</h2><p>错误类型遵循 <code>Error</code> 协议。</p><pre><code class="language-swift">enum NetworkError: Error {
     case noConnection
@@ -670,9 +670,9 @@ fetchData { result in
 }
 
 do {
-    throw ApiError.httpError(statusCode: 404, message: &amp;quot;Not Found&amp;quot;)
+    throw ApiError.httpError(statusCode: 404, message: &quot;Not Found&quot;)
 } catch ApiError.httpError(let code, let message) {
-    print(&amp;quot;HTTP \(code)：\(message)&amp;quot;)
+    print(&quot;HTTP \(code)：\(message)&quot;)
 } catch {
     print(error)
 }</code></pre><p><strong>LocalizedError</strong>：</p><p>提供本地化描述。</p><pre><code class="language-swift">enum LoginError: LocalizedError {
@@ -681,8 +681,8 @@ do {
 
     var errorDescription: String? {
         switch self {
-        case .invalidAccount: return &amp;quot;账号无效&amp;quot;
-        case .wrongPassword: return &amp;quot;密码错误&amp;quot;
+        case .invalidAccount: return &quot;账号无效&quot;
+        case .wrongPassword: return &quot;密码错误&quot;
         }
     }
 }</code></pre><h2>十五、避坑指南</h2><ul><li><p><strong>尽量不用强制解包</strong>：用可选绑定或 ?? 替代。</p></li><li><p><strong>try! 慎用</strong>：出错会崩溃，只用于确定不会失败的场景。</p></li><li><p><strong>guard 与 if let 选择</strong>：参数校验用 guard，分支逻辑用 if let。</p></li><li><p><strong>defer 执行顺序</strong>：多个 defer 逆序执行。</p></li><li><p><strong>可选链返回值</strong>：始终是可选类型，可能嵌套 Optional。</p></li><li><p><strong>错误类型命名</strong>：用 <code>-Error</code> 结尾，语义明确。</p></li><li><p><strong>错误传播</strong>：throws 函数要把错误往上抛，或本地处理。</p></li></ul><h2>十六、检查清单</h2><ul><li><p>[ ] 理解可选类型的本质</p></li><li><p>[ ] 能使用 if let、guard let 安全解包</p></li><li><p>[ ] 会使用可选链和 ??</p></li><li><p>[ ] 理解隐式解包可选类型</p></li><li><p>[ ] 能定义 throws 函数</p></li><li><p>[ ] 会使用 do-catch、try?、try!</p></li><li><p>[ ] 会使用 defer 清理资源</p></li><li><p>[ ] 能自定义错误类型</p></li><li><p>[ ] 了解 Result 类型</p></li></ul></div></div>

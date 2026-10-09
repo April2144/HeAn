@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -523,25 +523,25 @@
 
                     <!-- Markdown 正文 -->
                     <div class="article-body" id="article-body"><div class="preview-blog-content"><h2>本篇目标</h2><p>掌握 Swift 函数的定义、参数、返回值，理解闭包的语法与用法，学会使用常用的高阶函数。</p><h2>一、函数基础</h2><p><strong>定义函数</strong>：</p><pre><code class="language-swift">func greet() {
-    print(&amp;quot;Hello, Swift!&amp;quot;)
+    print(&quot;Hello, Swift!&quot;)
 }
 
 greet()  // 调用函数</code></pre><p><strong>带参数</strong>：</p><pre><code class="language-swift">func greet(name: String) {
-    print(&amp;quot;Hello, \(name)!&amp;quot;)
+    print(&quot;Hello, \(name)!&quot;)
 }
 
-greet(name: &amp;quot;Tom&amp;quot;)</code></pre><p><strong>带返回值</strong>：</p><pre><code class="language-swift">func add(a: Int, b: Int) -&amp;gt; Int {
+greet(name: &quot;Tom&quot;)</code></pre><p><strong>带返回值</strong>：</p><pre><code class="language-swift">func add(a: Int, b: Int) -&gt; Int {
     return a + b
 }
 
-let result = add(a: 3, b: 5)  // 8</code></pre><p><strong>多返回值</strong>（使用元组）：</p><pre><code class="language-swift">func minMax(array: [Int]) -&amp;gt; (min: Int, max: Int)? {
+let result = add(a: 3, b: 5)  // 8</code></pre><p><strong>多返回值</strong>（使用元组）：</p><pre><code class="language-swift">func minMax(array: [Int]) -&gt; (min: Int, max: Int)? {
     guard !array.isEmpty else { return nil }
     var currentMin = array[0]
     var currentMax = array[0]
     for value in array {
-        if value &amp;lt; currentMin {
+        if value &lt; currentMin {
             currentMin = value
-        } else if value &amp;gt; currentMax {
+        } else if value &gt; currentMax {
             currentMax = value
         }
     }
@@ -552,23 +552,23 @@ if let result = minMax(array: [3, 1, 5, 2, 4]) {
     print(result.min)  // 1
     print(result.max)  // 5
 }</code></pre><h2>二、参数标签</h2><p>Swift 函数参数有<strong>外部标签</strong>和<strong>内部名称</strong>。</p><pre><code class="language-swift">func greet(person name: String) {
-    print(&amp;quot;Hello, \(name)&amp;quot;)
+    print(&quot;Hello, \(name)&quot;)
 }
 
-greet(person: &amp;quot;Tom&amp;quot;)</code></pre><ul><li><p><code>person</code> 是外部标签，调用时使用。</p></li><li><p><code>name</code> 是内部名称，函数体内使用。</p></li></ul><p><strong>省略外部标签</strong>：</p><pre><code class="language-swift">func add(_ a: Int, _ b: Int) -&amp;gt; Int {
+greet(person: &quot;Tom&quot;)</code></pre><ul><li><p><code>person</code> 是外部标签，调用时使用。</p></li><li><p><code>name</code> 是内部名称，函数体内使用。</p></li></ul><p><strong>省略外部标签</strong>：</p><pre><code class="language-swift">func add(_ a: Int, _ b: Int) -&gt; Int {
     return a + b
 }
 
 add(3, 5)  // 不需要写标签</code></pre><p><strong>使用 `_` 省略</strong>：</p><pre><code class="language-swift">func greet(_ name: String) {
-    print(&amp;quot;Hello, \(name)&amp;quot;)
+    print(&quot;Hello, \(name)&quot;)
 }
 
-greet(&amp;quot;Tom&amp;quot;)</code></pre><h2>三、默认参数值</h2><pre><code class="language-swift">func greet(name: String = &amp;quot;Guest&amp;quot;) {
-    print(&amp;quot;Hello, \(name)&amp;quot;)
+greet(&quot;Tom&quot;)</code></pre><h2>三、默认参数值</h2><pre><code class="language-swift">func greet(name: String = &quot;Guest&quot;) {
+    print(&quot;Hello, \(name)&quot;)
 }
 
 greet()              // Hello, Guest
-greet(name: &amp;quot;Tom&amp;quot;)   // Hello, Tom</code></pre><h2>四、可变参数</h2><pre><code class="language-swift">func sum(_ numbers: Int...) -&amp;gt; Int {
+greet(name: &quot;Tom&quot;)   // Hello, Tom</code></pre><h2>四、可变参数</h2><pre><code class="language-swift">func sum(_ numbers: Int...) -&gt; Int {
     var total = 0
     for number in numbers {
         total += number
@@ -585,83 +585,83 @@ sum(1, 2, 3, 4)    // 10</code></pre><ul><li><p>可变参数在函数内部当�
 
 var x = 1
 var y = 2
-swapValues(&amp;amp;x, &amp;amp;y)
-print(x, y)  // 2, 1</code></pre><p><strong>注意</strong>：</p><ul><li><p>调用时参数前加 <code>&amp;</code>。</p></li><li><p><code>inout</code> 参数不能有默认值。</p></li><li><p>不能传入常量或字面量。</p></li></ul><h2>六、函数类型</h2><p>函数本身也是一种类型，可以赋值给变量。</p><pre><code class="language-swift">func add(a: Int, b: Int) -&amp;gt; Int {
+swapValues(&amp;x, &amp;y)
+print(x, y)  // 2, 1</code></pre><p><strong>注意</strong>：</p><ul><li><p>调用时参数前加 <code>&amp;</code>。</p></li><li><p><code>inout</code> 参数不能有默认值。</p></li><li><p>不能传入常量或字面量。</p></li></ul><h2>六、函数类型</h2><p>函数本身也是一种类型，可以赋值给变量。</p><pre><code class="language-swift">func add(a: Int, b: Int) -&gt; Int {
     return a + b
 }
 
-var mathFunction: (Int, Int) -&amp;gt; Int = add
-let result = mathFunction(3, 5)  // 8</code></pre><p><strong>函数作为参数</strong>：</p><pre><code class="language-swift">func calculate(a: Int, b: Int, operation: (Int, Int) -&amp;gt; Int) -&amp;gt; Int {
+var mathFunction: (Int, Int) -&gt; Int = add
+let result = mathFunction(3, 5)  // 8</code></pre><p><strong>函数作为参数</strong>：</p><pre><code class="language-swift">func calculate(a: Int, b: Int, operation: (Int, Int) -&gt; Int) -&gt; Int {
     return operation(a, b)
 }
 
-let sum = calculate(a: 3, b: 5, operation: add)  // 8</code></pre><p><strong>函数作为返回值</strong>：</p><pre><code class="language-swift">func chooseFunction(isAdd: Bool) -&amp;gt; (Int, Int) -&amp;gt; Int {
+let sum = calculate(a: 3, b: 5, operation: add)  // 8</code></pre><p><strong>函数作为返回值</strong>：</p><pre><code class="language-swift">func chooseFunction(isAdd: Bool) -&gt; (Int, Int) -&gt; Int {
     return isAdd ? add : { $0 - $1 }
-}</code></pre><h2>七、嵌套函数</h2><p>函数内部可以定义函数。</p><pre><code class="language-swift">func outer(value: Int) -&amp;gt; Int {
-    func inner(x: Int) -&amp;gt; Int {
+}</code></pre><h2>七、嵌套函数</h2><p>函数内部可以定义函数。</p><pre><code class="language-swift">func outer(value: Int) -&gt; Int {
+    func inner(x: Int) -&gt; Int {
         return x * 2
     }
     return inner(x: value) + 1
 }
 
-print(outer(value: 5))  // 11</code></pre><p><strong>用途</strong>：</p><ul><li><p>封装只在内部使用的逻辑。</p></li><li><p>配合闭包使用。</p></li></ul><h2>八、闭包基础</h2><p>闭包是自包含的代码块，可以在代码中传递和使用。</p><p><strong>闭包语法</strong>：</p><pre><code class="language-swift">{ (参数) -&amp;gt; 返回类型 in
+print(outer(value: 5))  // 11</code></pre><p><strong>用途</strong>：</p><ul><li><p>封装只在内部使用的逻辑。</p></li><li><p>配合闭包使用。</p></li></ul><h2>八、闭包基础</h2><p>闭包是自包含的代码块，可以在代码中传递和使用。</p><p><strong>闭包语法</strong>：</p><pre><code class="language-swift">{ (参数) -&gt; 返回类型 in
     代码
-}</code></pre><p><strong>示例</strong>：</p><pre><code class="language-swift">let greet = { (name: String) -&amp;gt; String in
-    return &amp;quot;Hello, \(name)&amp;quot;
+}</code></pre><p><strong>示例</strong>：</p><pre><code class="language-swift">let greet = { (name: String) -&gt; String in
+    return &quot;Hello, \(name)&quot;
 }
 
-print(greet(&amp;quot;Tom&amp;quot;))  // Hello, Tom</code></pre><p><strong>省略类型</strong>（类型推断）：</p><pre><code class="language-swift">let greet = { name in
-    return &amp;quot;Hello, \(name)&amp;quot;
-}</code></pre><p><strong>省略 return</strong>（单表达式）：</p><pre><code class="language-swift">let greet = { (name: String) -&amp;gt; String in
-    &amp;quot;Hello, \(name)&amp;quot;
+print(greet(&quot;Tom&quot;))  // Hello, Tom</code></pre><p><strong>省略类型</strong>（类型推断）：</p><pre><code class="language-swift">let greet = { name in
+    return &quot;Hello, \(name)&quot;
+}</code></pre><p><strong>省略 return</strong>（单表达式）：</p><pre><code class="language-swift">let greet = { (name: String) -&gt; String in
+    &quot;Hello, \(name)&quot;
 }</code></pre><p><strong>参数简写</strong>：</p><pre><code class="language-swift">let add = { $0 + $1 }
-print(add(3, 5))  // 8</code></pre><h2>九、尾随闭包</h2><p>当闭包是函数的最后一个参数时，可以写成尾随闭包。</p><pre><code class="language-swift">func performAction(action: () -&amp;gt; Void) {
+print(add(3, 5))  // 8</code></pre><h2>九、尾随闭包</h2><p>当闭包是函数的最后一个参数时，可以写成尾随闭包。</p><pre><code class="language-swift">func performAction(action: () -&gt; Void) {
     action()
 }
 
 // 普通写法
 performAction(action: {
-    print(&amp;quot;执行操作&amp;quot;)
+    print(&quot;执行操作&quot;)
 })
 
 // 尾随闭包
 performAction {
-    print(&amp;quot;执行操作&amp;quot;)
-}</code></pre><p><strong>多个闭包参数</strong>：</p><pre><code class="language-swift">func load(success: () -&amp;gt; Void, failure: () -&amp;gt; Void) {
+    print(&quot;执行操作&quot;)
+}</code></pre><p><strong>多个闭包参数</strong>：</p><pre><code class="language-swift">func load(success: () -&gt; Void, failure: () -&gt; Void) {
     // ...
 }
 
 load {
-    print(&amp;quot;成功&amp;quot;)
+    print(&quot;成功&quot;)
 } failure: {
-    print(&amp;quot;失败&amp;quot;)
-}</code></pre><h2>十、逃逸闭包与非逃逸闭包</h2><p><strong>非逃逸闭包</strong>（默认）：闭包在函数返回前执行完毕。</p><pre><code class="language-swift">func perform(action: () -&amp;gt; Void) {
+    print(&quot;失败&quot;)
+}</code></pre><h2>十、逃逸闭包与非逃逸闭包</h2><p><strong>非逃逸闭包</strong>（默认）：闭包在函数返回前执行完毕。</p><pre><code class="language-swift">func perform(action: () -&gt; Void) {
     action()
-}</code></pre><p><strong>逃逸闭包</strong>：闭包可能在函数返回后执行，需要加 <code>@escaping</code>。</p><pre><code class="language-swift">var completionHandlers: [() -&amp;gt; Void] = []
+}</code></pre><p><strong>逃逸闭包</strong>：闭包可能在函数返回后执行，需要加 <code>@escaping</code>。</p><pre><code class="language-swift">var completionHandlers: [() -&gt; Void] = []
 
-func addCompletion(handler: @escaping () -&amp;gt; Void) {
+func addCompletion(handler: @escaping () -&gt; Void) {
     completionHandlers.append(handler)
-}</code></pre><p><strong>常见逃逸场景</strong>：</p><ul><li><p>异步回调</p></li><li><p>存储闭包属性</p></li><li><p>网络请求完成回调</p></li></ul><pre><code class="language-swift">func fetchData(completion: @escaping (String) -&amp;gt; Void) {
+}</code></pre><p><strong>常见逃逸场景</strong>：</p><ul><li><p>异步回调</p></li><li><p>存储闭包属性</p></li><li><p>网络请求完成回调</p></li></ul><pre><code class="language-swift">func fetchData(completion: @escaping (String) -&gt; Void) {
     DispatchQueue.global().async {
         // 模拟网络请求
-        let data = &amp;quot;服务器返回的数据&amp;quot;
+        let data = &quot;服务器返回的数据&quot;
         DispatchQueue.main.async {
             completion(data)
         }
     }
-}</code></pre><h2>十一、自动闭包</h2><p><code>@autoclosure</code> 把表达式自动包装成闭包。</p><pre><code class="language-swift">func log(_ message: @autoclosure () -&amp;gt; String) {
+}</code></pre><h2>十一、自动闭包</h2><p><code>@autoclosure</code> 把表达式自动包装成闭包。</p><pre><code class="language-swift">func log(_ message: @autoclosure () -&gt; String) {
     print(message())
 }
 
-log(&amp;quot;这是一条日志&amp;quot;)  // 不需要写 { }</code></pre><p><strong>注意</strong>：</p><ul><li><p>自动闭包让调用更简洁。</p></li><li><p>不要滥用，会影响可读性。</p></li></ul><h2>十二、常用高阶函数</h2><p><strong>map</strong>：对每个元素做转换。</p><pre><code class="language-swift">let numbers = [1, 2, 3, 4, 5]
+log(&quot;这是一条日志&quot;)  // 不需要写 { }</code></pre><p><strong>注意</strong>：</p><ul><li><p>自动闭包让调用更简洁。</p></li><li><p>不要滥用，会影响可读性。</p></li></ul><h2>十二、常用高阶函数</h2><p><strong>map</strong>：对每个元素做转换。</p><pre><code class="language-swift">let numbers = [1, 2, 3, 4, 5]
 let doubled = numbers.map { $0 * 2 }
 print(doubled)  // [2, 4, 6, 8, 10]</code></pre><p><strong>filter</strong>：筛选符合条件的元素。</p><pre><code class="language-swift">let evenNumbers = numbers.filter { $0 % 2 == 0 }
 print(evenNumbers)  // [2, 4]</code></pre><p><strong>reduce</strong>：把数组归约为一个值。</p><pre><code class="language-swift">let sum = numbers.reduce(0) { $0 + $1 }
 print(sum)  // 15
 
 let sum2 = numbers.reduce(0, +)
-print(sum2)  // 15</code></pre><p><strong>sorted</strong>：排序。</p><pre><code class="language-swift">let sorted = numbers.sorted { $0 &amp;gt; $1 }
-print(sorted)  // [5, 4, 3, 2, 1]</code></pre><p><strong>compactMap</strong>：过滤 nil 并转换。</p><pre><code class="language-swift">let strings = [&amp;quot;1&amp;quot;, &amp;quot;2&amp;quot;, &amp;quot;abc&amp;quot;, &amp;quot;4&amp;quot;]
+print(sum2)  // 15</code></pre><p><strong>sorted</strong>：排序。</p><pre><code class="language-swift">let sorted = numbers.sorted { $0 &gt; $1 }
+print(sorted)  // [5, 4, 3, 2, 1]</code></pre><p><strong>compactMap</strong>：过滤 nil 并转换。</p><pre><code class="language-swift">let strings = [&quot;1&quot;, &quot;2&quot;, &quot;abc&quot;, &quot;4&quot;]
 let numbers2 = strings.compactMap { Int($0) }
 print(numbers2)  // [1, 2, 4]</code></pre><p><strong>flatMap</strong>：展平嵌套数组。</p><pre><code class="language-swift">let nested = [[1, 2], [3, 4], [5]]
 let flat = nested.flatMap { $0 }

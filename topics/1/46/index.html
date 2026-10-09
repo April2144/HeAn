@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -535,13 +535,13 @@ let dir = Direction.north</code></pre><p><strong>简化写法</strong>：</p><pr
 
 switch direction {
 case .north:
-    print(&amp;quot;向北&amp;quot;)
+    print(&quot;向北&quot;)
 case .south:
-    print(&amp;quot;向南&amp;quot;)
+    print(&quot;向南&quot;)
 case .east:
-    print(&amp;quot;向东&amp;quot;)
+    print(&quot;向东&quot;)
 case .west:
-    print(&amp;quot;向西&amp;quot;)
+    print(&quot;向西&quot;)
 }</code></pre><p><strong>特点</strong>：</p><ul><li><p>枚举是值类型。</p></li><li><p>枚举的每个分支都是确定的值。</p></li><li><p>switch 匹配枚举必须穷举，或加 default。</p></li></ul><h2>二、原始值</h2><p>枚举可以有一个原始值，类型可以是 String、Int、Double、Character 等。</p><pre><code class="language-swift">enum Weekday: Int {
     case monday = 1
     case tuesday
@@ -558,11 +558,11 @@ print(Weekday.friday.rawValue)  // 5</code></pre><p><strong>自动递增</strong
     case running  // 1
     case done     // 2
 }</code></pre><p><strong>字符串原始值</strong>：</p><pre><code class="language-swift">enum Environment: String {
-    case dev = &amp;quot;development&amp;quot;
-    case prod = &amp;quot;production&amp;quot;
+    case dev = &quot;development&quot;
+    case prod = &quot;production&quot;
 }
 
-print(Environment.dev.rawValue)  // development</code></pre><p><strong>用原始值初始化</strong>：</p><pre><code class="language-swift">if let env = Environment(rawValue: &amp;quot;development&amp;quot;) {
+print(Environment.dev.rawValue)  // development</code></pre><p><strong>用原始值初始化</strong>：</p><pre><code class="language-swift">if let env = Environment(rawValue: &quot;development&quot;) {
     print(env)  // dev
 }</code></pre><p><strong>注意</strong>：</p><ul><li><p>原始值初始化返回可选类型。</p></li><li><p>原始值不能重复。</p></li><li><p>有原始值的枚举，不能有关联值。</p></li></ul><h2>三、关联值</h2><p>枚举的每个分支可以关联不同类型和数量的值。</p><pre><code class="language-swift">enum Barcode {
     case upc(Int, Int, Int, Int)
@@ -570,25 +570,25 @@ print(Environment.dev.rawValue)  // development</code></pre><p><strong>用原始
 }
 
 let barcode1 = Barcode.upc(8, 85909, 51226, 3)
-let barcode2 = Barcode.qrCode(&amp;quot;ABCDEFGHIJKLMNOP&amp;quot;)</code></pre><p><strong>使用关联值</strong>：</p><pre><code class="language-swift">switch barcode1 {
+let barcode2 = Barcode.qrCode(&quot;ABCDEFGHIJKLMNOP&quot;)</code></pre><p><strong>使用关联值</strong>：</p><pre><code class="language-swift">switch barcode1 {
 case .upc(let numberSystem, let manufacturer, let product, let check):
-    print(&amp;quot;UPC: \(numberSystem)-\(manufacturer)-\(product)-\(check)&amp;quot;)
+    print(&quot;UPC: \(numberSystem)-\(manufacturer)-\(product)-\(check)&quot;)
 case .qrCode(let code):
-    print(&amp;quot;QR: \(code)&amp;quot;)
+    print(&quot;QR: \(code)&quot;)
 }</code></pre><p><strong>简写</strong>（所有关联值都用 let）：</p><pre><code class="language-swift">switch barcode1 {
 case let .upc(numberSystem, manufacturer, product, check):
-    print(&amp;quot;UPC: \(numberSystem)-\(manufacturer)-\(product)-\(check)&amp;quot;)
+    print(&quot;UPC: \(numberSystem)-\(manufacturer)-\(product)-\(check)&quot;)
 case let .qrCode(code):
-    print(&amp;quot;QR: \(code)&amp;quot;)
+    print(&quot;QR: \(code)&quot;)
 }</code></pre><p><strong>应用场景</strong>：</p><ul><li><p>网络请求结果：成功（数据）或失败（错误）</p></li><li><p>状态机：加载中、成功、失败</p></li><li><p>表达式：数字、字符串、变量</p></li></ul><h2>四、枚举的属性和方法</h2><p>枚举可以定义计算属性和方法。</p><pre><code class="language-swift">enum CompassPoint {
     case north, south, east, west
 
     var description: String {
         switch self {
-        case .north: return &amp;quot;北&amp;quot;
-        case .south: return &amp;quot;南&amp;quot;
-        case .east: return &amp;quot;东&amp;quot;
-        case .west: return &amp;quot;西&amp;quot;
+        case .north: return &quot;北&quot;
+        case .south: return &quot;南&quot;
+        case .east: return &quot;东&quot;
+        case .west: return &quot;西&quot;
         }
     }
 }
@@ -596,7 +596,7 @@ case let .qrCode(code):
 print(CompassPoint.north.description)  // 北</code></pre><p><strong>实例方法</strong>：</p><pre><code class="language-swift">enum TrafficLight {
     case red, yellow, green
 
-    func canGo() -&amp;gt; Bool {
+    func canGo() -&gt; Bool {
         return self == .green
     }
 }
@@ -626,15 +626,15 @@ struct Person: Greetable {
     var name: String
 
     func greet() {
-        print(&amp;quot;Hello, \(name)&amp;quot;)
+        print(&quot;Hello, \(name)&quot;)
     }
 }
 
-let p = Person(name: &amp;quot;Tom&amp;quot;)
+let p = Person(name: &quot;Tom&quot;)
 p.greet()  // Hello, Tom</code></pre><p><strong>属性要求</strong>：</p><ul><li><p><code>{ get }</code>：只读，可实现为只读或读写。</p></li><li><p><code>{ get set }</code>：读写，必须可读可写。</p></li></ul><pre><code class="language-swift">protocol Named {
     var name: String { get set }
 }</code></pre><p><strong>方法要求</strong>：</p><pre><code class="language-swift">protocol Calculable {
-    func add(a: Int, b: Int) -&amp;gt; Int
+    func add(a: Int, b: Int) -&gt; Int
 }</code></pre><p><strong>mutating 方法要求</strong>：</p><pre><code class="language-swift">protocol Resettable {
     mutating func reset()
 }
@@ -646,13 +646,13 @@ struct Counter: Resettable {
         count = 0
     }
 }</code></pre><h2>七、协议作为类型</h2><p>协议可以作为类型使用，存储任何遵循该协议的值。</p><pre><code class="language-swift">protocol Shape {
-    func area() -&amp;gt; Double
+    func area() -&gt; Double
 }
 
 struct Circle: Shape {
     var radius: Double
 
-    func area() -&amp;gt; Double {
+    func area() -&gt; Double {
         return .pi * radius * radius
     }
 }
@@ -661,7 +661,7 @@ struct Rectangle: Shape {
     var width: Double
     var height: Double
 
-    func area() -&amp;gt; Double {
+    func area() -&gt; Double {
         return width * height
     }
 }
@@ -690,7 +690,7 @@ struct Student: Person {
     var age: Int
 
     func introduce() {
-        print(&amp;quot;我是 \(name)，今年 \(age) 岁&amp;quot;)
+        print(&quot;我是 \(name)，今年 \(age) 岁&quot;)
     }
 }</code></pre><p><strong>注意</strong>：</p><ul><li><p>遵循子协议时，需要实现所有父协议的要求。</p></li><li><p>一个类型可以同时遵循多个协议。</p></li></ul><h2>九、协议扩展</h2><p>协议可以通过扩展提供默认实现。</p><pre><code class="language-swift">protocol Greetable {
     var name: String { get }
@@ -699,7 +699,7 @@ struct Student: Person {
 
 extension Greetable {
     func greet() {
-        print(&amp;quot;Hello, \(name)&amp;quot;)
+        print(&quot;Hello, \(name)&quot;)
     }
 }
 
@@ -707,9 +707,9 @@ struct Person: Greetable {
     var name: String
 }
 
-let p = Person(name: &amp;quot;Tom&amp;quot;)
+let p = Person(name: &quot;Tom&quot;)
 p.greet()  // Hello, Tom</code></pre><p><strong>优点</strong>：</p><ul><li><p>减少重复代码。</p></li><li><p>让协议拥有默认行为。</p></li></ul><p><strong>为协议添加约束</strong>：</p><pre><code class="language-swift">extension Collection where Element: Equatable {
-    func allEqual() -&amp;gt; Bool {
+    func allEqual() -&gt; Bool {
         for element in self {
             if element != first {
                 return false
@@ -728,15 +728,15 @@ protocol Aged {
     var age: Int { get }
 }
 
-func printInfo(person: Named &amp;amp; Aged) {
-    print(&amp;quot;\(person.name)，\(person.age) 岁&amp;quot;)
-}</code></pre><p><strong>用途</strong>：</p><ul><li><p>函数参数要求同时满足多个协议。</p></li><li><p>类型别名简化复杂组合。</p></li></ul><pre><code class="language-swift">typealias PersonInfo = Named &amp;amp; Aged</code></pre><h2>十一、可选协议要求</h2><p>用 <code>@objc</code> 标记的协议可以定义可选要求，仅适用于类。</p><pre><code class="language-swift">@objc protocol DataSource {
-    func numberOfItems() -&amp;gt; Int
-    @objc optional func titleForItem(at index: Int) -&amp;gt; String
+func printInfo(person: Named &amp; Aged) {
+    print(&quot;\(person.name)，\(person.age) 岁&quot;)
+}</code></pre><p><strong>用途</strong>：</p><ul><li><p>函数参数要求同时满足多个协议。</p></li><li><p>类型别名简化复杂组合。</p></li></ul><pre><code class="language-swift">typealias PersonInfo = Named &amp; Aged</code></pre><h2>十一、可选协议要求</h2><p>用 <code>@objc</code> 标记的协议可以定义可选要求，仅适用于类。</p><pre><code class="language-swift">@objc protocol DataSource {
+    func numberOfItems() -&gt; Int
+    @objc optional func titleForItem(at index: Int) -&gt; String
 }
 
 class MyDataSource: DataSource {
-    func numberOfItems() -&amp;gt; Int {
+    func numberOfItems() -&gt; Int {
         return 10
     }
 }</code></pre><p><strong>注意</strong>：</p><ul><li><p>可选要求只能用于 <code>@objc</code> 协议。</p></li><li><p>遵循类型必须是类。</p></li><li><p>纯 Swift 场景建议用协议扩展提供默认实现，替代可选要求。</p></li></ul><h2>十二、面向协议编程</h2><p>Swift 提倡面向协议编程（POP），优先用协议 + 组合，而不是继承。</p><p><strong>示例</strong>：</p><pre><code class="language-swift">protocol Flyable {
@@ -749,17 +749,17 @@ protocol Swimmable {
 
 struct Duck: Flyable, Swimmable {
     func fly() {
-        print(&amp;quot;鸭子在飞&amp;quot;)
+        print(&quot;鸭子在飞&quot;)
     }
 
     func swim() {
-        print(&amp;quot;鸭子在游泳&amp;quot;)
+        print(&quot;鸭子在游泳&quot;)
     }
 }
 
 struct Fish: Swimmable {
     func swim() {
-        print(&amp;quot;鱼在游泳&amp;quot;)
+        print(&quot;鱼在游泳&quot;)
     }
 }</code></pre><p><strong>优点</strong>：</p><ul><li><p>灵活组合能力。</p></li><li><p>避免类的单继承限制。</p></li><li><p>便于测试和替换实现。</p></li></ul><h2>十三、避坑指南</h2><ul><li><p><strong>枚举分支尽量少而清晰</strong>：过多分支考虑拆分。</p></li><li><p><strong>关联值 vs 原始值</strong>：不能同时存在。</p></li><li><p><strong>协议命名规范</strong>：表示能力用 <code>-able</code>、<code>-ible</code>，表示身份用名词。</p></li><li><p><strong>协议扩展默认实现</strong>：注意不要与具体实现冲突。</p></li><li><p><strong>@objc 可选要求</strong>：能不用就不用，优先用协议扩展。</p></li><li><p><strong>协议组合</strong>：类型太多时用 typealias 简化。</p></li></ul><h2>十四、检查清单</h2><ul><li><p>[ ] 能定义枚举，使用原始值</p></li><li><p>[ ] 理解关联值的用法</p></li><li><p>[ ] 会为枚举添加计算属性和方法</p></li><li><p>[ ] 会使用 CaseIterable</p></li><li><p>[ ] 能定义协议，遵循协议</p></li><li><p>[ ] 理解协议作为类型</p></li><li><p>[ ] 会使用协议扩展提供默认实现</p></li><li><p>[ ] 了解面向协议编程的思路</p></li></ul></div></div>
                     </div>

@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -541,10 +541,10 @@ struct HelloWorldApp: App {
 struct ContentView: View {
     var body: some View {
         VStack {
-            Image(systemName: &amp;quot;globe&amp;quot;)
+            Image(systemName: &quot;globe&quot;)
                 .imageScale(.large)
                 .foregroundStyle(.tint)
-            Text(&amp;quot;Hello, world!&amp;quot;)
+            Text(&quot;Hello, world!&quot;)
         }
         .padding()
     }
@@ -552,18 +552,18 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-}</code></pre><ul><li><p><code>struct ContentView: View</code>：定义一个视图</p></li><li><p><code>var body: some View</code>：描述界面内容</p></li><li><p><code>VStack</code>：垂直排列子视图</p></li><li><p><code>Image</code>：显示系统图标</p></li><li><p><code>Text</code>：显示文字</p></li><li><p><code>.padding()</code>：添加内边距</p></li><li><p><code>#Preview</code>：Xcode 预览代码</p></li></ul><h2>三、运行项目</h2><ol><li><p>在 Xcode 顶部工具栏选择模拟器（如 iPhone 15）</p></li><li><p>点击左上角运行按钮（三角形）</p></li><li><p>首次运行需要编译，等待完成</p></li><li><p>模拟器自动启动，显示 App 界面</p></li><li><p>看到地球图标和 “Hello, world!” 即表示运行成功</p></li></ol><p><strong>运行失败排查</strong>：</p><ul><li><p>检查模拟器是否已安装</p></li><li><p>检查 Xcode 版本与 macOS 是否匹配</p></li><li><p>检查项目配置是否有误</p></li><li><p>查看底部调试区错误信息</p></li></ul><h2>四、修改界面</h2><p><strong>修改文字</strong>：</p><p>将 <code>Text(&quot;Hello, world!&quot;)</code> 改为：</p><pre><code class="language-swift">Text(&amp;quot;我的第一个 iOS App&amp;quot;)</code></pre><p><strong>修改图标</strong>：</p><p>将 <code>Image(systemName: &quot;globe&quot;)</code> 改为：</p><pre><code class="language-swift">Image(systemName: &amp;quot;iphone&amp;quot;)</code></pre><p><strong>添加新文字</strong>：</p><pre><code class="language-swift">VStack {
-    Image(systemName: &amp;quot;iphone&amp;quot;)
+}</code></pre><ul><li><p><code>struct ContentView: View</code>：定义一个视图</p></li><li><p><code>var body: some View</code>：描述界面内容</p></li><li><p><code>VStack</code>：垂直排列子视图</p></li><li><p><code>Image</code>：显示系统图标</p></li><li><p><code>Text</code>：显示文字</p></li><li><p><code>.padding()</code>：添加内边距</p></li><li><p><code>#Preview</code>：Xcode 预览代码</p></li></ul><h2>三、运行项目</h2><ol><li><p>在 Xcode 顶部工具栏选择模拟器（如 iPhone 15）</p></li><li><p>点击左上角运行按钮（三角形）</p></li><li><p>首次运行需要编译，等待完成</p></li><li><p>模拟器自动启动，显示 App 界面</p></li><li><p>看到地球图标和 “Hello, world!” 即表示运行成功</p></li></ol><p><strong>运行失败排查</strong>：</p><ul><li><p>检查模拟器是否已安装</p></li><li><p>检查 Xcode 版本与 macOS 是否匹配</p></li><li><p>检查项目配置是否有误</p></li><li><p>查看底部调试区错误信息</p></li></ul><h2>四、修改界面</h2><p><strong>修改文字</strong>：</p><p>将 <code>Text(&quot;Hello, world!&quot;)</code> 改为：</p><pre><code class="language-swift">Text(&quot;我的第一个 iOS App&quot;)</code></pre><p><strong>修改图标</strong>：</p><p>将 <code>Image(systemName: &quot;globe&quot;)</code> 改为：</p><pre><code class="language-swift">Image(systemName: &quot;iphone&quot;)</code></pre><p><strong>添加新文字</strong>：</p><pre><code class="language-swift">VStack {
+    Image(systemName: &quot;iphone&quot;)
         .imageScale(.large)
         .foregroundStyle(.tint)
-    Text(&amp;quot;我的第一个 iOS App&amp;quot;)
+    Text(&quot;我的第一个 iOS App&quot;)
         .font(.title)
         .fontWeight(.bold)
-    Text(&amp;quot;从零开始学习 iOS 开发&amp;quot;)
+    Text(&quot;从零开始学习 iOS 开发&quot;)
         .font(.subheadline)
         .foregroundStyle(.secondary)
 }
-.padding()</code></pre><p><strong>修改样式</strong>：</p><table class="hean-table"><thead><tr><th><p>修饰符</p></th><th><p>作用</p></th></tr></thead><tbody><tr><td><p><code>.font(.title)</code></p></td><td><p>设置字体大小</p></td></tr><tr><td><p><code>.fontWeight(.bold)</code></p></td><td><p>设置字重</p></td></tr><tr><td><p><code>.foregroundStyle(.secondary)</code></p></td><td><p>设置文字颜色</p></td></tr><tr><td><p><code>.padding()</code></p></td><td><p>添加内边距</p></td></tr><tr><td><p><code>.background(Color.blue)</code></p></td><td><p>设置背景色</p></td></tr><tr><td><p><code>.cornerRadius(10)</code></p></td><td><p>设置圆角</p></td></tr></tbody></table><h2>五、使用预览</h2><p>SwiftUI 支持实时预览，修改代码后界面自动刷新。</p><p><strong>打开预览</strong>：</p><ol><li><p>打开 <code>ContentView.swift</code></p></li><li><p>点击右上角 Adjust Editor Options</p></li><li><p>选择 Canvas</p></li><li><p>或使用快捷键 <code>Command + Option + Enter</code></p></li></ol><p><strong>预览窗口操作</strong>：</p><table class="hean-table"><thead><tr><th><p>操作</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p>点击预览中的设备</p></td><td><p>切换设备</p></td></tr><tr><td><p>点击 Resume</p></td><td><p>恢复预览</p></td></tr><tr><td><p>点击 Live Preview</p></td><td><p>实时交互</p></td></tr><tr><td><p>点击 Inspect</p></td><td><p>查看视图层级</p></td></tr></tbody></table><p><strong>预览不刷新解决</strong>：</p><ul><li><p>点击 Resume</p></li><li><p>清理项目：Command + Shift + K</p></li><li><p>重启 Xcode</p></li><li><p>检查代码是否有编译错误</p></li></ul><h2>六、添加图片资源</h2><p><strong>准备图片</strong>：</p><ul><li><p>尺寸：建议使用 1x、2x、3x 三套图</p></li><li><p>格式：PNG 或 JPG</p></li><li><p>命名：英文小写，无空格</p></li></ul><p><strong>添加步骤</strong>：</p><ol><li><p>打开 <code>Assets.xcassets</code></p></li><li><p>点击左下角 + 号 → New Image Set</p></li><li><p>命名图片集，如 <code>logo</code></p></li><li><p>拖入对应图片</p></li><li><p>在代码中使用：</p></li></ol><pre><code class="language-swift">Image(&amp;quot;logo&amp;quot;)
+.padding()</code></pre><p><strong>修改样式</strong>：</p><table class="hean-table"><thead><tr><th><p>修饰符</p></th><th><p>作用</p></th></tr></thead><tbody><tr><td><p><code>.font(.title)</code></p></td><td><p>设置字体大小</p></td></tr><tr><td><p><code>.fontWeight(.bold)</code></p></td><td><p>设置字重</p></td></tr><tr><td><p><code>.foregroundStyle(.secondary)</code></p></td><td><p>设置文字颜色</p></td></tr><tr><td><p><code>.padding()</code></p></td><td><p>添加内边距</p></td></tr><tr><td><p><code>.background(Color.blue)</code></p></td><td><p>设置背景色</p></td></tr><tr><td><p><code>.cornerRadius(10)</code></p></td><td><p>设置圆角</p></td></tr></tbody></table><h2>五、使用预览</h2><p>SwiftUI 支持实时预览，修改代码后界面自动刷新。</p><p><strong>打开预览</strong>：</p><ol><li><p>打开 <code>ContentView.swift</code></p></li><li><p>点击右上角 Adjust Editor Options</p></li><li><p>选择 Canvas</p></li><li><p>或使用快捷键 <code>Command + Option + Enter</code></p></li></ol><p><strong>预览窗口操作</strong>：</p><table class="hean-table"><thead><tr><th><p>操作</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p>点击预览中的设备</p></td><td><p>切换设备</p></td></tr><tr><td><p>点击 Resume</p></td><td><p>恢复预览</p></td></tr><tr><td><p>点击 Live Preview</p></td><td><p>实时交互</p></td></tr><tr><td><p>点击 Inspect</p></td><td><p>查看视图层级</p></td></tr></tbody></table><p><strong>预览不刷新解决</strong>：</p><ul><li><p>点击 Resume</p></li><li><p>清理项目：Command + Shift + K</p></li><li><p>重启 Xcode</p></li><li><p>检查代码是否有编译错误</p></li></ul><h2>六、添加图片资源</h2><p><strong>准备图片</strong>：</p><ul><li><p>尺寸：建议使用 1x、2x、3x 三套图</p></li><li><p>格式：PNG 或 JPG</p></li><li><p>命名：英文小写，无空格</p></li></ul><p><strong>添加步骤</strong>：</p><ol><li><p>打开 <code>Assets.xcassets</code></p></li><li><p>点击左下角 + 号 → New Image Set</p></li><li><p>命名图片集，如 <code>logo</code></p></li><li><p>拖入对应图片</p></li><li><p>在代码中使用：</p></li></ol><pre><code class="language-swift">Image(&quot;logo&quot;)
     .resizable()
     .frame(width: 100, height: 100)</code></pre><h2>七、修改项目信息</h2><p><strong>修改显示名称</strong>：</p><ol><li><p>点击项目名称</p></li><li><p>General 标签</p></li><li><p>修改 Display Name</p></li></ol><p><strong>修改版本号</strong>：</p><ul><li><p>Version：对外版本号，如 1.0</p></li><li><p>Build：内部构建号，如 1</p></li></ul><p><strong>修改 App 图标</strong>：</p><ol><li><p>打开 <code>Assets.xcassets</code></p></li><li><p>选择 AppIcon</p></li><li><p>拖入对应尺寸图标</p></li><li><p>图标需符合 Apple 规范</p></li></ol><h2>八、避坑指南</h2><ul><li><p><strong>项目名称不要用中文</strong>：可能导致编译问题。</p></li><li><p><strong>Bundle Identifier 要唯一</strong>：上架后不可修改。</p></li><li><p><strong>不要直接改文件夹名</strong>：应在 Xcode 中重命名。</p></li><li><p><strong>预览不刷新先检查错误</strong>：编译错误会导致预览失败。</p></li><li><p><strong>图片命名规范</strong>：使用英文小写和连字符。</p></li><li><p><strong>模拟器方向</strong>：默认竖屏，可在项目设置中调整。</p></li></ul><h2>九、检查清单</h2><ul><li><p>[ ] 成功创建第一个 SwiftUI 项目</p></li><li><p>[ ] 理解 <code>App.swift</code> 和 <code>ContentView.swift</code> 的作用</p></li><li><p>[ ] 能修改文字和图标</p></li><li><p>[ ] 能使用 SwiftUI 预览</p></li><li><p>[ ] 能添加图片资源</p></li><li><p>[ ] 能修改项目显示名称和版本号</p></li><li><p>[ ] 在模拟器成功运行 App</p></li></ul><p>📦 这篇笔记对应的完整工程在 <a href="https://github.com/April2144/HelloWorld" target="_blank" rel="noopener">HelloWorld</a> —— 一个离线笔记 App。刚建完空项目的话，可以对照着看它的目录结构。</p></div></div>
                     </div>

@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -527,8 +527,8 @@
 
     var body: some View {
         VStack {
-            Text(&amp;quot;计数：\(count)&amp;quot;)
-            Button(&amp;quot;加一&amp;quot;) {
+            Text(&quot;计数：\(count)&quot;)
+            Button(&quot;加一&quot;) {
                 count += 1
             }
         }
@@ -537,14 +537,14 @@
     @State private var isOn = false
 
     var body: some View {
-        Toggle(&amp;quot;启用&amp;quot;, isOn: $isOn)
+        Toggle(&quot;启用&quot;, isOn: $isOn)
     }
 }</code></pre><h2>三、@Binding</h2><p><code>@Binding</code> 用于在子视图中读写父视图的状态。</p><p><strong>父视图</strong>：</p><pre><code class="language-swift">struct ParentView: View {
-    @State private var name = &amp;quot;&amp;quot;
+    @State private var name = &quot;&quot;
 
     var body: some View {
         VStack {
-            Text(&amp;quot;你好，\(name)&amp;quot;)
+            Text(&quot;你好，\(name)&quot;)
             ChildView(name: $name)
         }
     }
@@ -552,7 +552,7 @@
     @Binding var name: String
 
     var body: some View {
-        TextField(&amp;quot;输入名字&amp;quot;, text: $name)
+        TextField(&quot;输入名字&quot;, text: $name)
     }
 }</code></pre><p><strong>说明</strong>：</p><ul><li><p><code>$name</code> 把 @State 转换成 Binding。</p></li><li><p>子视图通过 @Binding 修改父视图的状态。</p></li><li><p>适用于父子视图共享状态。</p></li></ul><p><strong>可复用组件</strong>：</p><pre><code class="language-swift">struct CustomToggle: View {
     @Binding var isOn: Bool
@@ -562,7 +562,7 @@
         HStack {
             Text(title)
             Spacer()
-            Toggle(&amp;quot;&amp;quot;, isOn: $isOn)
+            Toggle(&quot;&quot;, isOn: $isOn)
                 .labelsHidden()
         }
         .padding()
@@ -581,8 +581,8 @@ class CounterViewModel: ObservableObject {
 
     var body: some View {
         VStack {
-            Text(&amp;quot;计数：\(viewModel.count)&amp;quot;)
-            Button(&amp;quot;加一&amp;quot;) {
+            Text(&quot;计数：\(viewModel.count)&quot;)
+            Button(&quot;加一&quot;) {
                 viewModel.increment()
             }
         }
@@ -591,10 +591,10 @@ class CounterViewModel: ObservableObject {
     @ObservedObject var viewModel: CounterViewModel
 
     var body: some View {
-        Text(&amp;quot;计数：\(viewModel.count)&amp;quot;)
+        Text(&quot;计数：\(viewModel.count)&quot;)
     }
 }</code></pre><p><strong>区别</strong>：</p><table class="hean-table"><thead><tr><th><p>属性包装器</p></th><th><p>用途</p></th><th><p>生命周期</p></th></tr></thead><tbody><tr><td><p>@StateObject</p></td><td><p>视图自己创建并持有</p></td><td><p>跟随视图</p></td></tr><tr><td><p>@ObservedObject</p></td><td><p>外部传入</p></td><td><p>由外部管理</p></td></tr></tbody></table><p><strong>使用原则</strong>：</p><ul><li><p>视图<strong>自己创建</strong>的对象：用 @StateObject。</p></li><li><p>视图<strong>外部传入</strong>的对象：用 @ObservedObject。</p></li></ul><h2>五、@EnvironmentObject</h2><p><code>@EnvironmentObject</code> 用于跨视图共享状态。</p><p><strong>注入</strong>：</p><pre><code class="language-swift">class AppState: ObservableObject {
-    @Published var username = &amp;quot;Guest&amp;quot;
+    @Published var username = &quot;Guest&quot;
 }
 
 @main
@@ -611,33 +611,33 @@ struct MyApp: App {
     @EnvironmentObject var appState: AppState
 
     var body: some View {
-        Text(&amp;quot;用户：\(appState.username)&amp;quot;)
+        Text(&quot;用户：\(appState.username)&quot;)
     }
 }</code></pre><p><strong>特点</strong>：</p><ul><li><p>无需逐层传递。</p></li><li><p>通过环境注入，任意子视图都能访问。</p></li><li><p>适合全局状态：用户信息、主题、设置。</p></li></ul><h2>六、@Environment</h2><p><code>@Environment</code> 用于读取系统环境值。</p><pre><code class="language-swift">struct MyView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
-        Text(colorScheme == .dark ? &amp;quot;深色模式&amp;quot; : &amp;quot;浅色模式&amp;quot;)
+        Text(colorScheme == .dark ? &quot;深色模式&quot; : &quot;浅色模式&quot;)
 
-        Button(&amp;quot;关闭&amp;quot;) {
+        Button(&quot;关闭&quot;) {
             dismiss()
         }
     }
 }</code></pre><p><strong>常用环境值</strong>：</p><table class="hean-table"><thead><tr><th><p>环境值</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>\.colorScheme</code></p></td><td><p>深色/浅色模式</p></td></tr><tr><td><p><code>\.dismiss</code></p></td><td><p>关闭当前视图</p></td></tr><tr><td><p><code>\.horizontalSizeClass</code></p></td><td><p>水平尺寸类</p></td></tr><tr><td><p><code>\.locale</code></p></td><td><p>语言区域</p></td></tr><tr><td><p><code>\.calendar</code></p></td><td><p>日历</p></td></tr><tr><td><p><code>\.scenePhase</code></p></td><td><p>应用生命周期</p></td></tr></tbody></table><h2>七、@Published</h2><p><code>@Published</code> 用于在 ObservableObject 中标记可发布属性。</p><pre><code class="language-swift">class LoginViewModel: ObservableObject {
-    @Published var username = &amp;quot;&amp;quot;
-    @Published var password = &amp;quot;&amp;quot;
+    @Published var username = &quot;&quot;
+    @Published var password = &quot;&quot;
     @Published var isLoggedIn = false
 
     var canSubmit: Bool {
-        !username.isEmpty &amp;amp;&amp;amp; !password.isEmpty
+        !username.isEmpty &amp;&amp; !password.isEmpty
     }
 
     func login() {
         isLoggedIn = true
     }
 }</code></pre><p><strong>特点</strong>：</p><ul><li><p>值变化时，通知订阅者。</p></li><li><p>只能在 ObservableObject 中使用。</p></li><li><p>配合 @StateObject / @ObservedObject 使用。</p></li></ul><h2>八、状态提升与单向数据流</h2><p><strong>状态提升</strong>：把状态放到共同的父视图，通过 @Binding 传递。</p><pre><code class="language-swift">struct ParentView: View {
-    @State private var text = &amp;quot;&amp;quot;
+    @State private var text = &quot;&quot;
 
     var body: some View {
         VStack {
@@ -651,7 +651,7 @@ struct TextInputView: View {
     @Binding var text: String
 
     var body: some View {
-        TextField(&amp;quot;输入&amp;quot;, text: $text)
+        TextField(&quot;输入&quot;, text: $text)
     }
 }
 
@@ -659,23 +659,23 @@ struct TextPreviewView: View {
     let text: String
 
     var body: some View {
-        Text(&amp;quot;预览：\(text)&amp;quot;)
+        Text(&quot;预览：\(text)&quot;)
     }
 }</code></pre><p><strong>单向数据流</strong>：</p><ul><li><p>状态定义在顶层。</p></li><li><p>数据向下传递。</p></li><li><p>事件向上传递。</p></li><li><p>保证数据一致性和可预测性。</p></li></ul><h2>九、综合示例：登录表单</h2><pre><code class="language-swift">struct LoginView: View {
-    @State private var username = &amp;quot;&amp;quot;
-    @State private var password = &amp;quot;&amp;quot;
+    @State private var username = &quot;&quot;
+    @State private var password = &quot;&quot;
     @State private var isLoggedIn = false
     @State private var showError = false
 
     var body: some View {
         VStack(spacing: 16) {
-            TextField(&amp;quot;用户名&amp;quot;, text: $username)
+            TextField(&quot;用户名&quot;, text: $username)
                 .textFieldStyle(.roundedBorder)
 
-            SecureField(&amp;quot;密码&amp;quot;, text: $password)
+            SecureField(&quot;密码&quot;, text: $password)
                 .textFieldStyle(.roundedBorder)
 
-            Button(&amp;quot;登录&amp;quot;) {
+            Button(&quot;登录&quot;) {
                 if username.isEmpty || password.isEmpty {
                     showError = true
                 } else {
@@ -686,13 +686,13 @@ struct TextPreviewView: View {
             .disabled(username.isEmpty || password.isEmpty)
 
             if showError {
-                Text(&amp;quot;请填写完整信息&amp;quot;)
+                Text(&quot;请填写完整信息&quot;)
                     .foregroundColor(.red)
                     .font(.caption)
             }
 
             if isLoggedIn {
-                Text(&amp;quot;登录成功：\(username)&amp;quot;)
+                Text(&quot;登录成功：\(username)&quot;)
                     .foregroundColor(.green)
             }
         }

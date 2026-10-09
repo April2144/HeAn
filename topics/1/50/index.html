@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -522,66 +522,66 @@
                     </div>
 
                     <!-- Markdown 正文 -->
-                    <div class="article-body" id="article-body"><div class="preview-blog-content"><h2>本篇目标</h2><p>掌握 SwiftUI 常用组件 Text、Image、Button 的用法，理解字体、颜色、图标系统，能组合组件构建常见界面元素。</p><h2>一、Text</h2><p>Text 用于显示文字，是 SwiftUI 最基础的组件。</p><p><strong>基础用法</strong>：</p><pre><code class="language-swift">Text(&amp;quot;Hello, SwiftUI!&amp;quot;)</code></pre><p><strong>字体</strong>：</p><pre><code class="language-swift">Text(&amp;quot;标题&amp;quot;).font(.title)
-Text(&amp;quot;大标题&amp;quot;).font(.largeTitle)
-Text(&amp;quot;正文&amp;quot;).font(.body)
-Text(&amp;quot;小字&amp;quot;).font(.caption)
-Text(&amp;quot;自定义&amp;quot;).font(.system(size: 24, weight: .bold, design: .rounded))</code></pre><p><strong>常用系统字体</strong>：</p><table class="hean-table"><thead><tr><th><p>字体</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>.largeTitle</code></p></td><td><p>最大标题</p></td></tr><tr><td><p><code>.title</code></p></td><td><p>标题</p></td></tr><tr><td><p><code>.title2</code> / <code>.title3</code></p></td><td><p>次级标题</p></td></tr><tr><td><p><code>.headline</code></p></td><td><p>强调正文</p></td></tr><tr><td><p><code>.body</code></p></td><td><p>正文（默认）</p></td></tr><tr><td><p><code>.callout</code></p></td><td><p>引用</p></td></tr><tr><td><p><code>.subheadline</code></p></td><td><p>次级正文</p></td></tr><tr><td><p><code>.footnote</code></p></td><td><p>脚注</p></td></tr><tr><td><p><code>.caption</code></p></td><td><p>说明文字</p></td></tr><tr><td><p><code>.caption2</code></p></td><td><p>最小说明</p></td></tr></tbody></table><p><strong>字重</strong>：</p><pre><code class="language-swift">Text(&amp;quot;粗体&amp;quot;).fontWeight(.bold)
-Text(&amp;quot;半粗&amp;quot;).fontWeight(.semibold)
-Text(&amp;quot;常规&amp;quot;).fontWeight(.regular)
-Text(&amp;quot;细体&amp;quot;).fontWeight(.light)</code></pre><p><strong>颜色</strong>：</p><pre><code class="language-swift">Text(&amp;quot;蓝色&amp;quot;).foregroundColor(.blue)
-Text(&amp;quot;自定义&amp;quot;).foregroundColor(Color(red: 0.2, green: 0.5, blue: 0.9))
-Text(&amp;quot;十六进制&amp;quot;).foregroundColor(Color(hex: &amp;quot;#3B82F6&amp;quot;))</code></pre><p><strong>对齐与行距</strong>：</p><pre><code class="language-swift">Text(&amp;quot;多行文字\n第二行&amp;quot;)
+                    <div class="article-body" id="article-body"><div class="preview-blog-content"><h2>本篇目标</h2><p>掌握 SwiftUI 常用组件 Text、Image、Button 的用法，理解字体、颜色、图标系统，能组合组件构建常见界面元素。</p><h2>一、Text</h2><p>Text 用于显示文字，是 SwiftUI 最基础的组件。</p><p><strong>基础用法</strong>：</p><pre><code class="language-swift">Text(&quot;Hello, SwiftUI!&quot;)</code></pre><p><strong>字体</strong>：</p><pre><code class="language-swift">Text(&quot;标题&quot;).font(.title)
+Text(&quot;大标题&quot;).font(.largeTitle)
+Text(&quot;正文&quot;).font(.body)
+Text(&quot;小字&quot;).font(.caption)
+Text(&quot;自定义&quot;).font(.system(size: 24, weight: .bold, design: .rounded))</code></pre><p><strong>常用系统字体</strong>：</p><table class="hean-table"><thead><tr><th><p>字体</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>.largeTitle</code></p></td><td><p>最大标题</p></td></tr><tr><td><p><code>.title</code></p></td><td><p>标题</p></td></tr><tr><td><p><code>.title2</code> / <code>.title3</code></p></td><td><p>次级标题</p></td></tr><tr><td><p><code>.headline</code></p></td><td><p>强调正文</p></td></tr><tr><td><p><code>.body</code></p></td><td><p>正文（默认）</p></td></tr><tr><td><p><code>.callout</code></p></td><td><p>引用</p></td></tr><tr><td><p><code>.subheadline</code></p></td><td><p>次级正文</p></td></tr><tr><td><p><code>.footnote</code></p></td><td><p>脚注</p></td></tr><tr><td><p><code>.caption</code></p></td><td><p>说明文字</p></td></tr><tr><td><p><code>.caption2</code></p></td><td><p>最小说明</p></td></tr></tbody></table><p><strong>字重</strong>：</p><pre><code class="language-swift">Text(&quot;粗体&quot;).fontWeight(.bold)
+Text(&quot;半粗&quot;).fontWeight(.semibold)
+Text(&quot;常规&quot;).fontWeight(.regular)
+Text(&quot;细体&quot;).fontWeight(.light)</code></pre><p><strong>颜色</strong>：</p><pre><code class="language-swift">Text(&quot;蓝色&quot;).foregroundColor(.blue)
+Text(&quot;自定义&quot;).foregroundColor(Color(red: 0.2, green: 0.5, blue: 0.9))
+Text(&quot;十六进制&quot;).foregroundColor(Color(hex: &quot;#3B82F6&quot;))</code></pre><p><strong>对齐与行距</strong>：</p><pre><code class="language-swift">Text(&quot;多行文字\n第二行&quot;)
     .multilineTextAlignment(.center)
-    .lineSpacing(6)</code></pre><p><strong>行数限制</strong>：</p><pre><code class="language-swift">Text(&amp;quot;这是一段很长的文字...&amp;quot;)
-    .lineLimit(2)</code></pre><p><strong>截断方式</strong>：</p><pre><code class="language-swift">Text(&amp;quot;这是一段很长的文字...&amp;quot;)
+    .lineSpacing(6)</code></pre><p><strong>行数限制</strong>：</p><pre><code class="language-swift">Text(&quot;这是一段很长的文字...&quot;)
+    .lineLimit(2)</code></pre><p><strong>截断方式</strong>：</p><pre><code class="language-swift">Text(&quot;这是一段很长的文字...&quot;)
     .lineLimit(1)
-    .truncationMode(.tail)   // 尾部截断</code></pre><p><strong>文字样式组合</strong>：</p><pre><code class="language-swift">Text(&amp;quot;重要提示&amp;quot;)
+    .truncationMode(.tail)   // 尾部截断</code></pre><p><strong>文字样式组合</strong>：</p><pre><code class="language-swift">Text(&quot;重要提示&quot;)
     .font(.headline)
     .foregroundColor(.white)
     .padding(.horizontal, 12)
     .padding(.vertical, 6)
     .background(Color.blue)
-    .cornerRadius(8)</code></pre><h2>二、Image</h2><p>Image 用于显示图片，支持系统图标（SF Symbols）和资源图片。</p><p><strong>系统图标</strong>：</p><pre><code class="language-swift">Image(systemName: &amp;quot;star.fill&amp;quot;)
-Image(systemName: &amp;quot;heart&amp;quot;)
-Image(systemName: &amp;quot;person.circle&amp;quot;)</code></pre><p><strong>资源图片</strong>：</p><pre><code class="language-swift">Image(&amp;quot;logo&amp;quot;)</code></pre><p><strong>调整尺寸</strong>：</p><pre><code class="language-swift">Image(systemName: &amp;quot;star.fill&amp;quot;)
+    .cornerRadius(8)</code></pre><h2>二、Image</h2><p>Image 用于显示图片，支持系统图标（SF Symbols）和资源图片。</p><p><strong>系统图标</strong>：</p><pre><code class="language-swift">Image(systemName: &quot;star.fill&quot;)
+Image(systemName: &quot;heart&quot;)
+Image(systemName: &quot;person.circle&quot;)</code></pre><p><strong>资源图片</strong>：</p><pre><code class="language-swift">Image(&quot;logo&quot;)</code></pre><p><strong>调整尺寸</strong>：</p><pre><code class="language-swift">Image(systemName: &quot;star.fill&quot;)
     .font(.largeTitle)
 
-Image(&amp;quot;logo&amp;quot;)
+Image(&quot;logo&quot;)
     .resizable()
-    .frame(width: 100, height: 100)</code></pre><p><strong>保持比例</strong>：</p><pre><code class="language-swift">Image(&amp;quot;photo&amp;quot;)
+    .frame(width: 100, height: 100)</code></pre><p><strong>保持比例</strong>：</p><pre><code class="language-swift">Image(&quot;photo&quot;)
     .resizable()
     .aspectRatio(contentMode: .fit)
-    .frame(width: 200, height: 200)</code></pre><p><strong>填充模式</strong>：</p><table class="hean-table"><thead><tr><th><p>模式</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>.fit</code></p></td><td><p>保持比例，完整显示</p></td></tr><tr><td><p><code>.fill</code></p></td><td><p>保持比例，填满容器（可能裁剪）</p></td></tr></tbody></table><p><strong>裁剪圆角</strong>：</p><pre><code class="language-swift">Image(&amp;quot;photo&amp;quot;)
+    .frame(width: 200, height: 200)</code></pre><p><strong>填充模式</strong>：</p><table class="hean-table"><thead><tr><th><p>模式</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>.fit</code></p></td><td><p>保持比例，完整显示</p></td></tr><tr><td><p><code>.fill</code></p></td><td><p>保持比例，填满容器（可能裁剪）</p></td></tr></tbody></table><p><strong>裁剪圆角</strong>：</p><pre><code class="language-swift">Image(&quot;photo&quot;)
     .resizable()
     .frame(width: 100, height: 100)
-    .clipShape(Circle())</code></pre><p><strong>图标颜色</strong>：</p><pre><code class="language-swift">Image(systemName: &amp;quot;heart.fill&amp;quot;)
-    .foregroundColor(.red)</code></pre><p><strong>SF Symbols 常用图标</strong>：</p><table class="hean-table"><thead><tr><th><p>图标</p></th><th><p>名称</p></th></tr></thead><tbody><tr><td><p>星标</p></td><td><p>star / star.fill</p></td></tr><tr><td><p>心形</p></td><td><p>heart / heart.fill</p></td></tr><tr><td><p>人物</p></td><td><p>person / person.circle</p></td></tr><tr><td><p>首页</p></td><td><p>house / house.fill</p></td></tr><tr><td><p>设置</p></td><td><p>gearshape / gearshape.fill</p></td></tr><tr><td><p>搜索</p></td><td><p>magnifyingglass</p></td></tr><tr><td><p>关闭</p></td><td><p>xmark</p></td></tr><tr><td><p>返回</p></td><td><p>chevron.left</p></td></tr><tr><td><p>更多</p></td><td><p>ellipsis</p></td></tr><tr><td><p>加号</p></td><td><p>plus</p></td></tr></tbody></table><h2>三、Button</h2><p>Button 是可点击的交互组件。</p><p><strong>基础用法</strong>：</p><pre><code class="language-swift">Button(&amp;quot;点击我&amp;quot;) {
-    print(&amp;quot;按钮被点击&amp;quot;)
-}</code></pre><p><strong>带样式</strong>：</p><pre><code class="language-swift">Button(&amp;quot;确认&amp;quot;) {
+    .clipShape(Circle())</code></pre><p><strong>图标颜色</strong>：</p><pre><code class="language-swift">Image(systemName: &quot;heart.fill&quot;)
+    .foregroundColor(.red)</code></pre><p><strong>SF Symbols 常用图标</strong>：</p><table class="hean-table"><thead><tr><th><p>图标</p></th><th><p>名称</p></th></tr></thead><tbody><tr><td><p>星标</p></td><td><p>star / star.fill</p></td></tr><tr><td><p>心形</p></td><td><p>heart / heart.fill</p></td></tr><tr><td><p>人物</p></td><td><p>person / person.circle</p></td></tr><tr><td><p>首页</p></td><td><p>house / house.fill</p></td></tr><tr><td><p>设置</p></td><td><p>gearshape / gearshape.fill</p></td></tr><tr><td><p>搜索</p></td><td><p>magnifyingglass</p></td></tr><tr><td><p>关闭</p></td><td><p>xmark</p></td></tr><tr><td><p>返回</p></td><td><p>chevron.left</p></td></tr><tr><td><p>更多</p></td><td><p>ellipsis</p></td></tr><tr><td><p>加号</p></td><td><p>plus</p></td></tr></tbody></table><h2>三、Button</h2><p>Button 是可点击的交互组件。</p><p><strong>基础用法</strong>：</p><pre><code class="language-swift">Button(&quot;点击我&quot;) {
+    print(&quot;按钮被点击&quot;)
+}</code></pre><p><strong>带样式</strong>：</p><pre><code class="language-swift">Button(&quot;确认&quot;) {
     // 操作
 }
 .buttonStyle(.borderedProminent)</code></pre><p><strong>常用按钮样式</strong>：</p><table class="hean-table"><thead><tr><th><p>样式</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>.automatic</code></p></td><td><p>默认</p></td></tr><tr><td><p><code>.bordered</code></p></td><td><p>带边框</p></td></tr><tr><td><p><code>.borderedProminent</code></p></td><td><p>带边框填充</p></td></tr><tr><td><p><code>.plain</code></p></td><td><p>无样式</p></td></tr><tr><td><p><code>.borderless</code></p></td><td><p>无边框</p></td></tr></tbody></table><p><strong>自定义按钮</strong>：</p><pre><code class="language-swift">Button {
-    print(&amp;quot;点击&amp;quot;)
+    print(&quot;点击&quot;)
 } label: {
     HStack {
-        Image(systemName: &amp;quot;plus&amp;quot;)
-        Text(&amp;quot;添加&amp;quot;)
+        Image(systemName: &quot;plus&quot;)
+        Text(&quot;添加&quot;)
     }
     .padding()
     .background(Color.blue)
     .foregroundColor(.white)
     .cornerRadius(10)
-}</code></pre><p><strong>按钮颜色</strong>：</p><pre><code class="language-swift">Button(&amp;quot;删除&amp;quot;) {
+}</code></pre><p><strong>按钮颜色</strong>：</p><pre><code class="language-swift">Button(&quot;删除&quot;) {
     // 操作
 }
-.tint(.red)</code></pre><p><strong>禁用按钮</strong>：</p><pre><code class="language-swift">Button(&amp;quot;提交&amp;quot;) {
+.tint(.red)</code></pre><p><strong>禁用按钮</strong>：</p><pre><code class="language-swift">Button(&quot;提交&quot;) {
     // 操作
 }
 .disabled(true)</code></pre><p><strong>图标按钮</strong>：</p><pre><code class="language-swift">Button {
     // 操作
 } label: {
-    Image(systemName: &amp;quot;heart.fill&amp;quot;)
+    Image(systemName: &quot;heart.fill&quot;)
         .font(.title)
         .foregroundColor(.red)
 }</code></pre><h2>四、颜色系统</h2><p><strong>系统颜色</strong>：</p><pre><code class="language-swift">Color.blue
@@ -594,7 +594,7 @@ Color.secondary     // 次级文字色
 Color.accentColor   // 强调色</code></pre><p><strong>系统背景色</strong>：</p><pre><code class="language-swift">Color(.systemBackground)
 Color(.secondarySystemBackground)
 Color(.systemGray6)</code></pre><p><strong>自定义颜色</strong>：</p><pre><code class="language-swift">Color(red: 0.2, green: 0.5, blue: 0.9)
-Color(hue: 0.6, saturation: 0.8, brightness: 0.9)</code></pre><p><strong>Assets 颜色</strong>：</p><pre><code class="language-swift">Color(&amp;quot;BrandBlue&amp;quot;)</code></pre><p><strong>渐变</strong>：</p><pre><code class="language-swift">LinearGradient(
+Color(hue: 0.6, saturation: 0.8, brightness: 0.9)</code></pre><p><strong>Assets 颜色</strong>：</p><pre><code class="language-swift">Color(&quot;BrandBlue&quot;)</code></pre><p><strong>渐变</strong>：</p><pre><code class="language-swift">LinearGradient(
     colors: [.blue, .purple],
     startPoint: .topLeading,
     endPoint: .bottomTrailing
@@ -605,16 +605,16 @@ LinearGradient(colors: [.blue, .green], startPoint: .leading, endPoint: .trailin
 RadialGradient(colors: [.white, .blue], center: .center, startRadius: 0, endRadius: 100)
 
 // 角度渐变
-AngularGradient(colors: [.red, .yellow, .green, .blue, .purple, .red], center: .center)</code></pre><h2>五、字体与排版</h2><p><strong>动态字体</strong>：</p><pre><code class="language-swift">Text(&amp;quot;支持动态字体&amp;quot;)
-    .font(.body)</code></pre><p>系统会自动根据用户设置调整字号。</p><p><strong>自定义字体</strong>：</p><pre><code class="language-swift">Text(&amp;quot;自定义字体&amp;quot;)
-    .font(.custom(&amp;quot;PingFangSC-Regular&amp;quot;, size: 18))</code></pre><p><strong>字体设计</strong>：</p><pre><code class="language-swift">Text(&amp;quot;圆体&amp;quot;).font(.system(.body, design: .rounded))
-Text(&amp;quot;等宽&amp;quot;).font(.system(.body, design: .monospaced))
-Text(&amp;quot;衬线&amp;quot;).font(.system(.body, design: .serif))</code></pre><p><strong>文字组合</strong>：</p><pre><code class="language-swift">Text(&amp;quot;Hello &amp;quot;)
+AngularGradient(colors: [.red, .yellow, .green, .blue, .purple, .red], center: .center)</code></pre><h2>五、字体与排版</h2><p><strong>动态字体</strong>：</p><pre><code class="language-swift">Text(&quot;支持动态字体&quot;)
+    .font(.body)</code></pre><p>系统会自动根据用户设置调整字号。</p><p><strong>自定义字体</strong>：</p><pre><code class="language-swift">Text(&quot;自定义字体&quot;)
+    .font(.custom(&quot;PingFangSC-Regular&quot;, size: 18))</code></pre><p><strong>字体设计</strong>：</p><pre><code class="language-swift">Text(&quot;圆体&quot;).font(.system(.body, design: .rounded))
+Text(&quot;等宽&quot;).font(.system(.body, design: .monospaced))
+Text(&quot;衬线&quot;).font(.system(.body, design: .serif))</code></pre><p><strong>文字组合</strong>：</p><pre><code class="language-swift">Text(&quot;Hello &quot;)
     .font(.title)
     .fontWeight(.bold)
-+ Text(&amp;quot;SwiftUI&amp;quot;)
++ Text(&quot;SwiftUI&quot;)
     .font(.title)
-    .foregroundColor(.blue)</code></pre><h2>六、常见组件组合</h2><h3>标签</h3><pre><code class="language-swift">Text(&amp;quot;新功能&amp;quot;)
+    .foregroundColor(.blue)</code></pre><h2>六、常见组件组合</h2><h3>标签</h3><pre><code class="language-swift">Text(&quot;新功能&quot;)
     .font(.caption)
     .fontWeight(.semibold)
     .foregroundColor(.white)
@@ -622,31 +622,31 @@ Text(&amp;quot;衬线&amp;quot;).font(.system(.body, design: .serif))</code></pr
     .padding(.vertical, 4)
     .background(Color.green)
     .cornerRadius(6)</code></pre><h3>图标 + 文字</h3><pre><code class="language-swift">HStack(spacing: 6) {
-    Image(systemName: &amp;quot;star.fill&amp;quot;)
+    Image(systemName: &quot;star.fill&quot;)
         .foregroundColor(.yellow)
-    Text(&amp;quot;4.9&amp;quot;)
+    Text(&quot;4.9&quot;)
         .font(.subheadline)
 }</code></pre><h3>带头像的信息行</h3><pre><code class="language-swift">HStack {
-    Image(systemName: &amp;quot;person.circle.fill&amp;quot;)
+    Image(systemName: &quot;person.circle.fill&quot;)
         .font(.largeTitle)
         .foregroundColor(.blue)
     VStack(alignment: .leading) {
-        Text(&amp;quot;用户名&amp;quot;)
+        Text(&quot;用户名&quot;)
             .font(.headline)
-        Text(&amp;quot;简介信息&amp;quot;)
+        Text(&quot;简介信息&quot;)
             .font(.caption)
             .foregroundColor(.gray)
     }
     Spacer()
 }
 .padding()</code></pre><h3>主按钮与次按钮</h3><pre><code class="language-swift">VStack(spacing: 12) {
-    Button(&amp;quot;主要操作&amp;quot;) {
+    Button(&quot;主要操作&quot;) {
         // 操作
     }
     .buttonStyle(.borderedProminent)
     .frame(maxWidth: .infinity)
 
-    Button(&amp;quot;次要操作&amp;quot;) {
+    Button(&quot;次要操作&quot;) {
         // 操作
     }
     .buttonStyle(.bordered)

@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -527,26 +527,26 @@
     var body: Body { get }
 }</code></pre><p><strong>自定义视图</strong>：</p><pre><code class="language-swift">struct ContentView: View {
     var body: some View {
-        Text(&amp;quot;Hello, SwiftUI!&amp;quot;)
+        Text(&quot;Hello, SwiftUI!&quot;)
     }
-}</code></pre><p><strong>说明</strong>：</p><ul><li><p><code>struct</code> 定义视图，遵循 <code>View</code> 协议。</p></li><li><p><code>body</code> 是计算属性，返回 <code>some View</code>。</p></li><li><p><code>some View</code> 表示不透明返回类型，隐藏具体类型。</p></li></ul><p><strong>为什么用 struct</strong>：</p><ul><li><p>值类型，轻量，适合频繁创建。</p></li><li><p>无继承，用组合代替。</p></li><li><p>状态管理更清晰。</p></li></ul><h2>三、基础视图</h2><h3>Text</h3><p>显示文字。</p><pre><code class="language-swift">Text(&amp;quot;Hello, World!&amp;quot;)</code></pre><h3>Image</h3><p>显示图片，支持系统图标和资源图片。</p><pre><code class="language-swift">Image(systemName: &amp;quot;star.fill&amp;quot;)
-Image(&amp;quot;logo&amp;quot;)</code></pre><h3>Button</h3><p>可点击按钮。</p><pre><code class="language-swift">Button(&amp;quot;点击我&amp;quot;) {
-    print(&amp;quot;按钮被点击&amp;quot;)
-}</code></pre><h3>其他常用视图</h3><ul><li><p><code>Toggle</code>：开关</p></li><li><p><code>Slider</code>：滑块</p></li><li><p><code>TextField</code>：文本输入</p></li><li><p><code>List</code>：列表</p></li><li><p><code>VStack</code> / <code>HStack</code> / <code>ZStack</code>：布局容器</p></li></ul><h2>四、视图修饰符</h2><p>修饰符用于修改视图的外观和行为。</p><pre><code class="language-swift">Text(&amp;quot;Hello&amp;quot;)
+}</code></pre><p><strong>说明</strong>：</p><ul><li><p><code>struct</code> 定义视图，遵循 <code>View</code> 协议。</p></li><li><p><code>body</code> 是计算属性，返回 <code>some View</code>。</p></li><li><p><code>some View</code> 表示不透明返回类型，隐藏具体类型。</p></li></ul><p><strong>为什么用 struct</strong>：</p><ul><li><p>值类型，轻量，适合频繁创建。</p></li><li><p>无继承，用组合代替。</p></li><li><p>状态管理更清晰。</p></li></ul><h2>三、基础视图</h2><h3>Text</h3><p>显示文字。</p><pre><code class="language-swift">Text(&quot;Hello, World!&quot;)</code></pre><h3>Image</h3><p>显示图片，支持系统图标和资源图片。</p><pre><code class="language-swift">Image(systemName: &quot;star.fill&quot;)
+Image(&quot;logo&quot;)</code></pre><h3>Button</h3><p>可点击按钮。</p><pre><code class="language-swift">Button(&quot;点击我&quot;) {
+    print(&quot;按钮被点击&quot;)
+}</code></pre><h3>其他常用视图</h3><ul><li><p><code>Toggle</code>：开关</p></li><li><p><code>Slider</code>：滑块</p></li><li><p><code>TextField</code>：文本输入</p></li><li><p><code>List</code>：列表</p></li><li><p><code>VStack</code> / <code>HStack</code> / <code>ZStack</code>：布局容器</p></li></ul><h2>四、视图修饰符</h2><p>修饰符用于修改视图的外观和行为。</p><pre><code class="language-swift">Text(&quot;Hello&quot;)
     .font(.title)
     .foregroundColor(.blue)
-    .padding()</code></pre><p><strong>常用修饰符</strong>：</p><table class="hean-table"><thead><tr><th><p>修饰符</p></th><th><p>作用</p></th></tr></thead><tbody><tr><td><p><code>.font()</code></p></td><td><p>设置字体</p></td></tr><tr><td><p><code>.foregroundColor()</code></p></td><td><p>设置前景色</p></td></tr><tr><td><p><code>.padding()</code></p></td><td><p>添加内边距</p></td></tr><tr><td><p><code>.background()</code></p></td><td><p>设置背景</p></td></tr><tr><td><p><code>.cornerRadius()</code></p></td><td><p>设置圆角</p></td></tr><tr><td><p><code>.frame()</code></p></td><td><p>设置尺寸</p></td></tr><tr><td><p><code>.opacity()</code></p></td><td><p>设置透明度</p></td></tr></tbody></table><p><strong>修饰符链</strong>：</p><p>修饰符按顺序应用，顺序不同效果可能不同。</p><pre><code class="language-swift">Text(&amp;quot;Hello&amp;quot;)
+    .padding()</code></pre><p><strong>常用修饰符</strong>：</p><table class="hean-table"><thead><tr><th><p>修饰符</p></th><th><p>作用</p></th></tr></thead><tbody><tr><td><p><code>.font()</code></p></td><td><p>设置字体</p></td></tr><tr><td><p><code>.foregroundColor()</code></p></td><td><p>设置前景色</p></td></tr><tr><td><p><code>.padding()</code></p></td><td><p>添加内边距</p></td></tr><tr><td><p><code>.background()</code></p></td><td><p>设置背景</p></td></tr><tr><td><p><code>.cornerRadius()</code></p></td><td><p>设置圆角</p></td></tr><tr><td><p><code>.frame()</code></p></td><td><p>设置尺寸</p></td></tr><tr><td><p><code>.opacity()</code></p></td><td><p>设置透明度</p></td></tr></tbody></table><p><strong>修饰符链</strong>：</p><p>修饰符按顺序应用，顺序不同效果可能不同。</p><pre><code class="language-swift">Text(&quot;Hello&quot;)
     .padding()
     .background(Color.blue)
     .cornerRadius(10)</code></pre><h2>五、视图组合</h2><p>SwiftUI 通过组合小视图构建复杂界面。</p><pre><code class="language-swift">struct ContentView: View {
     var body: some View {
         VStack {
-            Image(systemName: &amp;quot;globe&amp;quot;)
+            Image(systemName: &quot;globe&quot;)
                 .imageScale(.large)
                 .foregroundColor(.blue)
-            Text(&amp;quot;Hello, SwiftUI!&amp;quot;)
+            Text(&quot;Hello, SwiftUI!&quot;)
                 .font(.title)
-            Text(&amp;quot;从零开始学习 iOS 开发&amp;quot;)
+            Text(&quot;从零开始学习 iOS 开发&quot;)
                 .font(.subheadline)
                 .foregroundColor(.gray)
         }
@@ -555,10 +555,10 @@ Image(&amp;quot;logo&amp;quot;)</code></pre><h3>Button</h3><p>可点击按钮。
 }</code></pre><p><strong>提取子视图</strong>：</p><pre><code class="language-swift">struct HeaderView: View {
     var body: some View {
         VStack {
-            Image(systemName: &amp;quot;globe&amp;quot;)
+            Image(systemName: &quot;globe&quot;)
                 .imageScale(.large)
                 .foregroundColor(.blue)
-            Text(&amp;quot;Hello, SwiftUI!&amp;quot;)
+            Text(&quot;Hello, SwiftUI!&quot;)
                 .font(.title)
         }
     }
@@ -568,7 +568,7 @@ struct ContentView: View {
     var body: some View {
         VStack {
             HeaderView()
-            Text(&amp;quot;从零开始学习 iOS 开发&amp;quot;)
+            Text(&quot;从零开始学习 iOS 开发&quot;)
                 .font(.subheadline)
                 .foregroundColor(.gray)
         }
@@ -580,9 +580,9 @@ struct ContentView: View {
     ContentView()
 }
 
-#Preview(&amp;quot;iPad&amp;quot;) {
+#Preview(&quot;iPad&quot;) {
     ContentView()
-        .previewDevice(&amp;quot;iPad Pro (11-inch)&amp;quot;)
+        .previewDevice(&quot;iPad Pro (11-inch)&quot;)
 }</code></pre><p><strong>预览不刷新解决</strong>：</p><ul><li><p>点击 Resume</p></li><li><p>清理项目：Command + Shift + K</p></li><li><p>重启 Xcode</p></li><li><p>检查代码是否有编译错误</p></li></ul><h2>七、SwiftUI 与 UIKit 的关系</h2><ul><li><p>SwiftUI 是未来方向，新项目优先使用。</p></li><li><p>UIKit 仍可用于复杂界面、旧系统兼容。</p></li><li><p>可以通过 <code>UIViewRepresentable</code> 在 SwiftUI 中使用 UIKit 视图。</p></li><li><p>也可以通过 <code>UIHostingController</code> 在 UIKit 中使用 SwiftUI 视图。</p></li></ul><h2>八、避坑指南</h2><ul><li><p><strong>body 中不要写复杂逻辑</strong>：只负责描述界面。</p></li><li><p><strong>修饰符顺序很重要</strong>：先 padding 再 background 与反过来效果不同。</p></li><li><p><strong>预览不刷新先检查编译错误</strong>：编译错误会导致预览失败。</p></li><li><p><strong>不要在 body 中创建状态</strong>：状态应使用 @State 等属性包装器。</p></li><li><p><strong>some View 不能返回不同类型</strong>：需要条件返回时用 Group 或 AnyView。</p></li></ul><h2>九、检查清单</h2><ul><li><p>[ ] 理解声明式与命令式的区别</p></li><li><p>[ ] 能定义遵循 View 协议的视图</p></li><li><p>[ ] 会使用 Text、Image、Button 基础视图</p></li><li><p>[ ] 掌握常用修饰符</p></li><li><p>[ ] 能组合视图构建界面</p></li><li><p>[ ] 会使用 #Preview 预览</p></li><li><p>[ ] 了解 SwiftUI 与 UIKit 的关系</p></li></ul></div></div>
                     </div>
 

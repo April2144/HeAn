@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -523,24 +523,24 @@
 
                     <!-- Markdown 正文 -->
                     <div class="article-body" id="article-body"><div class="preview-blog-content"><h2>本篇目标</h2><p>掌握 List 与 ForEach 的使用，理解 NavigationStack 导航结构，学会页面跳转、传值、导航栏标题与工具栏配置，能构建带层级跳转的界面。</p><h2>一、List 基础</h2><p>List 用于展示可滚动的行列表，是 iOS 中最常见的界面结构。</p><pre><code class="language-swift">List {
-    Text(&amp;quot;第一行&amp;quot;)
-    Text(&amp;quot;第二行&amp;quot;)
-    Text(&amp;quot;第三行&amp;quot;)
+    Text(&quot;第一行&quot;)
+    Text(&quot;第二行&quot;)
+    Text(&quot;第三行&quot;)
 }</code></pre><p><strong>带分区</strong>：</p><pre><code class="language-swift">List {
-    Section(&amp;quot;分组一&amp;quot;) {
-        Text(&amp;quot;A&amp;quot;)
-        Text(&amp;quot;B&amp;quot;)
+    Section(&quot;分组一&quot;) {
+        Text(&quot;A&quot;)
+        Text(&quot;B&quot;)
     }
 
-    Section(&amp;quot;分组二&amp;quot;) {
-        Text(&amp;quot;C&amp;quot;)
-        Text(&amp;quot;D&amp;quot;)
+    Section(&quot;分组二&quot;) {
+        Text(&quot;C&quot;)
+        Text(&quot;D&quot;)
     }
 }</code></pre><p><strong>设置样式</strong>：</p><pre><code class="language-swift">List {
-    Text(&amp;quot;第一行&amp;quot;)
-    Text(&amp;quot;第二行&amp;quot;)
+    Text(&quot;第一行&quot;)
+    Text(&quot;第二行&quot;)
 }
-.listStyle(.insetGrouped)</code></pre><p><strong>常用列表样式</strong>：</p><table class="hean-table"><thead><tr><th><p>样式</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>.plain</code></p></td><td><p>普通列表</p></td></tr><tr><td><p><code>.grouped</code></p></td><td><p>分组列表</p></td></tr><tr><td><p><code>.insetGrouped</code></p></td><td><p>内嵌分组（默认）</p></td></tr><tr><td><p><code>.sidebar</code></p></td><td><p>侧边栏风格</p></td></tr></tbody></table><h2>二、ForEach</h2><p>ForEach 用于根据集合生成视图。</p><pre><code class="language-swift">let fruits = [&amp;quot;苹果&amp;quot;, &amp;quot;香蕉&amp;quot;, &amp;quot;橘子&amp;quot;]
+.listStyle(.insetGrouped)</code></pre><p><strong>常用列表样式</strong>：</p><table class="hean-table"><thead><tr><th><p>样式</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>.plain</code></p></td><td><p>普通列表</p></td></tr><tr><td><p><code>.grouped</code></p></td><td><p>分组列表</p></td></tr><tr><td><p><code>.insetGrouped</code></p></td><td><p>内嵌分组（默认）</p></td></tr><tr><td><p><code>.sidebar</code></p></td><td><p>侧边栏风格</p></td></tr></tbody></table><h2>二、ForEach</h2><p>ForEach 用于根据集合生成视图。</p><pre><code class="language-swift">let fruits = [&quot;苹果&quot;, &quot;香蕉&quot;, &quot;橘子&quot;]
 
 List {
     ForEach(fruits, id: \.self) { fruit in
@@ -548,7 +548,7 @@ List {
     }
 }</code></pre><p><strong>说明</strong>：</p><ul><li><p><code>id: \.self</code> 用于标识每个元素。</p></li><li><p>集合元素需要可哈希。</p></li><li><p>可以遍历数组、区间、字典。</p></li></ul><p><strong>遍历区间</strong>：</p><pre><code class="language-swift">List {
     ForEach(1...5, id: \.self) { number in
-        Text(&amp;quot;第 \(number) 行&amp;quot;)
+        Text(&quot;第 \(number) 行&quot;)
     }
 }</code></pre><p><strong>遍历对象数组</strong>：</p><pre><code class="language-swift">struct Item: Identifiable {
     let id = UUID()
@@ -556,21 +556,21 @@ List {
 }
 
 let items = [
-    Item(name: &amp;quot;项目一&amp;quot;),
-    Item(name: &amp;quot;项目二&amp;quot;),
-    Item(name: &amp;quot;项目三&amp;quot;)
+    Item(name: &quot;项目一&quot;),
+    Item(name: &quot;项目二&quot;),
+    Item(name: &quot;项目三&quot;)
 ]
 
 List(items) { item in
     Text(item.name)
 }</code></pre><p><strong>说明</strong>：</p><ul><li><p>遵循 <code>Identifiable</code> 协议后，不需要写 <code>id</code>。</p></li><li><p>推荐用 <code>Identifiable</code>，更简洁。</p></li></ul><p><strong>带索引</strong>：</p><pre><code class="language-swift">List {
     ForEach(Array(fruits.enumerated()), id: \.offset) { index, fruit in
-        Text(&amp;quot;\(index + 1). \(fruit)&amp;quot;)
+        Text(&quot;\(index + 1). \(fruit)&quot;)
     }
 }</code></pre><h2>三、列表行交互</h2><p><strong>添加点击</strong>：</p><pre><code class="language-swift">List {
     ForEach(items) { item in
         Button(item.name) {
-            print(&amp;quot;点击了 \(item.name)&amp;quot;)
+            print(&quot;点击了 \(item.name)&quot;)
         }
     }
 }</code></pre><p><strong>使用 NavigationLink</strong>：</p><pre><code class="language-swift">List {
@@ -579,7 +579,7 @@ List(items) { item in
             DetailView(item: item)
         }
     }
-}</code></pre><p><strong>删除与移动</strong>：</p><pre><code class="language-swift">@State private var items = [&amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;, &amp;quot;C&amp;quot;]
+}</code></pre><p><strong>删除与移动</strong>：</p><pre><code class="language-swift">@State private var items = [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;]
 
 List {
     ForEach(items, id: \.self) { item in
@@ -598,27 +598,27 @@ List {
 }
 .environment(\.editMode, $editMode)
 
-Button(&amp;quot;编辑&amp;quot;) {
+Button(&quot;编辑&quot;) {
     editMode = editMode == .active ? .inactive : .active
 }</code></pre><h2>四、NavigationStack</h2><p>NavigationStack 是 iOS 16 引入的新导航容器，替代 NavigationView。</p><p><strong>基础结构</strong>：</p><pre><code class="language-swift">NavigationStack {
     List {
-        NavigationLink(&amp;quot;详情页&amp;quot;) {
+        NavigationLink(&quot;详情页&quot;) {
             DetailView()
         }
     }
-    .navigationTitle(&amp;quot;首页&amp;quot;)
+    .navigationTitle(&quot;首页&quot;)
 }</code></pre><p><strong>说明</strong>：</p><ul><li><p><code>NavigationStack</code> 管理导航栈。</p></li><li><p><code>NavigationLink</code> 触发跳转。</p></li><li><p><code>.navigationTitle()</code> 设置标题。</p></li></ul><p><strong>兼容旧版本</strong>：</p><pre><code class="language-swift">NavigationView {
     // ...
 }</code></pre><ul><li><p>iOS 16+ 推荐用 <code>NavigationStack</code>。</p></li><li><p>如需兼容 iOS 15 及以下，用 <code>NavigationView</code>。</p></li></ul><h2>五、导航传值</h2><p><strong>通过初始化传值</strong>：</p><pre><code class="language-swift">struct DetailView: View {
     let name: String
 
     var body: some View {
-        Text(&amp;quot;详情：\(name)&amp;quot;)
+        Text(&quot;详情：\(name)&quot;)
     }
 }
 
-NavigationLink(&amp;quot;查看详情&amp;quot;) {
-    DetailView(name: &amp;quot;Hello&amp;quot;)
+NavigationLink(&quot;查看详情&quot;) {
+    DetailView(name: &quot;Hello&quot;)
 }</code></pre><p><strong>传递对象</strong>：</p><pre><code class="language-swift">struct Item: Identifiable, Hashable {
     let id = UUID()
     let name: String
@@ -630,27 +630,27 @@ NavigationLink(value: item) {
 .navigationDestination(for: Item.self) { item in
     DetailView(item: item)
 }</code></pre><p><strong>说明</strong>：</p><ul><li><p><code>navigationDestination</code> 根据值类型决定目标视图。</p></li><li><p>适合列表跳转详情。</p></li></ul><h2>六、导航标题与工具栏</h2><p><strong>设置标题</strong>：</p><pre><code class="language-swift">NavigationStack {
-    Text(&amp;quot;内容&amp;quot;)
-        .navigationTitle(&amp;quot;页面标题&amp;quot;)
+    Text(&quot;内容&quot;)
+        .navigationTitle(&quot;页面标题&quot;)
 }</code></pre><p><strong>标题显示模式</strong>：</p><pre><code class="language-swift">.navigationBarTitleDisplayMode(.inline)</code></pre><table class="hean-table"><thead><tr><th><p>模式</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>.automatic</code></p></td><td><p>自动</p></td></tr><tr><td><p><code>.inline</code></p></td><td><p>小标题</p></td></tr><tr><td><p><code>.large</code></p></td><td><p>大标题（默认）</p></td></tr></tbody></table><p><strong>工具栏</strong>：</p><pre><code class="language-swift">NavigationStack {
-    Text(&amp;quot;内容&amp;quot;)
-        .navigationTitle(&amp;quot;页面&amp;quot;)
+    Text(&quot;内容&quot;)
+        .navigationTitle(&quot;页面&quot;)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(&amp;quot;保存&amp;quot;) {
+                Button(&quot;保存&quot;) {
                     // 操作
                 }
             }
 
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(&amp;quot;取消&amp;quot;) {
+                Button(&quot;取消&quot;) {
                     // 操作
                 }
             }
         }
 }</code></pre><p><strong>常用位置</strong>：</p><table class="hean-table"><thead><tr><th><p>位置</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p><code>.navigationBarLeading</code></p></td><td><p>导航栏左侧</p></td></tr><tr><td><p><code>.navigationBarTrailing</code></p></td><td><p>导航栏右侧</p></td></tr><tr><td><p><code>.bottomBar</code></p></td><td><p>底部</p></td></tr><tr><td><p><code>.keyboard</code></p></td><td><p>键盘上方</p></td></tr></tbody></table><h2>七、导航返回</h2><p><strong>默认返回按钮</strong>：</p><p>NavigationStack 自动生成返回按钮。</p><p><strong>自定义返回</strong>：</p><pre><code class="language-swift">@Environment(\.dismiss) var dismiss
 
-Button(&amp;quot;返回&amp;quot;) {
+Button(&quot;返回&quot;) {
     dismiss()
 }</code></pre><p><strong>返回根视图</strong>：</p><pre><code class="language-swift">@Environment(\.dismiss) var dismiss</code></pre><p>或使用 NavigationPath 管理：</p><pre><code class="language-swift">@State private var path = NavigationPath()
 
@@ -658,7 +658,7 @@ NavigationStack(path: $path) {
     // ...
 }
 
-Button(&amp;quot;回到首页&amp;quot;) {
+Button(&quot;回到首页&quot;) {
     path = NavigationPath()
 }</code></pre><h2>八、NavigationPath 多级跳转</h2><pre><code class="language-swift">@State private var path: [Item] = []
 
@@ -674,25 +674,25 @@ NavigationStack(path: $path) {
 }</code></pre><p><strong>说明</strong>：</p><ul><li><p><code>path</code> 管理导航栈。</p></li><li><p>可以编程式跳转。</p></li><li><p>可以一次跳转多级。</p></li></ul><h2>九、标签页 TabView</h2><p>底部标签栏用于多个主页面切换。</p><pre><code class="language-swift">TabView {
     HomeView()
         .tabItem {
-            Label(&amp;quot;首页&amp;quot;, systemImage: &amp;quot;house&amp;quot;)
+            Label(&quot;首页&quot;, systemImage: &quot;house&quot;)
         }
 
     SettingsView()
         .tabItem {
-            Label(&amp;quot;设置&amp;quot;, systemImage: &amp;quot;gear&amp;quot;)
+            Label(&quot;设置&quot;, systemImage: &quot;gear&quot;)
         }
 }</code></pre><p><strong>带选中状态</strong>：</p><pre><code class="language-swift">@State private var selection = 0
 
 TabView(selection: $selection) {
     HomeView()
         .tabItem {
-            Label(&amp;quot;首页&amp;quot;, systemImage: &amp;quot;house&amp;quot;)
+            Label(&quot;首页&quot;, systemImage: &quot;house&quot;)
         }
         .tag(0)
 
     SettingsView()
         .tabItem {
-            Label(&amp;quot;设置&amp;quot;, systemImage: &amp;quot;gear&amp;quot;)
+            Label(&quot;设置&quot;, systemImage: &quot;gear&quot;)
         }
         .tag(1)
 }</code></pre><h2>十、综合示例：列表 → 详情</h2><pre><code class="language-swift">struct Item: Identifiable, Hashable {
@@ -703,9 +703,9 @@ TabView(selection: $selection) {
 
 struct ContentView: View {
     let items = [
-        Item(name: &amp;quot;项目一&amp;quot;, description: &amp;quot;描述一&amp;quot;),
-        Item(name: &amp;quot;项目二&amp;quot;, description: &amp;quot;描述二&amp;quot;),
-        Item(name: &amp;quot;项目三&amp;quot;, description: &amp;quot;描述三&amp;quot;)
+        Item(name: &quot;项目一&quot;, description: &quot;描述一&quot;),
+        Item(name: &quot;项目二&quot;, description: &quot;描述二&quot;),
+        Item(name: &quot;项目三&quot;, description: &quot;描述三&quot;)
     ]
 
     var body: some View {
@@ -721,7 +721,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .navigationTitle(&amp;quot;列表&amp;quot;)
+            .navigationTitle(&quot;列表&quot;)
             .navigationDestination(for: Item.self) { item in
                 DetailView(item: item)
             }

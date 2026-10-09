@@ -126,7 +126,10 @@ function jsonNodeToHtml(node) {
             return `<blockquote>${inner}</blockquote>`;
         case 'codeBlock': {
             const lang = attrs.language ? ` class="language-${attrs.language}"` : '';
-            return `<pre><code${lang}>${heanEscapeHtml(inner)}</code></pre>`;
+            // ⚠️ inner 里的 text 节点在第 151 行已按 heanEscapeHtml 转义过 ✓
+            //    这里【绝不能】再转义一次：会把 &quot; 变成 &amp;quot; ✗
+            //    → 页面就会显示出字面的 &quot; （实测 17 个页面、约 1000 处 ✗）
+            return `<pre><code${lang}>${inner}</code></pre>`;
         }
         case 'horizontalRule':
             return '<hr>';

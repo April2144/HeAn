@@ -318,7 +318,7 @@
 
         /* 右侧正文：与 admin 中后台预览保持一致 */
         .preview-blog-content {
-            font-size: 15px; line-height: 1.9; color: #334155;
+            font-size: 16px; line-height: 1.9; color: #334155;
         }
         .dark .preview-blog-content { color: #cbd5e1; }
         .preview-blog-content h1 {
@@ -523,94 +523,94 @@
 
                     <!-- Markdown 正文 -->
                     <div class="article-body" id="article-body"><div class="preview-blog-content"><h2>本篇目标</h2><p>掌握 SwiftUI 的布局系统，理解 VStack、HStack、ZStack 的使用方式，学会使用 Spacer、padding、frame、对齐方式构建常见界面布局。</p><h2>一、布局基础</h2><p>SwiftUI 的布局是声明式的：你描述视图应该如何排列，系统自动计算位置和尺寸。</p><p><strong>三种基础布局容器</strong>：</p><table class="hean-table"><thead><tr><th><p>容器</p></th><th><p>方向</p></th><th><p>说明</p></th></tr></thead><tbody><tr><td><p>VStack</p></td><td><p>垂直</p></td><td><p>从上到下排列</p></td></tr><tr><td><p>HStack</p></td><td><p>水平</p></td><td><p>从左到右排列</p></td></tr><tr><td><p>ZStack</p></td><td><p>叠层</p></td><td><p>前后叠加</p></td></tr></tbody></table><h2>二、VStack 垂直布局</h2><pre><code class="language-swift">VStack {
-    Text(&amp;quot;第一行&amp;quot;)
-    Text(&amp;quot;第二行&amp;quot;)
-    Text(&amp;quot;第三行&amp;quot;)
+    Text(&quot;第一行&quot;)
+    Text(&quot;第二行&quot;)
+    Text(&quot;第三行&quot;)
 }</code></pre><p><strong>设置间距</strong>：</p><pre><code class="language-swift">VStack(spacing: 20) {
-    Text(&amp;quot;第一行&amp;quot;)
-    Text(&amp;quot;第二行&amp;quot;)
+    Text(&quot;第一行&quot;)
+    Text(&quot;第二行&quot;)
 }</code></pre><p><strong>设置对齐方式</strong>：</p><pre><code class="language-swift">VStack(alignment: .leading) {
-    Text(&amp;quot;左对齐&amp;quot;)
-    Text(&amp;quot;第二行&amp;quot;)
+    Text(&quot;左对齐&quot;)
+    Text(&quot;第二行&quot;)
 }</code></pre><p><strong>常用对齐</strong>：</p><ul><li><p><code>.leading</code>：左对齐</p></li><li><p><code>.center</code>：居中（默认）</p></li><li><p><code>.trailing</code>：右对齐</p></li></ul><h2>三、HStack 水平布局</h2><pre><code class="language-swift">HStack {
-    Image(systemName: &amp;quot;star.fill&amp;quot;)
-    Text(&amp;quot;收藏&amp;quot;)
+    Image(systemName: &quot;star.fill&quot;)
+    Text(&quot;收藏&quot;)
 }</code></pre><p><strong>设置间距</strong>：</p><pre><code class="language-swift">HStack(spacing: 12) {
-    Image(systemName: &amp;quot;star.fill&amp;quot;)
-    Text(&amp;quot;收藏&amp;quot;)
+    Image(systemName: &quot;star.fill&quot;)
+    Text(&quot;收藏&quot;)
 }</code></pre><p><strong>设置对齐方式</strong>：</p><pre><code class="language-swift">HStack(alignment: .top) {
-    Image(systemName: &amp;quot;star.fill&amp;quot;)
-    Text(&amp;quot;多行文字\n第二行&amp;quot;)
+    Image(systemName: &quot;star.fill&quot;)
+    Text(&quot;多行文字\n第二行&quot;)
 }</code></pre><p><strong>常用对齐</strong>：</p><ul><li><p><code>.top</code>：顶部对齐</p></li><li><p><code>.center</code>：垂直居中（默认）</p></li><li><p><code>.bottom</code>：底部对齐</p></li><li><p><code>.firstTextBaseline</code>：第一行文字基线对齐</p></li></ul><h2>四、ZStack 叠层布局</h2><pre><code class="language-swift">ZStack {
     Color.blue
-    Text(&amp;quot;Hello&amp;quot;)
+    Text(&quot;Hello&quot;)
         .foregroundColor(.white)
 }
 .frame(width: 200, height: 100)</code></pre><p><strong>对齐方式</strong>：</p><pre><code class="language-swift">ZStack(alignment: .topLeading) {
     Color.blue
-    Text(&amp;quot;左上角&amp;quot;)
+    Text(&quot;左上角&quot;)
         .foregroundColor(.white)
 }
 .frame(width: 200, height: 100)</code></pre><p><strong>常用对齐</strong>：</p><ul><li><p><code>.topLeading</code>：左上</p></li><li><p><code>.top</code>：上中</p></li><li><p><code>.topTrailing</code>：右上</p></li><li><p><code>.leading</code>：左中</p></li><li><p><code>.center</code>：居中（默认）</p></li><li><p><code>.trailing</code>：右中</p></li><li><p><code>.bottomLeading</code>：左下</p></li><li><p><code>.bottom</code>：下中</p></li><li><p><code>.bottomTrailing</code>：右下</p></li></ul><h2>五、Spacer</h2><p>Spacer 用于填充剩余空间，把视图推到一边。</p><pre><code class="language-swift">HStack {
-    Text(&amp;quot;左边&amp;quot;)
+    Text(&quot;左边&quot;)
     Spacer()
-    Text(&amp;quot;右边&amp;quot;)
+    Text(&quot;右边&quot;)
 }</code></pre><p><strong>设置最小长度</strong>：</p><pre><code class="language-swift">Spacer(minLength: 20)</code></pre><p><strong>在 VStack 中</strong>：</p><pre><code class="language-swift">VStack {
-    Text(&amp;quot;顶部&amp;quot;)
+    Text(&quot;顶部&quot;)
     Spacer()
-    Text(&amp;quot;底部&amp;quot;)
+    Text(&quot;底部&quot;)
 }
-.frame(height: 200)</code></pre><h2>六、padding</h2><p>padding 用于添加内边距。</p><p><strong>四边相同</strong>：</p><pre><code class="language-swift">Text(&amp;quot;Hello&amp;quot;)
-    .padding()</code></pre><p><strong>指定数值</strong>：</p><pre><code class="language-swift">Text(&amp;quot;Hello&amp;quot;)
-    .padding(20)</code></pre><p><strong>指定方向</strong>：</p><pre><code class="language-swift">Text(&amp;quot;Hello&amp;quot;)
+.frame(height: 200)</code></pre><h2>六、padding</h2><p>padding 用于添加内边距。</p><p><strong>四边相同</strong>：</p><pre><code class="language-swift">Text(&quot;Hello&quot;)
+    .padding()</code></pre><p><strong>指定数值</strong>：</p><pre><code class="language-swift">Text(&quot;Hello&quot;)
+    .padding(20)</code></pre><p><strong>指定方向</strong>：</p><pre><code class="language-swift">Text(&quot;Hello&quot;)
     .padding(.horizontal, 20)
-    .padding(.vertical, 10)</code></pre><p><strong>指定单边</strong>：</p><pre><code class="language-swift">Text(&amp;quot;Hello&amp;quot;)
+    .padding(.vertical, 10)</code></pre><p><strong>指定单边</strong>：</p><pre><code class="language-swift">Text(&quot;Hello&quot;)
     .padding(.top, 10)
-    .padding(.leading, 20)</code></pre><p><strong>常用方向</strong>：</p><ul><li><p><code>.all</code>：四边</p></li><li><p><code>.horizontal</code>：水平</p></li><li><p><code>.vertical</code>：垂直</p></li><li><p><code>.top</code>、<code>.bottom</code>、<code>.leading</code>、<code>.trailing</code></p></li></ul><h2>七、frame</h2><p>frame 用于设置视图的尺寸。</p><p><strong>固定尺寸</strong>：</p><pre><code class="language-swift">Text(&amp;quot;Hello&amp;quot;)
-    .frame(width: 200, height: 100)</code></pre><p><strong>最大宽度</strong>：</p><pre><code class="language-swift">Text(&amp;quot;Hello&amp;quot;)
-    .frame(maxWidth: .infinity)</code></pre><p><strong>最大高度</strong>：</p><pre><code class="language-swift">Text(&amp;quot;Hello&amp;quot;)
-    .frame(maxHeight: .infinity)</code></pre><p><strong>对齐方式</strong>：</p><pre><code class="language-swift">Text(&amp;quot;Hello&amp;quot;)
-    .frame(width: 200, height: 100, alignment: .leading)</code></pre><p><strong>常用组合</strong>：</p><pre><code class="language-swift">Text(&amp;quot;Hello&amp;quot;)
+    .padding(.leading, 20)</code></pre><p><strong>常用方向</strong>：</p><ul><li><p><code>.all</code>：四边</p></li><li><p><code>.horizontal</code>：水平</p></li><li><p><code>.vertical</code>：垂直</p></li><li><p><code>.top</code>、<code>.bottom</code>、<code>.leading</code>、<code>.trailing</code></p></li></ul><h2>七、frame</h2><p>frame 用于设置视图的尺寸。</p><p><strong>固定尺寸</strong>：</p><pre><code class="language-swift">Text(&quot;Hello&quot;)
+    .frame(width: 200, height: 100)</code></pre><p><strong>最大宽度</strong>：</p><pre><code class="language-swift">Text(&quot;Hello&quot;)
+    .frame(maxWidth: .infinity)</code></pre><p><strong>最大高度</strong>：</p><pre><code class="language-swift">Text(&quot;Hello&quot;)
+    .frame(maxHeight: .infinity)</code></pre><p><strong>对齐方式</strong>：</p><pre><code class="language-swift">Text(&quot;Hello&quot;)
+    .frame(width: 200, height: 100, alignment: .leading)</code></pre><p><strong>常用组合</strong>：</p><pre><code class="language-swift">Text(&quot;Hello&quot;)
     .frame(maxWidth: .infinity, alignment: .leading)
     .padding()</code></pre><h2>八、布局优先级</h2><p>用 <code>layoutPriority</code> 控制空间分配优先级。</p><pre><code class="language-swift">HStack {
-    Text(&amp;quot;短文本&amp;quot;)
-    Text(&amp;quot;这是一段很长的文本，需要更多空间&amp;quot;)
+    Text(&quot;短文本&quot;)
+    Text(&quot;这是一段很长的文本，需要更多空间&quot;)
         .layoutPriority(1)
 }</code></pre><p><strong>说明</strong>：</p><ul><li><p>数值越大，优先级越高。</p></li><li><p>默认优先级为 0。</p></li></ul><h2>九、常见布局组合</h2><h3>卡片布局</h3><pre><code class="language-swift">VStack(alignment: .leading, spacing: 8) {
-    Image(systemName: &amp;quot;photo&amp;quot;)
+    Image(systemName: &quot;photo&quot;)
         .font(.largeTitle)
         .foregroundColor(.blue)
-    Text(&amp;quot;标题&amp;quot;)
+    Text(&quot;标题&quot;)
         .font(.headline)
-    Text(&amp;quot;描述文字&amp;quot;)
+    Text(&quot;描述文字&quot;)
         .font(.subheadline)
         .foregroundColor(.gray)
 }
 .padding()
 .background(Color(.systemGray6))
 .cornerRadius(12)</code></pre><h3>列表行布局</h3><pre><code class="language-swift">HStack {
-    Image(systemName: &amp;quot;person.circle&amp;quot;)
+    Image(systemName: &quot;person.circle&quot;)
         .font(.largeTitle)
     VStack(alignment: .leading) {
-        Text(&amp;quot;姓名&amp;quot;)
+        Text(&quot;姓名&quot;)
             .font(.headline)
-        Text(&amp;quot;描述&amp;quot;)
+        Text(&quot;描述&quot;)
             .font(.subheadline)
             .foregroundColor(.gray)
     }
     Spacer()
-    Image(systemName: &amp;quot;chevron.right&amp;quot;)
+    Image(systemName: &quot;chevron.right&quot;)
         .foregroundColor(.gray)
 }
 .padding()</code></pre><h3>顶部栏布局</h3><pre><code class="language-swift">HStack {
-    Button(&amp;quot;返回&amp;quot;) {
+    Button(&quot;返回&quot;) {
         // 返回操作
     }
     Spacer()
-    Text(&amp;quot;标题&amp;quot;)
+    Text(&quot;标题&quot;)
         .font(.headline)
     Spacer()
-    Button(&amp;quot;更多&amp;quot;) {
+    Button(&quot;更多&quot;) {
         // 更多操作
     }
 }
