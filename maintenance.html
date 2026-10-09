@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ⚠️ 故障兜底页：绝不进索引 ✗（nginx 以 502/503 状态返回 ✓ 爬虫会正确理解"暂时不可用"✓） -->
+    <meta name="robots" content="noindex, nofollow">
+    <title>服务暂时不可用 · 禾安的笔记</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #f8fafc; color: #334155; padding: 24px; text-align: center;
+        }
+        .card { max-width: 420px; }
+        .icon { font-size: 44px; line-height: 1; margin-bottom: 18px; }
+        h1 { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #1e293b; }
+        p { font-size: 14px; line-height: 1.9; color: #64748b; }
+        a {
+            display: inline-block; margin-top: 22px; padding: 10px 22px; border-radius: 10px;
+            background: #3B82F6; color: #fff; text-decoration: none; font-size: 14px; font-weight: 500;
+            transition: background .2s;
+        }
+        a:hover { background: #2563EB; }
+        @media (prefers-color-scheme: dark) {
+            body { background: #0f172a; color: #cbd5e1; }
+            h1 { color: #f1f5f9; }
+            p { color: #94a3b8; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon">🛠️</div>
+        <h1>服务暂时不可用</h1>
+        <p>后端正在重启或出现短暂异常，通常几秒内就会恢复。<br>请稍后刷新重试，带来的不便请谅解。</p>
+        <a href="/">返回首页</a>
+    </div>
+</body>
+</html>
