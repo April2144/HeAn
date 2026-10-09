@@ -94,7 +94,10 @@
             </div>
 
             <div class="flex gap-6 overflow-x-auto pb-4 pt-4 -mt-4 snap-x snap-mandatory scrollbar-hide" id="topics-grid" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
-                <!-- 精选专题卡片由 JS 动态生成 -->
+                <!-- HOME_CARDS:topics:start -->
+                <!-- 以下卡片由 scripts/gen_home_cards.py 生成（爬虫可见 ✓ 勿手改）；前端 JS 加载后会覆盖为它的版本 ✓ -->
+                <a href="topics/1/" class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow flex-shrink-0 w-[300px]" title="iOS 开发：从 0 到上架"><div class="aspect-[16/9] overflow-hidden"><img src="uploads/images/2026/09/20/eb60d5a4432b4e8381867553e4ec8723.png" alt="iOS 开发：从 0 到上架" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"></div><div class="p-5"><h4 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2 line-clamp-1">iOS 开发：从 0 到上架</h4><p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">本专题面向 iOS 开发初学者和想系统梳理 iOS 知识体系的开发者。从 Swift 语言基础、SwiftUI 界面开发…</p><p class="text-xs text-primary mt-3">共 27 篇 <i class="fa-solid fa-arrow-right ml-1"></i></p></div></a>
+                <!-- HOME_CARDS:topics:end -->
             </div>
 
             <div class="mt-8 text-center md:hidden">
@@ -115,7 +118,11 @@
             </div>
 
             <div class="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide" id="projects-grid" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
-                <!-- 项目卡片由 JS 动态生成，限宽 + snap -->
+                <!-- HOME_CARDS:projects:start -->
+                <!-- 以下卡片由 scripts/gen_home_cards.py 生成（爬虫可见 ✓ 勿手改）；前端 JS 加载后会覆盖为它的版本 ✓ -->
+                <a href="projects/4/" class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow flex-shrink-0 w-[300px]" title="批量重命名工具"><div class="aspect-[16/9] overflow-hidden"><img src="uploads/images/2026/10/06/a8f2a0f9c1874df79c132d19ca73ce62.png" alt="批量重命名工具" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"></div><div class="p-5"><h4 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2 line-clamp-1">批量重命名工具</h4><p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">在浏览器里直接选一个文件夹，按规则批量改名，全程不上传任何文件。 支持正则替换、序号补零、前缀后缀、大小写转换等规则；改…</p><p class="text-xs text-primary mt-3">查看详情 <i class="fa-solid fa-arrow-right ml-1"></i></p></div></a>
+                <a href="projects/5/" class="group bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow flex-shrink-0 w-[300px]" title="图片压缩工具"><div class="aspect-[16/9] overflow-hidden"><img src="uploads/images/2026/09/28/695c61c79f22ea6b7b9fe199db8465c6.png" alt="图片压缩工具" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"></div><div class="p-5"><h4 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-2 line-clamp-1">图片压缩工具</h4><p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">不用装 Python，打开网页就能批量压缩图片。支持有损 / 无损两种模式，PNG 走 pngquant 优化（实测可压…</p><p class="text-xs text-primary mt-3">查看详情 <i class="fa-solid fa-arrow-right ml-1"></i></p></div></a>
+                <!-- HOME_CARDS:projects:end -->
             </div>
 
             <div class="mt-8 text-center md:hidden">
@@ -133,7 +140,14 @@
             </div>
 
             <div class="grid md:grid-cols-2 gap-4" id="updates-grid">
-                <!-- 由 JS 动态生成 -->
+                <!-- HOME_CARDS:updates:start -->
+                <!-- 以下卡片由 scripts/gen_home_cards.py 生成（爬虫可见 ✓ 勿手改）；前端 JS 加载后会覆盖为它的版本 ✓ -->
+                <a href="blog/8/" class="group flex gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-lg transition-shadow" title="用 AI 辅助开发个人网站的真实时间线"><div class="flex-1 min-w-0"><h4 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-1 line-clamp-1">用 AI 辅助开发个人网站的真实时间线</h4><p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">从三个仓库的真实提交记录看项目是怎么推进的：哪个阶段最密集、收尾为什么比开工长；以及 AI 在这类项目里能插进哪一环、哪一环插不进去。</p></div></a>
+                <a href="blog/9/" class="group flex gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-lg transition-shadow" title="用 AI 搭建后台与 CMS：我负责什么，AI 负责什么"><div class="flex-1 min-w-0"><h4 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-1 line-clamp-1">用 AI 搭建后台与 CMS：我负责什么，AI 负责什么</h4><p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">把后台开发拆成两堆：凡是&quot;决定要什么&quot;的自己做，凡是&quot;按已定结构去实现&quot;的交给 AI。文中给了实际分工、两个踩过的坑，以及一条关于验收的判断…</p></div></a>
+                <a href="blog/7/" class="group flex gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-lg transition-shadow" title="技术选型：我为什么选 HTML/CSS/JS + Python(FastAPI) + MySQL"><div class="flex-1 min-w-0"><h4 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-1 line-clamp-1">技术选型：我为什么选 HTML/CSS/JS + Python(FastAPI) + MySQL</h4><p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">不用框架、不追新：从&quot;一个人维护、要长期改&quot;这两条约束出发，说清前端、后端、数据库各自的取舍理由，以及这套组合不适合什么场景。</p></div></a>
+                <a href="blog/6/" class="group flex gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-lg transition-shadow" title="我是如何从零搭建这个网站的"><div class="flex-1 min-w-0"><h4 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-1 line-clamp-1">我是如何从零搭建这个网站的</h4><p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">个人站从空目录到能访问的完整过程：怎么定内容板块、技术栈按什么标准选、内容结构为什么要统一，以及上线阶段真正花时间的几件事。</p></div></a>
+                <a href="blog/2/" class="group flex gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-lg transition-shadow" title="欢迎来到禾安的个人站"><div class="flex-1 min-w-0"><h4 class="font-bold text-sm text-slate-800 dark:text-slate-100 mb-1 line-clamp-1">欢迎来到禾安的个人站</h4><p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">禾安个人站的开篇导览：这里有哪些板块，以及你能从中拿走什么。</p></div></a>
+                <!-- HOME_CARDS:updates:end -->
             </div>
         </div>
     </section>
