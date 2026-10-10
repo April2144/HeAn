@@ -79,7 +79,7 @@ async function loadHomeTopics() {
             const updatedAt = (t.updated_at || '').slice(0, 10);
             const desc = (t.description || '').trim();
             return `
-                <a href="topics/detail.html?series=${t.id}&from=home" class="block group flex-shrink-0 w-56 snap-start"
+                <a href="topics/${t.id}/" class="block group flex-shrink-0 w-56 snap-start"
                    onclick="trackClick('click_zhuanti','open_series','zhuanti_card','home','series',${t.id})">
                     <article class="card-hover flex flex-col w-56 aspect-square rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
                         <div class="h-2/3 overflow-hidden bg-slate-100 dark:bg-slate-800">
@@ -105,7 +105,7 @@ async function loadHomeTopics() {
             return `
                 <li class="topic-simple-item">
                     <span class="topic-simple-index">${i + 1}</span>
-                    <a href="detail.html?series=${t.id}&from=topics" class="block group min-w-0"
+                    <a href="${t.id}/" class="block group min-w-0"
                        onclick="trackClick('click_topic','open_series','topics_list','topics','series',${t.id})">
                         <h4 class="font-semibold text-sm text-slate-800 dark:text-slate-100 group-hover:text-primary transition-theme-color truncate">${escapeHtml(title)}</h4>
                         <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5">${escapeHtml(shortDesc)}</p>
@@ -327,7 +327,7 @@ function renderSeriesList() {
         const updatedAt = (s.updated_at || '').slice(0, 10);
         const desc = (s.description || '').trim();
         return `
-        <a href="detail.html?series=${s.id}&from=topics" class="block group">
+        <a href="${s.id}/" class="block group">
             <article class="card-hover flex flex-col aspect-square rounded-xl overflow-hidden border border-slate-100 dark:border-slate-700">
                 <div class="h-2/3 overflow-hidden bg-slate-100 dark:bg-slate-800">
                     ${renderTopicCover(s)}
