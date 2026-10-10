@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 百度搜索资源平台：站点归属验证（HTML 标签验证）
+         站点：www.hacore.cn —— 首页同一份文件，裸域与 www 都生效 ✓
+         ⚠️ 这行【必须留在本地 HeAn/ 并提交 git】：
+            1) 只放服务器上 → 会被发布时的 rsync --delete 清掉 ✗（9/24 的文件验证就是这样失效的 ✗）
+            2) gen_static.py 只做定点替换（title/description/filing），不会覆盖这一行 ✓ -->
+    <meta name="baidu-site-verification" content="codeva-fyJN15ruIU" />
     <title>禾安的笔记 | AI 时代的独立开发者</title>
     <meta name="description" content="专注iOS移动端开发10年，分享技术、产品与独立开发思考" id="meta-desc">
     <!-- SEO：规范链接 + 分享卡片（静态写死 → 爬虫不执行 JS 也能读到 ✓；JS 之后会用后台配置再覆盖一次） -->
