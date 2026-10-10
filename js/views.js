@@ -345,6 +345,13 @@ function renderFooter(contacts = {}) {
                 </div>
             </div>
             ${policiesHtml}
+            <!-- 网站地图入口（2026-10-10 ✓）
+                 ⚠️ 必须【在这里】渲染 —— 本函数的 footer.innerHTML 会整体替换页脚 ✗
+                    静态 HTML 里写的同名入口会被这行替换掉 ✗
+                    （实测症状：curl 抓源码看得到 ✓ 但真人浏览器里看不到 ✗ = 就是这个原因 ✓） -->
+            <p class="text-xs text-slate-500">
+                <a href="${root}/sitemap.html" class="hover:text-primary transition-colors">网站地图</a>
+            </p>
         </div>
     `;
 
