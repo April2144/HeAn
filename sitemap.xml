@@ -2,7 +2,7 @@
 <!-- 禾安站点地图 —— 数据取自数据库，只含已发布内容
      由 my_server/scripts/gen_sitemap.py 生成，请勿手改；内容有更新就重跑脚本
      生成日期：2026-10-10
-     条目：静态页 5 + 专题 5 + 专题文章 27 + 博客 5 + 产品 2 = 44
+     条目：静态页 5 + 专题 5 + 专题文章 27 + 博客 5 + 产品 2 = 45
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -268,5 +268,11 @@
     <lastmod>2026-10-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.hacore.cn/sitemap.html</loc>
+    <lastmod>2026-10-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>
