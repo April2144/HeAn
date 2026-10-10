@@ -151,7 +151,7 @@ function resolveProjectLink(project, detailHref) {
 
 /* ==================== 工具：本地开发时用【本地工具】 ====================
  * 背景（实测问题）：项目数据里的工具入口是【写死的线上绝对地址】
- *     projects.demo_url = https://hacore.cn/tools/compress/
+ *     projects.demo_url = https://www.hacore.cn/tools/compress/
  *   → 本地打开站点点「在线预览」会跳到线上工具 ✗（用的是线上服务）
  *
  * 设计（简化版）：本地/开发环境 → 一律指向【本地工具】；线上 → 原样用线上地址 ✓
