@@ -8,8 +8,11 @@
 <link rel="canonical" href="https://www.hacore.cn/sitemap.html">
 <meta name="robots" content="index,follow">
 <script>var _hmt = _hmt || [];(function(){var hm = document.createElement("script");hm.src="https://hm.baidu.com/hm.js?e6e31f2ba1cd1d461d0cd134ddc464df";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script>
+<!-- 主题：light/dark 手动切换（⭐ 不随系统 ✗ 默认 light ✓）与全站一致 ✓
+     key 用 hean-theme-mode ✓ → 与后台 admin 的 theme-mode 解耦 ✓ -->
+<script>(function(){try{var t=localStorage.getItem('hean-theme-mode')||'light';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark'].includes(u))?u:t;document.documentElement.classList.toggle('dark',m==='dark')}catch(e){}})();</script>
 <style>
-  :root { color-scheme: light dark; }
+  :root { color-scheme: light; }
   body { max-width: 820px; margin: 0 auto; padding: 32px 20px 64px;
          font: 16px/1.75 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
          color: #1e293b; background: #f8fafc; }
@@ -25,17 +28,15 @@
   a { color: #2563eb; text-decoration: none; }
   a:hover { text-decoration: underline; }
   .foot { color: #64748b; font-size: 13px; text-align: center; margin-top: 26px; }
-  @media (prefers-color-scheme: dark) {
-    body { color: #e2e8f0; background: #0f172a; }
-    section { background: #1e293b; border-color: #334155; }
-    .sub, .foot { color: #94a3b8; }
-    a { color: #7dd3fc; }
-  }
+  html.dark body { color: #e2e8f0; background: #0f172a; }
+  html.dark section { background: #1e293b; border-color: #334155; }
+  html.dark .sub, html.dark .foot { color: #94a3b8; }
+  html.dark a { color: #7dd3fc; }
 </style>
 </head>
 <body>
 <h1>网站地图</h1>
-<p class="sub">禾安的笔记 · 全站内容索引（共 44 个页面，生成于 2026-10-10）</p>
+<p class="sub">禾安的笔记 · 全站内容索引（共 45 个页面，生成于 2026-10-11）</p>
   <section>
     <h2>栏目</h2>
     <ul class="nav">
@@ -79,6 +80,9 @@
       <li><a href="https://www.hacore.cn/topics/1/174/">了解专题</a></li>
     </ul>
     <h3><a href="https://www.hacore.cn/topics/3/">独立开发：从 0 到 1</a></h3>
+    <ul>
+      <li><a href="https://www.hacore.cn/topics/3/274/">了解专题</a></li>
+    </ul>
     <h3><a href="https://www.hacore.cn/topics/4/">技术人产品思维与商业洞察</a></h3>
     <h3><a href="https://www.hacore.cn/topics/5/">全栈开发：从 0 到上线</a></h3>
     <h3><a href="https://www.hacore.cn/topics/6/">AI 搭建网站/CMS：从 0 到 1</a></h3>

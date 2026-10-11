@@ -9,7 +9,7 @@
     <meta name="robots" content="noindex, follow">
     <!-- 暗黑模式防闪烁 -->
     <script>
-        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
+        (function(){try{var t=localStorage.getItem('hean-theme-mode') || 'light';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark'].includes(u))?u:t;document.documentElement.classList.toggle('dark',m==='dark')}catch(e){}})();
     </script>
     <script src="./js/config.js"></script>
         <!-- ⚠️ Tailwind / Font Awesome 已本地化（assets/vendor/）：不再依赖外网 CDN（DNS 污染 / 断网时页面才不会丢样式）
@@ -69,7 +69,7 @@ var _hmt = _hmt || [];
             <ul>
                 <li><strong>你主动提供的信息</strong>：通过 Newsletter 订阅提交的邮箱、通过联系表单填写的称呼与联系方式、以及你主动发送的咨询内容；</li>
                 <li><strong>技术日志</strong>：服务器可能记录访问时间、IP、User-Agent 等基础访问日志，用于安全排查与运行统计；</li>
-                <li><strong>本地偏好</strong>：你的主题模式（浅色/深色/跟随系统）等偏好保存在你浏览器本地，不会上传。</li>
+                <li><strong>本地偏好</strong>：你的主题模式（浅色/深色）等偏好保存在你浏览器本地，不会上传。</li>
             </ul>
 
             <h2>二、信息的使用</h2>

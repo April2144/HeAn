@@ -7,7 +7,7 @@
     <meta name="description" content="禾安 - 专题详情">
     <!-- 暗黑模式防闪烁 -->
     <script>
-        (function(){try{var t=localStorage.getItem('theme-mode')||'system';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark','system'].includes(u))?u:t;var d=m==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):m;document.documentElement.classList.toggle('dark',d==='dark')}catch(e){}})();
+        (function(){try{var t=localStorage.getItem('hean-theme-mode') || 'light';var u=new URLSearchParams(location.search).get('theme');var m=(u&&['light','dark'].includes(u))?u:t;document.documentElement.classList.toggle('dark',m==='dark')}catch(e){}})();
     </script>
     <script src="../js/config.js"></script>
         <!-- ⚠️ Tailwind / Font Awesome 已本地化（assets/vendor/）：不再依赖外网 CDN（DNS 污染 / 断网时页面才不会丢样式）
@@ -533,10 +533,9 @@
         <script>
         (function() {
             // 初始化主题（参考 theme.js 中的 initTheme）
-            const t = localStorage.getItem('theme-mode') || 'system';
+            const t = localStorage.getItem('hean-theme-mode') || 'light';
             const u = new URLSearchParams(location.search).get('theme');
-            const m = (u && ['light','dark','system'].includes(u)) ? u : t;
-            const d = m === 'system' ? (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light') : m;
+            const m = (u && ['light','dark'].includes(u)) ? u : t;
             // 统一初始化导航 / 主题 / 登录（initApp 处理 detail 模式）
             initApp('topics', { type: 'detail' });
             HeAnAuth.mountLoginButton();

@@ -1,39 +1,29 @@
 /**
  * HeAn 主题切换模块
- * 三模式：light / dark / system
- * localStorage key: 'theme-mode'（与 admin 一致）
- * 支持 URL 参数 ?theme=light|dark|system
+ * 双模式：light / dark（⭐ 不支持"跟随系统" ✗）
+ * 默认：light ✓（首次打开 / 无记录 / 记录值非法时）
+ * localStorage key: 'hean-theme-mode'
+ *   ⚠️ 与后台 admin 的 'theme-mode'【完全解耦】✓ 互不影响 ✓（2026-10-11 前后台分离）
+ * 支持 URL 参数 ?theme=light|dark
  */
-
-/** 获取系统主题偏好 */
-function getSystemTheme() {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
 
 /** 初始化主题：读取 localStorage / URL 参数，应用 dark class */
 function initTheme() {
     const urlMode = new URLSearchParams(location.search).get('theme');
     let mode;
-    if (urlMode && ['light', 'dark', 'system'].includes(urlMode)) {
+    if (urlMode && ['light', 'dark'].includes(urlMode)) {
         mode = urlMode;
     } else {
-        const saved = localStorage.getItem('theme-mode');
-        mode = (saved && ['light', 'dark', 'system'].includes(saved)) ? saved : 'system';
+        const saved = localStorage.getItem('hean-theme-mode');
+        // ⭐ 默认 light ✓；历史遗留的 'system'（或任何非法值）也一律归为 light ✓
+        mode = (saved === 'dark') ? 'dark' : 'light';
     }
 
-    const effective = mode === 'system' ? getSystemTheme() : mode;
-    document.documentElement.classList.toggle('dark', effective === 'dark');
-
+    document.documentElement.classList.toggle('dark', mode === 'dark');
     updateThemeIcon(mode);
 
-    // 监听系统主题变化（仅在 system 模式下生效）
-    const mql = window.matchMedia('(prefers-color-scheme: dark)');
-    mql.addEventListener('change', () => {
-        const current = localStorage.getItem('theme-mode') || 'system';
-        if (current === 'system') {
-            document.documentElement.classList.toggle('dark', getSystemTheme() === 'dark');
-        }
-    });
+    // ⚠️ 已移除：监听系统主题变化的 matchMedia 监听器 ✗
+    //    规范：HeAn 只支持 light/dark 手动切换，不支持随系统 ✓（2026-10-11）
 }
 
 /** 绑定主题切换按钮：必须在导航栏渲染（initNavbar）之后调用，此时 #theme-toggle 才存在 */
@@ -42,14 +32,12 @@ function bindThemeToggle() {
     if (btn) btn.addEventListener('click', toggleTheme);
 }
 
-/** 三模式循环切换: light -> dark -> system -> light */
+/** 双模式切换：light ⇄ dark */
 function toggleTheme() {
-    const modes = ['light', 'dark', 'system'];
-    const current = localStorage.getItem('theme-mode') || 'system';
-    const i = modes.indexOf(current);
-    const next = modes[(i + 1) % modes.length];
+    const cur = localStorage.getItem('hean-theme-mode') === 'dark' ? 'dark' : 'light';
+    const next = cur === 'dark' ? 'light' : 'dark';
 
-    localStorage.setItem('theme-mode', next);
+    localStorage.setItem('hean-theme-mode', next);
 
     // 如果是从 URL 参数进入，清除参数
     if (new URLSearchParams(location.search).get('theme')) {
@@ -58,20 +46,17 @@ function toggleTheme() {
         history.replaceState(null, '', u.toString());
     }
 
-    const effective = next === 'system' ? getSystemTheme() : next;
-    document.documentElement.classList.toggle('dark', effective === 'dark');
+    document.documentElement.classList.toggle('dark', next === 'dark');
     updateThemeIcon(next);
 }
 
-/** 更新三个 SVG 图标的可见性 */
+/** 更新两个 SVG 图标的可见性（light / dark ✓） */
 function updateThemeIcon(mode) {
     const light = document.querySelectorAll('.theme-icon-light');
     const dark = document.querySelectorAll('.theme-icon-dark');
-    const system = document.querySelectorAll('.theme-icon-system');
     const show = (els, visible) => els.forEach(el => el.style.display = visible ? '' : 'none');
-    show(light, mode === 'light');
+    show(light, mode !== 'dark');
     show(dark, mode === 'dark');
-    show(system, mode === 'system');
 }
 
 // ========== 滚动阴影 ==========
@@ -107,7 +92,7 @@ function initApp(activePage, opts = {}) {
         HeAnAuth.initAuthSync({ skipLoginBtn: opts.type === 'login' });
     }
     // 导航栏渲染后，按当前主题同步一次图标（initTheme 执行时导航栏尚不存在，跨页跳转时图标需在此补刷新）
-    updateThemeIcon(localStorage.getItem('theme-mode') || 'system');
+    updateThemeIcon(localStorage.getItem('hean-theme-mode'));
     bindThemeToggle();
     // 首屏用缓存的联系方式渲染页脚（二次访问即完整），避免数据到达后再整体替换 → 页脚跳变
     renderFooter(readCachedContacts() || undefined);
