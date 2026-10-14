@@ -4,7 +4,7 @@
  * 适配后端新接口：分组结构（groups）替代旧的分类结构
  *
  * API_BASE: 后端服务地址
- * 公开站点固定自动检测：localhost/127.0.0.1 → 本机；dev.hacore.cn → 内网开发；www.hacore.cn（及裸域）→ 同源。
+ * 公开站点固定自动检测：localhost/127.0.0.1 → 本机；dev.hacore.cn → 开发(内网)；www.hacore.cn（及裸域）→ 同源。
  * 调试可用 ?api=xxx 临时覆盖。
  */
 
