@@ -154,17 +154,20 @@ function resolveProjectLink(project, detailHref) {
  *     projects.demo_url = https://www.hacore.cn/tools/compress/
  *   → 本地打开站点点「在线预览」会跳到线上工具 ✗（用的是线上服务）
  *
- * 设计（简化版）：本地/开发环境 → 一律指向【本地工具】；线上 → 原样用线上地址 ✓
- *   ⚠️ 前提：本地工具服务要先跑起来 → 用 my_server/scripts/tools_dev.sh 一键启动
- *      （没起服务时按钮会连不上 —— 这是预期行为：本地开发就该用本地服务 ✓）
+ * 设计（2026-10-15 收敛）：开发环境 → 统一走 http://dev.hacore.cn/tools/…（无端口 ✓）；
+ *   线上 → 原样用线上地址 ✓（https://www.hacore.cn/tools/… ✓）
+ *   ⚠️ 前提：本机 nginx（dev.hacore.cn:80 ✓）与工具自己的服务（8661 / 8662 ✓）都在跑
+ *      → my_server/scripts/dev_all.sh 会一并拉起 ✓（没起时按钮连不上 = 预期行为 ✓）
  *
  * ⚠️ 浏览器【禁止】从 http 页面跳 file:// ✗ → 本地工具必须用 http 伺服
  *      （tools_dev.sh 已帮你起好；纯静态页也仍可直接双击打开，两不冲突 ✓）
  * =================================================================== */
 const TOOL_LOCAL_MAP = {
-    //  线上路径              → 本地地址（端口与 tools_dev.sh 保持一致）
-    '/tools/compress/': 'http://127.0.0.1:8661/',
-    '/tools/rename/': 'http://127.0.0.1:8662/',
+    //  线上路径           → 开发环境地址（统一走域名 ✓ 无端口 ✓）
+    //  ⚠️ 由本机 nginx :80 按路径分发到【工具自己的服务 ✓】（页面静态 ✓ 压缩接口 → :8661 ✓）
+    //     不再直连 127.0.0.1:8661 / :8662 ✗
+    '/tools/compress/': 'http://dev.hacore.cn/tools/compress/',
+    '/tools/rename/': 'http://dev.hacore.cn/tools/rename/',
 };
 
 /** 当前是否为「本地/开发」环境（线上访客永远 false → 直接用线上工具 ✓） */
