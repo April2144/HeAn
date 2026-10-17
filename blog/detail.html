@@ -45,6 +45,9 @@
             <div id="article-cover-wrap" class="rounded-2xl overflow-hidden shadow-lg mb-10">
                 <img id="article-cover" src="" alt="文章封面" class="w-full object-cover">
             </div>
+            <!-- 摘要：有值才显示（文案与样式与专题详情页保持一致） -->
+            <div id="article-summary" style="display:none"
+                 class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-8"></div>
             <div class="article-content text-slate-700 dark:text-slate-300" id="article-body"></div>
             <!-- 文章标签 -->
             <div class="mt-10 pt-8" id="article-labels-section" style="display:none;">
@@ -106,6 +109,13 @@
                 coverWrap.style.display = '';
             } else {
                 coverWrap.style.display = 'none';
+            }
+            // 摘要：有值才显示（无摘要 → 保持隐藏，不占位）
+            // 兼容旧预渲染页（可能还没有该容器）：取不到就跳过，不能中断正文渲染
+            const summaryEl = document.getElementById('article-summary');
+            if (summaryEl && blog.summary) {
+                summaryEl.textContent = blog.summary;
+                summaryEl.style.display = '';
             }
             document.getElementById('article-body').innerHTML = renderContent(blog.content || '');
 

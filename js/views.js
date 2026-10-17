@@ -321,7 +321,7 @@ function renderFooter(contacts = {}) {
     }
 
     const beianHtml = (filingNo || icpFilingNo) ? `
-        <div class="footer-beian flex items-center gap-4">
+        <div class="footer-beian flex flex-col items-center gap-1">
             ${icpFilingNo ? `<a href="${escapeHtml(icpFilingUrl)}" target="_blank" rel="noopener"
                class="text-xs text-slate-400 hover:text-primary transition-colors"
                title="ICP备案">ICP备案：${escapeHtml(icpFilingNo)}</a>` : ''}
