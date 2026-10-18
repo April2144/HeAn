@@ -299,7 +299,7 @@ var _hmt = _hmt || [];
                 projectsGrid.innerHTML = '';
                 allProjects.forEach(project => {
                     // 按平台类型决定跳转：app→商店链接，web→网站链接，都没有则进详情页（老项目兜底）
-                    const link = resolveProjectLink(project, `projects/${project.id}/?from=home`);
+                    const link = resolveProjectLink(project, `projects/${project.id}/`);
                     const card = document.createElement('a');
                     card.href = link.href;
                     if (link.external) { card.target = '_blank'; card.rel = 'noopener'; }
@@ -336,7 +336,7 @@ var _hmt = _hmt || [];
                 items.forEach(it => {
                     // 只含博客（专题文章不进首页，避免与「精选专题」重复）
                     const card = document.createElement('a');
-                    card.href = `blog/${it.id}/?from=home`;
+                    card.href = `blog/${it.id}/`;
                     card.className = "card-hover flex flex-col gap-2 bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-100 dark:border-slate-700 group";
                     card.onclick = () => trackClick('click_blog', 'open_blog', 'blog_card', 'home', 'blog', it.id);
                     card.innerHTML = `

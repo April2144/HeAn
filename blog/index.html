@@ -98,7 +98,7 @@ var _hmt = _hmt || [];
             if (filtered.length === 0) { blogList.innerHTML = ''; emptyState.classList.remove('hidden'); return; }
             emptyState.classList.add('hidden');
             blogList.innerHTML = filtered.map(blog => `
-                <a href="${blog.id}/?from=blog" class="block group">
+                <a href="${blog.id}/" class="block group">
                     <article class="card-hover bg-white dark:bg-slate-800 p-6 md:p-8 border border-slate-100 dark:border-slate-700">
                         <div class="flex flex-col md:flex-row md:items-start gap-4">
                             <div class="flex-1">
