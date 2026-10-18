@@ -546,12 +546,9 @@
             }
         })();
 
-        // 返回上级页面：根据来源智能返回
+        // 返回上级页面：有历史则返回上一页，否则回专题列表
         function goBack() {
-            const from = new URLSearchParams(location.search).get('from');
-            if (from === 'home') {
-                window.history.back();
-            } else if (window.history.length > 1) {
+            if (window.history.length > 1) {
                 window.history.back();
             } else {
                 // 回列表页：用 navHref（见 blog/detail.html 的说明 ✓）
