@@ -39,7 +39,12 @@
             display: flex;
             width: 100%;
             max-width: 1280px;             /* 窗口 ≥1280 时锁定 1280px 居中，左栏 320 + 右栏 960 */
-            height: calc(100vh - 4rem);     /* 固定高度，左右各自滚动 */
+            /* ⚠️ 必须写 100vh，不能写 calc(100vh - 4rem)：
+               box-sizing: border-box 下 height 已包含容器自身的 padding-top（pt-16 = 4rem，给固定顶栏留位）。
+               写成 calc(100vh - 4rem) → 内容区只剩 100vh - 8rem，
+               而左右两栏的高度是 calc(100vh - 4rem) → 底部 4rem 溢出后被下面的 overflow:hidden 裁掉，
+               表现为「左栏章节展开后，最下面的章节/文章怎么滚都出不来」（2026-10-23 实测修复） */
+            height: 100vh;                  /* 固定高度，左右各自滚动 */
             overflow: hidden;
         }
 
