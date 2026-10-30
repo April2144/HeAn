@@ -97,73 +97,59 @@ function escapeHtml(str) {
  * @returns {{href: string, external: boolean, label: string}}
  */
 /**
- * 解析内容 ID —— 优先「真实路径」，回退「旧查询参数」
+ * 解析内容 ID —— 规范路径 /blog/6/、/projects/4/
  *
- * 背景：详情页规范 URL 是纯数字 ID（2026-10-31 定稿 ✓）
- *   规范：/blog/6/、/projects/4/         ← SSR，爬虫能直接读到正文 ✓
- *   旧（兼容）：/blog/detail.html?id=6   ← 老外链/已收录页面不 404 ✓
- * 归一化靠 canonical：旧链接的 canonical 指向规范路径 ✓（见 js/seo.js）
+ * 旧 detail.html?id= 与分组 slug 路径已废弃（Nginx 直接 404 ✓）
+ * 旧地址不再做兼容，也不参与 canonical ✓
  *
  * @param {string} kind 路径片段：blog | projects
  * @returns {number} 内容 ID（解析不到返回 0）
  */
 function resolveContentId(kind) {
-    // ① SSR 注入的 data 属性（/blog/17/ 与旧的 /blog/practice/17/ 都能取到 id ✓）
-    //    ⚠️ 必须放第一位：旧格式路径的父段是分组 slug，靠正则也能取，但以 SSR 注入为准 ✓
+    // ① SSR 注入的 data 属性（最可靠 ✓）
     const attr = 'data-' + (kind === 'blog' ? 'blog' : 'project') + '-id';
     const el = document.querySelector('[' + attr + ']');
     if (el) {
         const v = parseInt(el.getAttribute(attr), 10);
         if (v) return v;
     }
-    // ② 旧路径：/blog/6/ 或 /blog/6/index.html
+    // ② 规范路径：/blog/6/ 或 /blog/6/index.html
     const m = location.pathname.match(new RegExp('/' + kind + '/(\\d+)(?:/|/index\\.html)?$'));
-    if (m) return parseInt(m[1], 10) || 0;
-    // ③ 新路径：/blog/practice/6/（分组 slug 在前，id 在后 ✓）
-    const m2 = location.pathname.match(new RegExp('/' + kind + '/[^/]+/(\\d+)(?:/|/index\\.html)?$'));
-    if (m2) return parseInt(m2[1], 10) || 0;
-    // ④ 旧查询参数：?id=6
-    const q = new URLSearchParams(location.search).get('id');
-    return (q && parseInt(q, 10)) || 0;
+    return m ? (parseInt(m[1], 10) || 0) : 0;
 }
 
 /**
- * 解析专题 ID —— 优先「真实路径」，回退「旧查询参数」
- *   规范：/topics/6/ 、/topics/6/5/   ← SSR，爬虫能直接读到正文 ✓
- *   旧（兼容）：/topics/detail.html?series=6
+ * 解析专题 ID —— 规范路径 /topics/6/、/topics/6/5/
+ * 旧 slug 路径已废弃（404 ✓）
  * @returns {number} 专题 ID（解析不到返回 0）
  */
 function resolveSeriesId() {
-    // ① SSR 注入（旧的 /topics/fullstack/ 只有 slug → 以 SSR 注入为准 ✓）
+    // ① SSR 注入
     const el = document.querySelector('[data-series-id]');
     if (el) {
         const v = parseInt(el.getAttribute('data-series-id'), 10);
         if (v) return v;
     }
-    // ② 旧路径：/topics/6/ 或 /topics/6/5/
+    // ② 规范路径：/topics/6/ 或 /topics/6/5/
     const m = location.pathname.match(/\/topics\/(\d+)(?:\/(\d+))?(?:\/|\/index\.html)?$/);
-    if (m) return parseInt(m[1], 10) || 0;
-    // ③ 旧查询参数
-    const q = new URLSearchParams(location.search).get('series');
-    return (q && parseInt(q, 10)) || 0;
+    return m ? (parseInt(m[1], 10) || 0) : 0;
 }
 
 /**
- * 解析专题内文章 ID —— 优先 /topics/{series}/{article}/，回退 ?article=
+ * 解析专题内文章 ID —— /topics/{series}/{article}/，兼容 /topics/{series}/?article=
  * @returns {number} 文章 ID（解析不到返回 0）
  */
 function resolveArticleId() {
-    // ① SSR 注入（旧的 /topics/fullstack/175/ 只有父段 slug → 以 SSR 注入为准 ✓）
+    // ① SSR 注入
     const el = document.querySelector('[data-article-id]');
     if (el) {
         const v = parseInt(el.getAttribute('data-article-id'), 10);
         if (v) return v;
     }
-    // ② 路径：/topics/5/175/（旧）或 /topics/fullstack/175/（新）
-    //    ⚠️ 父段可能是 id 也可能是 slug → 用 [^/]+ 兼容两种 ✓
-    const m = location.pathname.match(/\/topics\/[^/]+\/(\d+)(?:\/|\/index\.html)?$/);
+    // ② 规范路径：/topics/5/175/
+    const m = location.pathname.match(/\/topics\/\d+\/(\d+)(?:\/|\/index\.html)?$/);
     if (m) return parseInt(m[1], 10) || 0;
-    // ③ 旧查询参数
+    // ③ 首页「最新更新」直达：/topics/5/?article=175
     const q = new URLSearchParams(location.search).get('article');
     return (q && parseInt(q, 10)) || 0;
 }
