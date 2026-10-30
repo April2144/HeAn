@@ -99,8 +99,9 @@ function escapeHtml(str) {
 /**
  * 解析内容 ID —— 规范路径 /blog/6/、/projects/4/
  *
- * 旧 detail.html?id= 与分组 slug 路径已废弃（Nginx 直接 404 ✓）
- * 旧地址不再做兼容，也不参与 canonical ✓
+ * 旧 detail.html?id= 由 Nginx 301 → 规范路径 ✓（已进 sitemap/推送，不能死链）
+ * 旧分组 slug / 专题 slug 路径已废弃（直接 404 ✓）
+ * 旧地址不参与 canonical ✓ 本函数也不再解析查询参数 ✓
  *
  * @param {string} kind 路径片段：blog | projects
  * @returns {number} 内容 ID（解析不到返回 0）
