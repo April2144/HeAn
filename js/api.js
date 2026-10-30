@@ -190,9 +190,9 @@ var _PAGE_TYPE_MAP = {          // 仅作旧式 URL（未预渲染、走 ?id= �
 function _pathTypeInfo(pathname) {
     var p = (pathname || location.pathname || '').replace(/\/index\.html$/, '/');
     var m;
-    // ⚠️ 双格式（2026-10-30）：/blog/17/ 与 /blog/17-slug/ 都算同一篇文章 ✓
-    if ((m = p.match(/^\/blog\/(\d+)(?:-[^/]+)?\/?$/)))     return { type: 'blog', id: parseInt(m[1], 10) };
-    if ((m = p.match(/^\/projects\/(\d+)(?:-[^/]+)?\/?$/))) return { type: 'project', id: parseInt(m[1], 10) };
+    // ⚠️ 双格式（2026-10-30）：/blog/17/（旧）与 /blog/practice/17/（新，分组 slug + id）✓
+    if ((m = p.match(/^\/blog\/(?:[^/]+\/)?(\d+)\/?$/)))     return { type: 'blog', id: parseInt(m[1], 10) };
+    if ((m = p.match(/^\/projects\/(?:[^/]+\/)?(\d+)\/?$/))) return { type: 'project', id: parseInt(m[1], 10) };
     // 专题：/topics/1/、/topics/1/47/、/topics/swiftui/、/topics/swiftui/swift-basics/
     //   都归到系列 ✓；slug 形式拿不到数字 id → 用 SSR 注入的 data-series-id 兜底 ✓
     if ((m = p.match(/^\/topics\/([^/]+)(?:\/[^/]+)?\/?$/))) {

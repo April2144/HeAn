@@ -119,8 +119,8 @@ function resolveContentId(kind) {
     // ② 旧路径：/blog/6/ 或 /blog/6/index.html
     const m = location.pathname.match(new RegExp('/' + kind + '/(\\d+)(?:/|/index\\.html)?$'));
     if (m) return parseInt(m[1], 10) || 0;
-    // ③ 新路径：/blog/6-slug/（id 在前，slug 在后 ✓）
-    const m2 = location.pathname.match(new RegExp('/' + kind + '/(\\d+)-[^/]+(?:/|/index\\.html)?$'));
+    // ③ 新路径：/blog/practice/6/（分组 slug 在前，id 在后 ✓）
+    const m2 = location.pathname.match(new RegExp('/' + kind + '/[^/]+/(\\d+)(?:/|/index\\.html)?$'));
     if (m2) return parseInt(m2[1], 10) || 0;
     // ④ 旧查询参数：?id=6
     const q = new URLSearchParams(location.search).get('id');
