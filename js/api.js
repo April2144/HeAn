@@ -190,18 +190,12 @@ var _PAGE_TYPE_MAP = {          // 仅作旧式 URL（未预渲染、走 ?id= �
 function _pathTypeInfo(pathname) {
     var p = (pathname || location.pathname || '').replace(/\/index\.html$/, '/');
     var m;
-    // 规范地址（2026-10-31）：/blog/17/、/projects/4/（旧的 /blog/practice/17/ 也兼容 ✓）
-    if ((m = p.match(/^\/blog\/(?:[^/]+\/)?(\d+)\/?$/)))     return { type: 'blog', id: parseInt(m[1], 10) };
-    if ((m = p.match(/^\/projects\/(?:[^/]+\/)?(\d+)\/?$/))) return { type: 'project', id: parseInt(m[1], 10) };
-    // 专题：/topics/1/、/topics/1/47/（旧的 /topics/fullstack/1/ 也兼容 ✓）
-    //   都归到系列 ✓；旧 slug 形式拿不到数字 id → 用 SSR 注入的 data-series-id 兜底 ✓
-    if ((m = p.match(/^\/topics\/([^/]+)(?:\/[^/]+)?\/?$/))) {
-        var _sid = parseInt(m[1], 10);
-        if (!_sid) {
-            var _el = document.querySelector('[data-series-id]');
-            _sid = _el ? (parseInt(_el.getAttribute('data-series-id'), 10) || 0) : 0;
-        }
-        return { type: 'series', id: _sid };
+    // 规范地址（2026-10-31）：/blog/17/、/projects/4/（旧分组 slug 路径已 404 ✓）
+    if ((m = p.match(/^\/blog\/(\d+)\/?$/)))     return { type: 'blog', id: parseInt(m[1], 10) };
+    if ((m = p.match(/^\/projects\/(\d+)\/?$/))) return { type: 'project', id: parseInt(m[1], 10) };
+    // 专题：/topics/1/、/topics/1/47/（旧 slug 路径已 404 ✓）
+    if ((m = p.match(/^\/topics\/(\d+)(?:\/\d+)?\/?$/))) {
+        return { type: 'series', id: parseInt(m[1], 10) };
     }
     if (/^\/blog\/?$/.test(p))     return { type: 'blog_list', id: 0 };
     if (/^\/projects\/?$/.test(p)) return { type: 'project_list', id: 0 };
@@ -214,14 +208,8 @@ function _pathTypeInfo(pathname) {
 function autoTrackPageView(activePage) {
     var info = _pathTypeInfo(location.pathname);
     if (!info) {
-        // 兜底：未预渲染的旧式 URL（如 /blog/detail.html?id=6，或带 ?series= 的旧链接）
-        var params = new URLSearchParams(window.location.search);
-        var isSeriesDetail = !!params.get('series');
-        var pageType = isSeriesDetail ? 'series' : (_PAGE_TYPE_MAP[activePage] || activePage || 'page');
-        var pageId = 0;
-        var id = params.get('id') || params.get('series') || params.get('article') || params.get('topic');
-        if (id) pageId = parseInt(id) || 0;
-        info = { type: pageType, id: pageId };
+        // 未识别的页面（如维护页）→ 用导航标记兜底 ✓
+        info = { type: _PAGE_TYPE_MAP[activePage] || activePage || 'page', id: 0 };
     }
     trackPageViewAuto(info.type, info.id);
 }
