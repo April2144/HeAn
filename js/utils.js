@@ -99,17 +99,17 @@ function escapeHtml(str) {
 /**
  * 解析内容 ID —— 优先「真实路径」，回退「旧查询参数」
  *
- * 背景：详情页现在有两种 URL（都能用 ✓）
- *   新（预渲染）：/blog/6/、/projects/4/   ← 静态 HTML，爬虫能直接读到正文 ✓
- *   旧（兼容）  ：/blog/detail.html?id=6   ← 老外链/已收录页面不 404 ✓
- * 归一化靠 canonical：旧链接的 canonical 指向新路径 ✓（见 js/seo.js）
+ * 背景：详情页规范 URL 是纯数字 ID（2026-10-31 定稿 ✓）
+ *   规范：/blog/6/、/projects/4/         ← SSR，爬虫能直接读到正文 ✓
+ *   旧（兼容）：/blog/detail.html?id=6   ← 老外链/已收录页面不 404 ✓
+ * 归一化靠 canonical：旧链接的 canonical 指向规范路径 ✓（见 js/seo.js）
  *
  * @param {string} kind 路径片段：blog | projects
  * @returns {number} 内容 ID（解析不到返回 0）
  */
 function resolveContentId(kind) {
-    // ① SSR 注入的 data 属性（2026-10-30 双格式 URL：/blog/17/ 与 /blog/17-slug/ 通用 ✓）
-    //    ⚠️ 必须放第一位：新格式路径里只有 slug，靠正则拿不到 id ✗
+    // ① SSR 注入的 data 属性（/blog/17/ 与旧的 /blog/practice/17/ 都能取到 id ✓）
+    //    ⚠️ 必须放第一位：旧格式路径的父段是分组 slug，靠正则也能取，但以 SSR 注入为准 ✓
     const attr = 'data-' + (kind === 'blog' ? 'blog' : 'project') + '-id';
     const el = document.querySelector('[' + attr + ']');
     if (el) {
@@ -129,12 +129,12 @@ function resolveContentId(kind) {
 
 /**
  * 解析专题 ID —— 优先「真实路径」，回退「旧查询参数」
- *   新（预渲染）：/topics/6/ 、/topics/6/5/   ← 静态 HTML，爬虫能直接读到正文 ✓
- *   旧（兼容）  ：/topics/detail.html?series=6
+ *   规范：/topics/6/ 、/topics/6/5/   ← SSR，爬虫能直接读到正文 ✓
+ *   旧（兼容）：/topics/detail.html?series=6
  * @returns {number} 专题 ID（解析不到返回 0）
  */
 function resolveSeriesId() {
-    // ① SSR 注入（/topics/swiftui/ 这种新格式里没有数字 id ✗ → 只信这里 ✓）
+    // ① SSR 注入（旧的 /topics/fullstack/ 只有 slug → 以 SSR 注入为准 ✓）
     const el = document.querySelector('[data-series-id]');
     if (el) {
         const v = parseInt(el.getAttribute('data-series-id'), 10);
@@ -153,7 +153,7 @@ function resolveSeriesId() {
  * @returns {number} 文章 ID（解析不到返回 0）
  */
 function resolveArticleId() {
-    // ① SSR 注入（/topics/swiftui/swift-basics/ 里没有数字 id ✗）
+    // ① SSR 注入（旧的 /topics/fullstack/175/ 只有父段 slug → 以 SSR 注入为准 ✓）
     const el = document.querySelector('[data-article-id]');
     if (el) {
         const v = parseInt(el.getAttribute('data-article-id'), 10);
