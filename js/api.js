@@ -190,10 +190,19 @@ var _PAGE_TYPE_MAP = {          // 仅作旧式 URL（未预渲染、走 ?id= �
 function _pathTypeInfo(pathname) {
     var p = (pathname || location.pathname || '').replace(/\/index\.html$/, '/');
     var m;
-    if ((m = p.match(/^\/blog\/(\d+)\/?$/)))      return { type: 'blog', id: parseInt(m[1], 10) };
-    if ((m = p.match(/^\/projects\/(\d+)\/?$/)))  return { type: 'project', id: parseInt(m[1], 10) };
-    // 专题：/topics/1/（系列）与 /topics/1/47/（系列内文章）都归到系列，id = 系列号 ✓
-    if ((m = p.match(/^\/topics\/(\d+)(?:\/\d+)?\/?$/))) return { type: 'series', id: parseInt(m[1], 10) };
+    // ⚠️ 双格式（2026-10-30）：/blog/17/ 与 /blog/17-slug/ 都算同一篇文章 ✓
+    if ((m = p.match(/^\/blog\/(\d+)(?:-[^/]+)?\/?$/)))     return { type: 'blog', id: parseInt(m[1], 10) };
+    if ((m = p.match(/^\/projects\/(\d+)(?:-[^/]+)?\/?$/))) return { type: 'project', id: parseInt(m[1], 10) };
+    // 专题：/topics/1/、/topics/1/47/、/topics/swiftui/、/topics/swiftui/swift-basics/
+    //   都归到系列 ✓；slug 形式拿不到数字 id → 用 SSR 注入的 data-series-id 兜底 ✓
+    if ((m = p.match(/^\/topics\/([^/]+)(?:\/[^/]+)?\/?$/))) {
+        var _sid = parseInt(m[1], 10);
+        if (!_sid) {
+            var _el = document.querySelector('[data-series-id]');
+            _sid = _el ? (parseInt(_el.getAttribute('data-series-id'), 10) || 0) : 0;
+        }
+        return { type: 'series', id: _sid };
+    }
     if (/^\/blog\/?$/.test(p))     return { type: 'blog_list', id: 0 };
     if (/^\/projects\/?$/.test(p)) return { type: 'project_list', id: 0 };
     if (/^\/topics\/?$/.test(p))   return { type: 'topics_list', id: 0 };

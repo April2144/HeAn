@@ -108,10 +108,21 @@ function escapeHtml(str) {
  * @returns {number} 内容 ID（解析不到返回 0）
  */
 function resolveContentId(kind) {
-    // ① 真实路径：/blog/6/ 或 /blog/6/index.html
+    // ① SSR 注入的 data 属性（2026-10-30 双格式 URL：/blog/17/ 与 /blog/17-slug/ 通用 ✓）
+    //    ⚠️ 必须放第一位：新格式路径里只有 slug，靠正则拿不到 id ✗
+    const attr = 'data-' + (kind === 'blog' ? 'blog' : 'project') + '-id';
+    const el = document.querySelector('[' + attr + ']');
+    if (el) {
+        const v = parseInt(el.getAttribute(attr), 10);
+        if (v) return v;
+    }
+    // ② 旧路径：/blog/6/ 或 /blog/6/index.html
     const m = location.pathname.match(new RegExp('/' + kind + '/(\\d+)(?:/|/index\\.html)?$'));
     if (m) return parseInt(m[1], 10) || 0;
-    // ② 旧查询参数：?id=6
+    // ③ 新路径：/blog/6-slug/（id 在前，slug 在后 ✓）
+    const m2 = location.pathname.match(new RegExp('/' + kind + '/(\\d+)-[^/]+(?:/|/index\\.html)?$'));
+    if (m2) return parseInt(m2[1], 10) || 0;
+    // ④ 旧查询参数：?id=6
     const q = new URLSearchParams(location.search).get('id');
     return (q && parseInt(q, 10)) || 0;
 }
@@ -123,8 +134,16 @@ function resolveContentId(kind) {
  * @returns {number} 专题 ID（解析不到返回 0）
  */
 function resolveSeriesId() {
+    // ① SSR 注入（/topics/swiftui/ 这种新格式里没有数字 id ✗ → 只信这里 ✓）
+    const el = document.querySelector('[data-series-id]');
+    if (el) {
+        const v = parseInt(el.getAttribute('data-series-id'), 10);
+        if (v) return v;
+    }
+    // ② 旧路径：/topics/6/ 或 /topics/6/5/
     const m = location.pathname.match(/\/topics\/(\d+)(?:\/(\d+))?(?:\/|\/index\.html)?$/);
     if (m) return parseInt(m[1], 10) || 0;
+    // ③ 旧查询参数
     const q = new URLSearchParams(location.search).get('series');
     return (q && parseInt(q, 10)) || 0;
 }
@@ -134,8 +153,17 @@ function resolveSeriesId() {
  * @returns {number} 文章 ID（解析不到返回 0）
  */
 function resolveArticleId() {
-    const m = location.pathname.match(/\/topics\/(\d+)\/(\d+)(?:\/|\/index\.html)?$/);
-    if (m) return parseInt(m[2], 10) || 0;
+    // ① SSR 注入（/topics/swiftui/swift-basics/ 里没有数字 id ✗）
+    const el = document.querySelector('[data-article-id]');
+    if (el) {
+        const v = parseInt(el.getAttribute('data-article-id'), 10);
+        if (v) return v;
+    }
+    // ② 路径：/topics/5/175/（旧）或 /topics/fullstack/175/（新）
+    //    ⚠️ 父段可能是 id 也可能是 slug → 用 [^/]+ 兼容两种 ✓
+    const m = location.pathname.match(/\/topics\/[^/]+\/(\d+)(?:\/|\/index\.html)?$/);
+    if (m) return parseInt(m[1], 10) || 0;
+    // ③ 旧查询参数
     const q = new URLSearchParams(location.search).get('article');
     return (q && parseInt(q, 10)) || 0;
 }

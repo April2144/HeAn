@@ -18,16 +18,8 @@
     <link rel="stylesheet" href="assets/vendor/font-awesome/all.min.css">
     <link rel="stylesheet" href="./js/common.css?v=20260921d">
     <link rel="icon" href="assets/logo-mark.svg">
-<!-- 百度统计（2026-10-10 安装；ID 固定，勿改）-->
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?e6e31f2ba1cd1d461d0cd134ddc464df";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
+<!-- 百度统计：统一走 /js/tj.js（内部按域名决定是否上报 ✓ 本地调试不污染线上数据 ✓）-->
+<script src="/js/tj.js"></script>
 </head>
 <body class="bg-light text-slate-800 dark:bg-dark dark:text-slate-200 font-sans min-h-screen">
 
@@ -89,11 +81,56 @@ var _hmt = _hmt || [];
                 <input id="pwd-input" type="password" autocomplete="current-password" required placeholder="请输入密码"
                     class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none transition">
             </div>
+            <div class="flex justify-end">
+                <button type="button" id="link-forgot"
+                    class="text-sm text-slate-500 dark:text-slate-400 hover:text-primary transition-colors">忘记密码？</button>
+            </div>
             <div id="err-pwd" class="text-sm text-red-500 hidden"></div>
             <button type="submit" id="submit-pwd"
                 class="w-full py-2.5 rounded-lg bg-primary text-white font-medium hover:opacity-90 transition disabled:opacity-50">
                 登录
             </button>
+        </form>
+
+        <!-- 重置密码表单（默认隐藏）：忘记密码 / 首次设置密码 -->
+        <form id="form-reset" class="space-y-4 hidden">
+            <p class="text-sm text-slate-500 dark:text-slate-400">通过邮箱验证码重置密码（从未设过密码也走这里）</p>
+            <div>
+                <label class="block text-sm font-medium mb-1">邮箱</label>
+                <input id="reset-email" type="email" autocomplete="email" required placeholder="请输入注册邮箱"
+                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none transition">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">验证码</label>
+                <div class="flex space-x-2">
+                    <input id="reset-code" type="text" inputmode="numeric" autocomplete="one-time-code" required placeholder="请输入验证码"
+                        class="flex-1 px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none transition">
+                    <button id="reset-send-btn" type="button"
+                        class="px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors whitespace-nowrap">
+                        发送验证码
+                    </button>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">新密码</label>
+                <input id="reset-pwd" type="password" autocomplete="new-password" required placeholder="6~32 位"
+                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none transition">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">确认新密码</label>
+                <input id="reset-pwd2" type="password" autocomplete="new-password" required placeholder="再次输入新密码"
+                    class="w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none transition">
+            </div>
+            <div id="err-reset" class="text-sm text-red-500 hidden"></div>
+            <div id="ok-reset" class="text-sm text-green-600 dark:text-green-400 hidden"></div>
+            <button type="submit" id="submit-reset"
+                class="w-full py-2.5 rounded-lg bg-primary text-white font-medium hover:opacity-90 transition disabled:opacity-50">
+                重置密码
+            </button>
+            <p class="text-center text-sm">
+                <button type="button" id="link-back-login"
+                    class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors">← 返回登录</button>
+            </p>
         </form>
 
         <p class="text-center text-sm text-slate-500 dark:text-slate-400 mt-6">
@@ -106,8 +143,8 @@ var _hmt = _hmt || [];
     <script src="./js/utils.js"></script>
     <script src="./js/views.js?v=20261011a"></script>
     <script src="./js/theme.js?v=20261011a"></script>
-    <script src="./js/auth.js?v=20260921e"></script>
-    <script src="./js/login.js"></script>
+    <script src="./js/auth.js?v=20261024a"></script>
+    <script src="./js/login.js?v=20261024a"></script>
     <script>
         initApp('login', { type: 'login' });
     </script>

@@ -69,6 +69,32 @@ const HeAnAuth = (function () {
     return json.data;
   }
 
+  // 重置密码（忘记密码 / 首次设置密码）：邮箱验证码校验
+  async function resetPassword(email, code, newPassword) {
+    const res = await fetch(`${API_BASE}/site/auth/reset-password`, {
+      method: 'POST',
+      headers: _buildHeaders(),
+      body: JSON.stringify({ email, code, new_password: newPassword }),
+    });
+    const json = await res.json();
+    if (json.code !== 200) throw new Error(json.msg || '重置密码失败');
+    return json;
+  }
+
+  // 修改密码（需登录；从未设过密码时 oldPassword 传空即可直接设置）
+  async function changePassword(oldPassword, newPassword) {
+    const token = getToken();
+    if (!token) throw new Error('请先登录');
+    const res = await fetch(`${API_BASE}/site/auth/change-password`, {
+      method: 'POST',
+      headers: Object.assign(_buildHeaders(), { 'Authorization': `Bearer ${token}` }),
+      body: JSON.stringify({ old_password: oldPassword || '', new_password: newPassword }),
+    });
+    const json = await res.json();
+    if (json.code !== 200) throw new Error(json.msg || '修改密码失败');
+    return json;
+  }
+
   async function sendCode(email, purpose = 'login') {
     const res = await fetch(`${API_BASE}/site/auth/send-code`, {
       method: 'POST',
@@ -194,6 +220,79 @@ const HeAnAuth = (function () {
     mountAuthArea(opts);
   }
 
+  // 修改密码弹窗（头像下拉菜单入口）—— 自建轻量 modal，不引入额外组件
+  function openChangePasswordModal() {
+    if (document.getElementById('change-pwd-mask')) return; // 幂等：防重复打开
+
+    const mask = document.createElement('div');
+    mask.id = 'change-pwd-mask';
+    mask.className = 'fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4';
+    mask.innerHTML = `
+      <div class="w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-semibold text-slate-800 dark:text-slate-100">修改密码</h3>
+          <button class="cp-close text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"><i class="fas fa-times"></i></button>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-200">当前密码</label>
+          <input class="cp-old w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-primary outline-none transition"
+            type="password" autocomplete="current-password" placeholder="从未设过密码可留空">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-200">新密码</label>
+          <input class="cp-new w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-primary outline-none transition"
+            type="password" autocomplete="new-password" placeholder="6~32 位">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-200">确认新密码</label>
+          <input class="cp-new2 w-full px-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-primary outline-none transition"
+            type="password" autocomplete="new-password" placeholder="再次输入新密码">
+        </div>
+        <div class="cp-err text-sm text-red-500 hidden"></div>
+        <div class="flex space-x-2">
+          <button class="cp-cancel flex-1 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-slate-700 dark:text-slate-200">取消</button>
+          <button class="cp-submit flex-1 py-2.5 rounded-lg bg-primary text-white text-sm font-medium hover:opacity-90 transition disabled:opacity-50">确定</button>
+        </div>
+      </div>`;
+    document.body.appendChild(mask);
+
+    const errEl = mask.querySelector('.cp-err');
+    const close = () => mask.remove();
+    mask.querySelector('.cp-close').addEventListener('click', close);
+    mask.querySelector('.cp-cancel').addEventListener('click', close);
+    mask.addEventListener('click', (e) => { if (e.target === mask) close(); });
+
+    const submit = mask.querySelector('.cp-submit');
+    submit.addEventListener('click', async () => {
+      const oldPwd = mask.querySelector('.cp-old').value;
+      const newPwd = mask.querySelector('.cp-new').value;
+      const newPwd2 = mask.querySelector('.cp-new2').value;
+      errEl.classList.add('hidden');
+      if (newPwd.length < 6 || newPwd.length > 32) {
+        errEl.textContent = '密码长度需为 6~32 位';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      if (newPwd !== newPwd2) {
+        errEl.textContent = '两次输入的密码不一致';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      submit.disabled = true;
+      submit.textContent = '提交中…';
+      try {
+        const res = await changePassword(oldPwd, newPwd);
+        close();
+        if (typeof showToast === 'function') showToast(res.msg || '密码已修改');
+      } catch (err) {
+        errEl.textContent = err.message || '修改失败';
+        errEl.classList.remove('hidden');
+        submit.disabled = false;
+        submit.textContent = '确定';
+      }
+    });
+  }
+
   function renderAuthArea(host, opts) {
     opts = opts || {};
     host.innerHTML = '';
@@ -240,6 +339,7 @@ const HeAnAuth = (function () {
           <button class="auth-copy-id ml-2 px-1.5 py-0.5 rounded hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="复制用户 ID"><i class="fas fa-copy"></i></button>
         </div>
         <div class="my-1 border-t border-slate-100 dark:border-slate-700"></div>
+        <button class="auth-change-pwd w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">修改密码</button>
         <button class="auth-logout w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">退出登录</button>
       `;
 
@@ -266,6 +366,14 @@ const HeAnAuth = (function () {
           setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i>'; }, 1200);
         }
       });
+      const changePwdItem = menu.querySelector('.auth-change-pwd');
+      if (changePwdItem) {
+        changePwdItem.addEventListener('click', (e) => {
+          e.stopPropagation();
+          menu.classList.add('hidden');
+          openChangePasswordModal();
+        });
+      }
       menu.querySelector('.auth-logout').addEventListener('click', () => {
         logout();
         location.reload();
@@ -308,7 +416,8 @@ const HeAnAuth = (function () {
 
   return {
     getToken, isLoggedIn, currentUser,
-    loginByCode, loginByPassword, sendCode, fetchMe, logout,
+    loginByCode, loginByPassword, sendCode, resetPassword, changePassword,
+    fetchMe, logout,
     mountAuthArea, mountLoginButton: mountAuthArea, renderAuthArea,
     initAuth, initAuthSync,
     goBackAfterLogin,
