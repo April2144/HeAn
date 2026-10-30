@@ -348,6 +348,70 @@ function renderSeriesList() {
 let currentTopic = null;
 let currentArticle = null;
 
+/**
+ * 文章地址写入策略（2026-10-31）：
+ *   replace → 首次进入专题时把地址归一成第一篇文章的 URL（不新增历史记录）
+ *   push    → 用户点击目录 / 上下篇时新增一条历史（浏览器后退可回上一篇）
+ *   none    → popstate 回放历史，只渲染内容，不再写历史
+ *
+ * ⚠️ topicDepth 只用于「左上角返回按钮」：回到进入专题【之前】的页面，
+ *    而不是回到专题内上一篇（用户明确要求 ✓）。
+ */
+function _writeArticleHistory(article, mode) {
+    if (!currentTopic || !article || mode === 'none') return;
+    const aid = article.id || article.article_key;
+    if (!aid) return;
+    const url = '/topics/' + currentTopic.id + '/' + aid + '/';
+    const state = history.state || {};
+    const depth = parseInt(state.topicDepth, 10) || 0;
+    if (mode === 'replace') {
+        history.replaceState({ topicDepth: depth, topicArticleId: String(aid) }, '', url);
+        return;
+    }
+    // push：同一篇不重复写历史
+    if (String(state.topicArticleId) === String(aid)) return;
+    history.pushState({ topicDepth: depth + 1, topicArticleId: String(aid) }, '', url);
+}
+
+/** 文章切换后同步 title / canonical / og / JSON-LD，避免地址变了而 SEO 还停在专题页 */
+function _syncArticleSeo(article) {
+    if (!window.HeAnSeo || !currentTopic) return;
+    const aid = article.id || article.article_key;
+    if (!aid) return;
+    const url = location.origin + '/topics/' + currentTopic.id + '/' + aid + '/';
+    const desc = HeAnSeo.plainText(article.summary)
+        || (HeAnSeo.plainText(article.content) || '').slice(0, 120)
+        || HeAnSeo.plainText(currentTopic.description);
+    const image = article.cover_image || currentTopic.cover_image || '';
+    HeAnSeo.apply({
+        title: `${article.title || '无标题'} | ${currentTopic.name || ''} | ${siteDisplayName()}`,
+        description: desc,
+        image: image,
+        type: 'article',
+        url: url,
+        jsonLd: HeAnSeo.jsonLd.course({
+            title: article.title || '无标题',
+            description: desc,
+            image: image,
+            url: url,
+        }),
+    });
+}
+
+// 浏览器前进/后退：地址里是哪篇就渲染哪篇（不再写历史 ✓）
+window.addEventListener('popstate', function () {
+    if (!currentTopic) return;
+    const m = location.pathname.match(/^\/topics\/(\d+)(?:\/(\d+))?\/?$/);
+    if (!m) return;                                    // 已离开专题页，交给浏览器加载
+    if (String(m[1]) !== String(currentTopic.id)) return;
+    if (m[2]) {
+        selectArticle(m[2], { historyMode: 'none' });
+    } else {
+        const first = findFirstArticle(currentTopic);
+        if (first) selectArticle(first.id || first.article_key, { historyMode: 'none' });
+    }
+});
+
 async function loadTopicDetailPage() {
     // 兼容三种 URL：/topics/6/（预渲染）、/topics/6/5/（预渲染·指定文章）、?series=6（旧链接）
     const topicId = resolveSeriesId();
@@ -394,10 +458,17 @@ async function loadTopicDetailPage() {
     // 渲染侧边栏目录树
     renderOutlineTree();
 
+    // 进入专题时记录历史基准（depth=0）；之后点文章 pushState 在此基础上累加 ✓
+    // ⚠️ 刷新页面时 history.state 会保留（可能已是 depth=2）→ 不要重置成 0 ✗
+    if (!history.state || history.state.topicDepth == null) {
+        history.replaceState({ topicDepth: 0 }, '', location.href);
+    }
+
     // 深链优先：/topics/6/5/ 或 ?article=5 → 直接打开该篇；否则默认第一篇
+    // 首次打开用 replace：/topics/5/ 归一成第一篇文章的真实 URL，且不新增历史 ✓
     const firstArticle = findArticleById(currentTopic, resolveArticleId()) || findFirstArticle(currentTopic);
     if (firstArticle) {
-        selectArticle(firstArticle.id || firstArticle.article_key);
+        selectArticle(firstArticle.id || firstArticle.article_key, { historyMode: 'replace' });
     }
 }
 
@@ -537,7 +608,7 @@ function toggleArticle(artId) {
     if (chevron) chevron.classList.toggle('rotate-90', isExpanded);
 }
 
-function selectArticle(articleId) {
+function selectArticle(articleId, opts) {
     if (!currentTopic) return;
 
     const targetId = String(articleId);
@@ -553,6 +624,9 @@ function selectArticle(articleId) {
     if (!article) return;
     currentArticle = article;
 
+    // 地址栏 / 历史记录：首次进入归一为文章 URL，点击切换则新增历史 ✓
+    _writeArticleHistory(article, (opts && opts.historyMode) || 'push');
+
     // 重新渲染目录，确保当前文章所在章节和文章节点都展开
     renderOutlineTree();
 
@@ -564,6 +638,7 @@ function selectArticle(articleId) {
     }
 
     renderArticleDetail(article);
+    _syncArticleSeo(article);   // 标题/canonical 与地址栏保持一致 ✓
 }
 
 // 阅读进度追踪：监听内容区滚动，按最大可见比例上报 learn_progress（去抖 + 完成标记）
