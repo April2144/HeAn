@@ -287,6 +287,16 @@ function renderFooter(contacts = {}) {
                 ${showPrivacyPolicy ? `<a href="${escapeHtml(privacyPolicyUrl)}" class="hover:text-primary transition-colors">隐私协议</a>` : ''}
             </div>` : '';
 
+    // 赞赏入口：⚠️ 只在首页渲染（本函数全站共用，不加判断会变成全站推广位 ✗）
+    //   为什么放页脚：不占首屏、不打断阅读；首页曝光量约为工具页的 70 倍（2026-11 日志实测）
+    //   兼容本地预览：线上 "/"、本地 "/hean/" 都算首页 ✓
+    const _homePath = location.pathname.replace(/\/index\.html$/, '/');
+    const isHomePage = _homePath === '/' || _homePath === '/hean/';
+    //   ⚠️ 位置：品牌/版权区块内（与备案信息同级），不再单独占页脚最后一行 ✗
+    const rewardHtml = isHomePage ? `
+                    <!-- 赞赏入口（仅首页）：点击弹出赞赏码 -->
+                    <a href="#" class="footer-reward inline-block text-xs text-slate-400 hover:text-primary transition-colors mt-1">☕ 赞赏支持</a>` : '';
+
     const icons = [];
 
     // 邮箱：点击弹出联系意向弹窗
@@ -320,13 +330,15 @@ function renderFooter(contacts = {}) {
         icons.push(`<a href="${contacts.twitter_url}" target="_blank" rel="noopener" class="footer-contact-icon text-slate-400 hover:text-primary" title="Twitter"><i class="fab fa-twitter"></i></a>`);
     }
 
+    // 备案信息：ICP 与公安【横排】，放得下就一行；屏幕不够时整块折行（flex-wrap）
+    //   ⚠️ 每个 <a> 必须 whitespace-nowrap：否则窄屏会在单个备案号内部断开 ✗（要的是两个备案号之间换行 ✓）
     const beianHtml = (filingNo || icpFilingNo) ? `
-        <div class="footer-beian flex flex-col items-center gap-1">
+        <div class="footer-beian flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
             ${icpFilingNo ? `<a href="${escapeHtml(icpFilingUrl)}" target="_blank" rel="noopener"
-               class="text-xs text-slate-400 hover:text-primary transition-colors"
+               class="whitespace-nowrap text-xs text-slate-400 hover:text-primary transition-colors"
                title="ICP备案">ICP备案：${escapeHtml(icpFilingNo)}</a>` : ''}
             ${filingNo ? `<a href="${escapeHtml(filingUrl)}" target="_blank" rel="noreferrer"
-               class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-primary transition-colors"
+               class="inline-flex items-center gap-1.5 whitespace-nowrap text-xs text-slate-400 hover:text-primary transition-colors"
                title="公安联网备案"><img src="${root}/assets/beian-gongan.png" alt="公安联网备案" style="width:16px;height:16px;display:inline-block;vertical-align:middle">${escapeHtml(filingNo)}</a>` : ''}
         </div>` : '';
 
@@ -337,6 +349,7 @@ function renderFooter(contacts = {}) {
                 <div>
                     <a href="${root}/index.html" class="font-bold text-lg leading-tight block">${escapeHtml(footerBrandName())}</a>
                     <p class="text-xs text-slate-500 mt-0.5">&copy; ${new Date().getFullYear()} All rights reserved.</p>
+                    ${rewardHtml}
                     </div>
                 ${beianHtml}
                 <div class="flex space-x-4 text-xl">
@@ -373,6 +386,16 @@ function renderFooter(contacts = {}) {
             openContactModal();
         });
     });
+
+    // 绑定赞赏入口（仅首页存在）：先埋点，再弹赞赏码
+    const rewardLink = footer.querySelector('.footer-reward');
+    if (rewardLink) {
+        rewardLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            trackClick('click_reward', 'open_reward', 'footer', 'home', 'reward', 0);
+            openRewardModal();
+        });
+    }
 }
 
 /**
@@ -589,4 +612,42 @@ function _createContactModal() {
             errEl.classList.remove('hidden');
         }
     });
+}
+
+// ========== 赞赏码弹窗（仅首页页脚入口调用）==========
+
+function openRewardModal() {
+    let modal = document.getElementById('reward-modal');
+    if (!modal) {
+        const root = getRoot();
+        modal = document.createElement('div');
+        modal.id = 'reward-modal';
+        modal.className = 'hidden fixed inset-0 z-[9999] flex items-center justify-center p-4';
+        // ⚠️ 优先取 assets/reward-qrcode.png；文件不存在时自动回退到占位图 ✓
+        //    → 以后换真图：把图片命名为 reward-qrcode.png 放进 assets/ 即可，无需改代码 ✓
+        modal.innerHTML = `
+            <div class="absolute inset-0 bg-black/50" onclick="closeRewardModal()"></div>
+            <div class="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-sm p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold">☕ 赞赏支持</h3>
+                    <button onclick="closeRewardModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <img src="${root}/assets/reward-qrcode.png" alt="赞赏码"
+                     class="mx-auto block w-56 h-56 object-contain rounded-lg border border-slate-200 dark:border-slate-700 bg-white p-2"
+                     onerror="this.onerror=null;this.src='${root}/assets/reward-placeholder.svg';">
+                <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed text-center">
+                    如果这里的内容对你有帮助，可以扫码请我喝杯咖啡。<br>赞赏完全自愿，不影响任何内容的免费阅读。
+                </p>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    modal.classList.remove('hidden');
+}
+
+function closeRewardModal() {
+    const modal = document.getElementById('reward-modal');
+    if (modal) modal.classList.add('hidden');
 }

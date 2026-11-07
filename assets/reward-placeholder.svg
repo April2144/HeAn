@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" role="img" aria-label="赞赏码占位图">
+  <rect width="240" height="240" rx="12" fill="#ffffff"/>
+  <rect x="12" y="12" width="216" height="216" rx="8" fill="none" stroke="#cbd5e1" stroke-width="3" stroke-dasharray="8 6"/>
+  <!-- 三个定位角（示意二维码） -->
+  <g fill="none" stroke="#94a3b8" stroke-width="10">
+    <rect x="34" y="34" width="52" height="52" rx="6"/>
+    <rect x="154" y="34" width="52" height="52" rx="6"/>
+    <rect x="34" y="154" width="52" height="52" rx="6"/>
+  </g>
+  <g fill="#94a3b8">
+    <rect x="48" y="48" width="24" height="24"/>
+    <rect x="168" y="48" width="24" height="24"/>
+    <rect x="48" y="168" width="24" height="24"/>
+    <rect x="104" y="44" width="10" height="10"/>
+    <rect x="130" y="44" width="10" height="10"/>
+    <rect x="104" y="68" width="10" height="10"/>
+    <rect x="132" y="70" width="10" height="10"/>
+    <rect x="104" y="176" width="10" height="10"/>
+    <rect x="128" y="176" width="10" height="10"/>
+    <rect x="152" y="176" width="10" height="10"/>
+    <rect x="176" y="176" width="10" height="10"/>
+    <rect x="176" y="152" width="10" height="10"/>
+    <rect x="152" y="152" width="10" height="10"/>
+  </g>
+  <text x="120" y="112" text-anchor="middle" font-size="14" fill="#94a3b8" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">赞赏码</text>
+  <text x="120" y="134" text-anchor="middle" font-size="11" fill="#cbd5e1" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">待替换</text>
+</svg>
